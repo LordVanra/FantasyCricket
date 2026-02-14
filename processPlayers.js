@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { syncStats } = require('./dbSync'); // Import database sync function
 
 class CricketDataProcessor {
   constructor(inputFile) {
@@ -254,11 +255,18 @@ class CricketDataProcessor {
     };
   }
 
-  save(outputFile) {
+  async save(outputFile) {
     const processed = this.processData();
     fs.writeFileSync(outputFile, JSON.stringify(processed, null, 2));
     console.log(`Processed data saved to ${outputFile}`);
     console.log(`Total players: ${Object.keys(processed.players).length}`);
+
+    // Automated database sync
+    try {
+      await syncStats();
+    } catch (err) {
+      console.error('Failed to sync to database:', err.message);
+    }
   }
 }
 
@@ -266,6 +274,11 @@ const inputFile = process.argv[2] || 'scraped-data.json';
 const outputFile = process.argv[3] || 'player-stats.json';
 
 const processor = new CricketDataProcessor(inputFile);
-processor.save(outputFile);
+processor.save(outputFile).then(() => {
+  // Exit gracefully to avoid libuv assertion on Windows
+}).catch(err => {
+  console.error('Processor failed:', err);
+  process.exitCode = 1;
+});
 
 module.exports = CricketDataProcessor;

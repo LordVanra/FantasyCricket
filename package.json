@@ -1,0 +1,12 @@
+{
+  "name": "fantasy-cricket-backend",
+  "version": "0.1",
+  "description": "Backend for Fantasy Cricket",
+  "main": "datascrape.js",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.7",
+    "axios": "^1.6.7",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.5"
+  }
+}
