@@ -1,0 +1,376 @@
+:root {
+    --bg-dark: #0f172a;
+    --bg-card: #1e293b;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent: #10b981;
+    /* Emerald */
+    --accent-hover: #059669;
+    --danger: #ef4444;
+    --border: #334155;
+    --nav-bg: #0f172a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+.view {
+    padding: 2rem 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--nav-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.accent {
+    color: var(--accent);
+}
+
+/* Auth Card */
+.auth-view {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.auth-card {
+    background-color: var(--bg-card);
+    padding: 2.5rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    border: 1px solid var(--border);
+}
+
+.auth-card h2 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+#toggle-auth {
+    color: var(--accent);
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: white;
+    font-family: inherit;
+}
+
+.form-group input:focus {
+    outline: 2px solid var(--accent);
+    border-color: transparent;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.btn-primary {
+    background-color: var(--accent);
+    color: white;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+}
+
+.btn-accent {
+    background-color: #0ea5e9;
+    /* Light blue */
+    color: white;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+}
+
+.full-width {
+    width: 100%;
+}
+
+/* Dashboard Layout */
+.main-layout {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+@media (max-width: 900px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.card-header input {
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    color: white;
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+/* Player List */
+.player-list {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.player-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.player-info h4 {
+    font-size: 1rem;
+}
+
+.player-info p {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.mini-list {
+    margin: 1rem 0;
+    min-height: 50px;
+}
+
+.squad-player {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-dark);
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.btn-xs {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+.taken {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.taken::after {
+    content: " (Taken)";
+    font-size: 0.7rem;
+    color: var(--danger);
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.tab-link {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+}
+
+.tab-link.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+/* Trade Layout */
+.trade-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+@media (max-width: 800px) {
+    .trade-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.trade-proposal select {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    color: white;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+/* Reordering Buttons */
+.reorder-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.btn-arrow {
+    padding: 2px 4px;
+    background: var(--border);
+    color: white;
+    font-size: 0.6rem;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.btn-arrow:hover {
+    background: var(--accent);
+}
+
+/* Notifications ... */
+#notification-area {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 1000;
+}
+
+.notification {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    color: white;
+    font-size: 0.875rem;
+    animation: slideIn 0.3s ease-out;
+}
+
+.notification.success {
+    border-left: 4px solid var(--accent);
+}
+
+.notification.error {
+    border-left: 4px solid var(--danger);
+}
+
+.notification.info {
+    border-left: 4px solid #0ea5e9;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.badge {
+    background: var(--accent);
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 99px;
+    font-weight: 600;
+}
