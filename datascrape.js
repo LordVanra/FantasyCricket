@@ -14,7 +14,13 @@ class CricketScraper {
   }
 
   cleanText(text) {
-    return text.replace(/[^a-zA-Z0-9\s\.\(\)]/g, '').replace(/\s+/g, ' ').trim();
+    return text.replace(/[^a-zA-Z0-9\s\.\(\)\/]/g, '').replace(/\s+/g, ' ').trim();
+  }
+
+  cleanPlayerName(name) {
+    let cleaned = name.replace(/\(c\)/g, '').trim();
+    cleaned = cleaned.replace(/\s+/g, ' ');
+    return cleaned;
   }
 
   async scrapeMatch(matchUrl) {
@@ -24,45 +30,56 @@ class CricketScraper {
 
       const battingData = [];
       const bowlingData = [];
-      const fieldingData = [];
-
-      let isBowlingTable = false;
+      const fieldingData = {};
 
       $('table').each((i, table) => {
-        const tableText = $(table).text();
-
-        if (tableText.includes('BOWLING') || tableText.includes('Bowling')) {
-          isBowlingTable = true;
-        } else if (tableText.includes('BATTING') || tableText.includes('Batting')) {
-          isBowlingTable = false;
-        }
+        const tableHtml = $(table).html();
+        const isBattingTable = tableHtml.includes('BATTING') || tableHtml.includes('Batting');
+        const isBowlingTable = tableHtml.includes('BOWLING') || tableHtml.includes('Bowling');
 
         $(table).find('tbody tr').each((j, row) => {
           const cells = $(row).find('td');
 
-          if (!isBowlingTable && cells.length >= 7 && cells.length <= 8) {
-            const player = this.cleanText($(cells[0]).text());
+          if (isBattingTable && cells.length >= 7 && cells.length <= 8) {
+            const playerCell = $(cells[0]);
+            const playerName = this.cleanPlayerName(this.cleanText(playerCell.text()));
+            const playerUrl = playerCell.find('a').attr('href');
             const dismissal = this.cleanText($(cells[1]).text());
             const runs = this.cleanText($(cells[2]).text());
             const balls = this.cleanText($(cells[3]).text());
 
-            if (player && runs && !isNaN(parseInt(runs))) {
+            if (playerName && runs && !isNaN(parseInt(runs))) {
               const mins = cells.length === 8 ? this.cleanText($(cells[4]).text()) : '';
               const fours = cells.length === 8 ? this.cleanText($(cells[5]).text()) : this.cleanText($(cells[4]).text());
               const sixes = cells.length === 8 ? this.cleanText($(cells[6]).text()) : this.cleanText($(cells[5]).text());
               const sr = cells.length === 8 ? this.cleanText($(cells[7]).text()) : this.cleanText($(cells[6]).text());
 
-              battingData.push({ player, runs, balls, mins, fours, sixes, sr });
+              battingData.push({ player: playerName, url: playerUrl, runs, balls, mins, fours, sixes, sr });
 
+              const dismissalCell = $(cells[1]);
               if (dismissal.toLowerCase().includes('c ')) {
-                const catchMatch = dismissal.match(/c\s+([^\s]+)/i);
+                // Improved regex to handle initials and spaces better
+                const catchMatch = dismissal.match(/c\s+([A-Z][A-Za-z\s\.]+?)(?:\s+b\s+|$)/i);
                 if (catchMatch) {
-                  const fielder = this.cleanText(catchMatch[1]);
-                  const existing = fieldingData.find(f => f.player === fielder);
-                  if (existing) {
-                    existing.catches = (parseInt(existing.catches) || 0) + 1;
-                  } else {
-                    fieldingData.push({ player: fielder, catches: 1, runouts: 0, stumpings: 0 });
+                  const fielderName = this.cleanText(catchMatch[1]);
+                  if (fielderName.length > 1 && !['sub', 'Sub'].includes(fielderName)) {
+                    // Try to find the link for the fielder
+                    let fielderUrl = '';
+                    dismissalCell.find('a').each((k, link) => {
+                      const linkText = this.cleanText($(link).text()).toLowerCase();
+                      const searchName = fielderName.toLowerCase();
+                      if (linkText.includes(searchName) || searchName.includes(linkText)) {
+                        fielderUrl = $(link).attr('href');
+                      }
+                    });
+
+                    if (!fieldingData[fielderName]) {
+                      fieldingData[fielderName] = { catches: 0, runouts: 0, stumpings: 0, url: fielderUrl };
+                    }
+                    fieldingData[fielderName].catches += 1;
+                    if (fielderUrl && !fieldingData[fielderName].url) {
+                      fieldingData[fielderName].url = fielderUrl;
+                    }
                   }
                 }
               }
@@ -70,50 +87,78 @@ class CricketScraper {
               if (dismissal.toLowerCase().includes('run out')) {
                 const roMatch = dismissal.match(/run out\s+\(([^)]+)\)/i);
                 if (roMatch) {
-                  const fielders = roMatch[1].split('/');
+                  const fieldersText = roMatch[1];
+                  const fielders = fieldersText.split('/');
                   fielders.forEach(f => {
-                    const fielder = this.cleanText(f);
-                    const existing = fieldingData.find(fd => fd.player === fielder);
-                    if (existing) {
-                      existing.runouts = (parseInt(existing.runouts) || 0) + 1;
-                    } else {
-                      fieldingData.push({ player: fielder, catches: 0, runouts: 1, stumpings: 0 });
+                    const fielderName = this.cleanText(f);
+                    if (fielderName.length > 1 && !['sub', 'Sub'].includes(fielderName)) {
+                      let fielderUrl = '';
+                      dismissalCell.find('a').each((k, link) => {
+                        const linkText = this.cleanText($(link).text()).toLowerCase();
+                        const searchName = fielderName.toLowerCase();
+                        if (linkText.includes(searchName) || searchName.includes(linkText)) {
+                          fielderUrl = $(link).attr('href');
+                        }
+                      });
+
+                      if (!fieldingData[fielderName]) {
+                        fieldingData[fielderName] = { catches: 0, runouts: 0, stumpings: 0, url: fielderUrl };
+                      }
+                      fieldingData[fielderName].runouts += 1;
+                      if (fielderUrl && !fieldingData[fielderName].url) {
+                        fieldingData[fielderName].url = fielderUrl;
+                      }
                     }
                   });
                 }
               }
 
               if (dismissal.toLowerCase().includes('st ')) {
-                const stMatch = dismissal.match(/st\s+([^\s]+)/i);
+                const stMatch = dismissal.match(/st\s+([A-Z][A-Za-z\s\.]+?)(?:\s+b\s+|$)/i);
                 if (stMatch) {
-                  const keeper = this.cleanText(stMatch[1]);
-                  const existing = fieldingData.find(f => f.player === keeper);
-                  if (existing) {
-                    existing.stumpings = (parseInt(existing.stumpings) || 0) + 1;
-                  } else {
-                    fieldingData.push({ player: keeper, catches: 0, runouts: 0, stumpings: 1 });
+                  const keeperName = this.cleanText(stMatch[1]);
+                  if (keeperName.length > 1 && !['sub', 'Sub'].includes(keeperName)) {
+                    let keeperUrl = '';
+                    dismissalCell.find('a').each((k, link) => {
+                      const linkText = this.cleanText($(link).text()).toLowerCase();
+                      const searchName = keeperName.toLowerCase();
+                      if (linkText.includes(searchName) || searchName.includes(linkText)) {
+                        keeperUrl = $(link).attr('href');
+                      }
+                    });
+
+                    if (!fieldingData[keeperName]) {
+                      fieldingData[keeperName] = { catches: 0, runouts: 0, stumpings: 0, url: keeperUrl };
+                    }
+                    fieldingData[keeperName].stumpings += 1;
+                    if (keeperUrl && !fieldingData[keeperName].url) {
+                      fieldingData[keeperName].url = keeperUrl;
+                    }
                   }
                 }
               }
             }
           }
 
-          if (cells.length >= 5) {
-            const col0 = this.cleanText($(cells[0]).text());
-            const col1 = this.cleanText($(cells[1]).text());
-            const col2 = this.cleanText($(cells[2]).text());
-            const col3 = this.cleanText($(cells[3]).text());
-            const col4 = this.cleanText($(cells[4]).text());
-            const col5 = cells.length > 5 ? this.cleanText($(cells[5]).text()) : '';
+          if (isBowlingTable && cells.length >= 5) {
+            const bowlerCell = $(cells[0]);
+            const bowlerName = this.cleanPlayerName(this.cleanText(bowlerCell.text()));
+            const bowlerUrl = bowlerCell.find('a').attr('href');
+            const overs = this.cleanText($(cells[1]).text());
+            const maidens = this.cleanText($(cells[2]).text());
+            const runs = this.cleanText($(cells[3]).text());
+            const wickets = this.cleanText($(cells[4]).text());
+            const economy = cells.length > 5 ? this.cleanText($(cells[5]).text()) : '';
 
-            if (col0 && col1 && col3 && col4 && (col1.includes('.') || col1.match(/^\d+$/))) {
+            if (bowlerName && overs && (overs.includes('.') || overs.match(/^\d+$/))) {
               bowlingData.push({
-                bowler: col0,
-                overs: col1,
-                maidens: col2,
-                runs: col3,
-                wickets: col4,
-                economy: col5,
+                bowler: bowlerName,
+                url: bowlerUrl,
+                overs: overs,
+                maidens: maidens,
+                runs: runs,
+                wickets: wickets,
+                economy: economy,
                 dots: cells.length >= 7 ? this.cleanText($(cells[6]).text()) : '',
                 fours: cells.length >= 8 ? this.cleanText($(cells[7]).text()) : '',
                 sixes: cells.length >= 9 ? this.cleanText($(cells[8]).text()) : '',
@@ -125,7 +170,15 @@ class CricketScraper {
         });
       });
 
-      return { batting: battingData, bowling: bowlingData, fielding: fieldingData };
+      const fielding = Object.keys(fieldingData).map(name => ({
+        player: name,
+        url: fieldingData[name].url,
+        catches: fieldingData[name].catches,
+        runouts: fieldingData[name].runouts,
+        stumpings: fieldingData[name].stumpings
+      }));
+
+      return { batting: battingData, bowling: bowlingData, fielding: fielding };
     } catch (error) {
       return { batting: [], bowling: [], fielding: [] };
     }

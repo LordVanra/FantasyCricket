@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Tournament Stats</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-box input {
+            padding: 15px 25px;
+            width: 100%;
+            max-width: 600px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: box-shadow 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .leaderboards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .leaderboard-box {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .leaderboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .leaderboard-content {
+            padding: 20px;
+        }
+
+        .top-player {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-player:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .player-rank {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            width: 40px;
+        }
+
+        .player-info {
+            flex: 1;
+        }
+
+        .player-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1rem;
+            margin-bottom: 3px;
+        }
+
+        .player-stat {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .all-players-section {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+
+        .all-players-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .all-players-content {
+            padding: 20px;
+        }
+
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .player-item {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 8px;
+        }
+
+        .player-item:hover {
+            background: #f8f9fa;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 50px auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .close {
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .close:hover {
+            transform: scale(1.2);
+        }
+
+        .modal-body {
+            padding: 30px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .stats-section {
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            font-size: 1.3rem;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .match-by-match {
+            margin-top: 15px;
+        }
+
+        .match-card {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #764ba2;
+        }
+
+        .match-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .match-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .match-stat {
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Cricket Tournament Player Stats</h1>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search players...">
+        </div>
+
+        <div class="leaderboards">
+            <div class="leaderboard-box">
+                <div class="leaderboard-header">Top Batsmen</div>
+                <div class="leaderboard-content" id="topBatsmen"></div>
+            </div>
+
+            <div class="leaderboard-box">
+                <div class="leaderboard-header">Top Bowlers</div>
+                <div class="leaderboard-content" id="topBowlers"></div>
+            </div>
+        </div>
+
+        <div class="all-players-section">
+            <div class="all-players-header">All Players</div>
+            <div class="all-players-content">
+                <div class="players-grid" id="allPlayers"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="playerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalPlayerName"></h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        let allPlayers = {};
+
+        async function loadData() {
+            try {
+                const response = await fetch('stats.json');
+                const data = await response.json();
+                allPlayers = data.players;
+                displayLeaderboards(allPlayers);
+                displayAllPlayers(allPlayers);
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        function displayLeaderboards(players) {
+            const playerList = Object.values(players);
+
+            const topBatsmen = playerList
+                .filter(p => p.totalRuns > 0)
+                .sort((a, b) => b.totalRuns - a.totalRuns)
+                .slice(0, 5);
+
+            const topBowlers = playerList
+                .filter(p => p.totalOvers > 0)
+                .map(p => ({
+                    ...p,
+                    economy: p.totalOvers > 0 ? (p.totalRunsConceded / p.totalOvers).toFixed(2) : 999
+                }))
+                .sort((a, b) => b.totalWickets - a.totalWickets || parseFloat(a.economy) - parseFloat(b.economy))
+                .slice(0, 5);
+
+            const batsmenContainer = document.getElementById('topBatsmen');
+            batsmenContainer.innerHTML = '';
+            topBatsmen.forEach((player, index) => {
+                const avgSR = player.totalBalls > 0 ? ((player.totalRuns / player.totalBalls) * 100).toFixed(2) : 0;
+                const div = document.createElement('div');
+                div.className = 'top-player';
+                div.onclick = () => showPlayerModal(player.name);
+                div.innerHTML = `
+          <div class="player-rank">${index + 1}</div>
+          <div class="player-info">
+            <div class="player-name">${player.name}</div>
+            <div class="player-stat">${player.totalRuns} runs | ${player.totalSixes} sixes | SR: ${avgSR}</div>
+          </div>
+        `;
+                batsmenContainer.appendChild(div);
+            });
+
+            const bowlersContainer = document.getElementById('topBowlers');
+            bowlersContainer.innerHTML = '';
+            topBowlers.forEach((player, index) => {
+                const div = document.createElement('div');
+                div.className = 'top-player';
+                div.onclick = () => showPlayerModal(player.name);
+                div.innerHTML = `
+          <div class="player-rank">${index + 1}</div>
+          <div class="player-info">
+            <div class="player-name">${player.name}</div>
+            <div class="player-stat">${player.totalWickets} wickets | ${player.economy} economy</div>
+          </div>
+        `;
+                bowlersContainer.appendChild(div);
+            });
+        }
+
+        function displayAllPlayers(players) {
+            const container = document.getElementById('allPlayers');
+            container.innerHTML = '';
+
+            const playerList = Object.values(players).sort((a, b) => a.name.localeCompare(b.name));
+
+            playerList.forEach(player => {
+                const div = document.createElement('div');
+                div.className = 'player-item';
+                div.setAttribute('data-player-name', player.name.toLowerCase());
+                div.onclick = () => showPlayerModal(player.name);
+                div.textContent = player.name;
+                container.appendChild(div);
+            });
+        }
+
+        document.getElementById('searchInput').addEventListener('input', function (e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            const playerItems = document.querySelectorAll('.player-item');
+
+            playerItems.forEach(item => {
+                const playerName = item.getAttribute('data-player-name');
+                if (playerName.includes(searchTerm) || searchTerm === '') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        function showPlayerModal(playerName) {
+            const player = allPlayers[playerName];
+            if (!player) return;
+
+            document.getElementById('modalPlayerName').textContent = playerName;
+
+            let html = '';
+
+            if (player.batting.length > 0) {
+                const avgSR = player.totalBalls > 0 ? ((player.totalRuns / player.totalBalls) * 100).toFixed(2) : 0;
+
+                html += `
+          <div class="stats-section">
+            <div class="section-header">Batting Summary</div>
+            <div class="stat-grid">
+              <div class="stat-card">
+                <div class="stat-label">Total Runs</div>
+                <div class="stat-value">${player.totalRuns}</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Balls Faced</div>
+                <div class="stat-value">${player.totalBalls}</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Fours</div>
+                <div class="stat-value">${player.totalFours}</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Sixes</div>
+                <div class="stat-value">${player.totalSixes}</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Strike Rate</div>
+                <div class="stat-value">${avgSR}</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Innings</div>
+                <div class="stat-value">${player.batting.length}</div>
+              </div>
+            </div>
+            
+            <div class="match-by-match">
+              <h3>Match by Match</h3>
+        `;
+
+                player.batting.forEach((inning, idx) => {
+                    html += `
+            <div class="match-card">
+              <div class="match-title">Match ${idx + 1}</div>
+              <div class="match-stats">
+                <div class="match-stat"><strong>Runs:</strong> ${inning.runs}</div>
+                <div class="match-stat"><strong>Balls:</strong> ${inning.balls}</div>
+                <div class="match-stat"><strong>4s:</strong> ${inning.fours}</div>
+                <div class="match-stat"><strong>6s:</strong> ${inning.sixes}</div>
+                <div class="match-stat"><strong>SR:</strong> ${inning.sr}</div>
+              </div>
+            </div>
+          `;
+                });
+
+                html += `</div></div>`;
+            }
+
+            if (player.bowling.length > 0) {
+                const avgEconomy = player.totalOvers > 0 ? (player.totalRunsConceded / player.totalOvers).toFixed(2) : 0;
+
+                html += `
+          <div class="stats-section">
+            <div class="section-header">Bowling Summary</div>
+            <div class="stat-grid">
+              <div class="stat-card">
+                <div class="stat-label">Wickets</div>
+                <div class="stat-value">${player.totalWickets}</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Runs Conceded</div>
+                <div class="stat-value">${player.totalRunsConceded}</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Overs</div>
+                <div class="stat-value">${player.totalOvers.toFixed(1)}</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Economy</div>
+                <div class="stat-value">${avgEconomy}</div>
+              </div>
+            </div>
+            
+            <div class="match-by-match">
+              <h3>Match by Match</h3>
+        `;
+
+                player.bowling.forEach((spell, idx) => {
+                    html += `
+            <div class="match-card">
+              <div class="match-title">Match ${idx + 1}</div>
+              <div class="match-stats">
+                <div class="match-stat"><strong>Overs:</strong> ${spell.overs}</div>
+                <div class="match-stat"><strong>Wickets:</strong> ${spell.wickets}</div>
+                <div class="match-stat"><strong>Runs:</strong> ${spell.runs}</div>
+                <div class="match-stat"><strong>Economy:</strong> ${spell.economy}</div>
+              </div>
+            </div>
+          `;
+                });
+
+                html += `</div></div>`;
+            }
+
+            if (player.fielding.length > 0) {
+                const totalCatches = player.fielding.reduce((sum, f) => sum + parseInt(f.catches), 0);
+                const totalRunouts = player.fielding.reduce((sum, f) => sum + parseInt(f.runouts), 0);
+                const totalStumpings = player.fielding.reduce((sum, f) => sum + parseInt(f.stumpings), 0);
+
+                if (totalCatches + totalRunouts + totalStumpings > 0) {
+                    html += `
+            <div class="stats-section">
+              <div class="section-header">Fielding Summary</div>
+              <div class="stat-grid">
+                <div class="stat-card">
+                  <div class="stat-label">Catches</div>
+                  <div class="stat-value">${totalCatches}</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-label">Run Outs</div>
+                  <div class="stat-value">${totalRunouts}</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-label">Stumpings</div>
+                  <div class="stat-value">${totalStumpings}</div>
+                </div>
+              </div>
+            </div>
+          `;
+                }
+            }
+
+            document.getElementById('modalBody').innerHTML = html;
+            document.getElementById('playerModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('playerModal').style.display = 'none';
+        }
+
+        window.onclick = function (event) {
+            const modal = document.getElementById('playerModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        loadData();
+    </script>
+</body>
+
+</html>
