@@ -1,0 +1,7986 @@
+{
+  "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138",
+  "matches": [
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/netherlands-vs-united-states-of-america-21st-match-group-a-1512739/full-scorecard",
+      "batting": [
+        {
+          "player": "Monank Patel (c)",
+          "runs": "36",
+          "balls": "22",
+          "mins": "40",
+          "fours": "3",
+          "sixes": "1",
+          "sr": "163.63"
+        },
+        {
+          "player": "Shayan Jahangir",
+          "runs": "20",
+          "balls": "14",
+          "mins": "13",
+          "fours": "1",
+          "sixes": "2",
+          "sr": "142.85"
+        },
+        {
+          "player": "Saiteja Mukkamalla",
+          "runs": "79",
+          "balls": "51",
+          "mins": "63",
+          "fours": "5",
+          "sixes": "4",
+          "sr": "154.90"
+        },
+        {
+          "player": "Sanjay Krishnamurthi",
+          "runs": "1",
+          "balls": "2",
+          "mins": "8",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Shubham Ranjane",
+          "runs": "48",
+          "balls": "24",
+          "mins": "45",
+          "fours": "3",
+          "sixes": "2",
+          "sr": "200.00"
+        },
+        {
+          "player": "Milind Kumar",
+          "runs": "3",
+          "balls": "4",
+          "mins": "9",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "75.00"
+        },
+        {
+          "player": "Harmeet Singh",
+          "runs": "1",
+          "balls": "2",
+          "mins": "4",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Mohammad Mohsin",
+          "runs": "1",
+          "balls": "1",
+          "mins": "4",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Michael Levitt",
+          "runs": "3",
+          "balls": "7",
+          "mins": "7",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "42.85"
+        },
+        {
+          "player": "Max ODowd",
+          "runs": "13",
+          "balls": "11",
+          "mins": "23",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "118.18"
+        },
+        {
+          "player": "Bas de Leede",
+          "runs": "23",
+          "balls": "17",
+          "mins": "26",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "135.29"
+        },
+        {
+          "player": "Colin Ackermann",
+          "runs": "0",
+          "balls": "1",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Scott Edwards (c)",
+          "runs": "20",
+          "balls": "14",
+          "mins": "21",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "142.85"
+        },
+        {
+          "player": "Zach LionCachet",
+          "runs": "6",
+          "balls": "5",
+          "mins": "5",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "120.00"
+        },
+        {
+          "player": "Roelof van der Merwe",
+          "runs": "10",
+          "balls": "11",
+          "mins": "18",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "90.90"
+        },
+        {
+          "player": "Logan van Beek",
+          "runs": "2",
+          "balls": "5",
+          "mins": "12",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "40.00"
+        },
+        {
+          "player": "Aryan Dutt",
+          "runs": "9",
+          "balls": "7",
+          "mins": "8",
+          "fours": "0",
+          "sixes": "1",
+          "sr": "128.57"
+        },
+        {
+          "player": "Kyle Klein",
+          "runs": "6",
+          "balls": "11",
+          "mins": "15",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "54.54"
+        },
+        {
+          "player": "Fred Klaassen",
+          "runs": "3",
+          "balls": "6",
+          "mins": "8",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Aryan Dutt",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "24",
+          "wickets": "0",
+          "economy": "12.00",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Logan van Beek",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "28",
+          "wickets": "1",
+          "economy": "7.00",
+          "dots": "9",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Kyle Klein",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "35",
+          "wickets": "1",
+          "economy": "8.75",
+          "dots": "9",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Fred Klaassen",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "32",
+          "wickets": "1",
+          "economy": "10.66",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Roelof van der Merwe",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "36",
+          "wickets": "0",
+          "economy": "12.00",
+          "dots": "0",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Bas de Leede",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "37",
+          "wickets": "3",
+          "economy": "9.25",
+          "dots": "6",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Ali Khan",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "18",
+          "wickets": "0",
+          "economy": "9.00",
+          "dots": "6",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Nosthush Kenjige",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "20",
+          "wickets": "1",
+          "economy": "6.66",
+          "dots": "7",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Harmeet Singh",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "21",
+          "wickets": "4",
+          "economy": "5.25",
+          "dots": "10",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Shadley van Schalkwyk",
+          "overs": "2.5",
+          "maidens": "0",
+          "runs": "21",
+          "wickets": "3",
+          "economy": "7.41",
+          "dots": "7",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mohammad Mohsin",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "19",
+          "wickets": "2",
+          "economy": "6.33",
+          "dots": "5",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Shubham Ranjane",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "4",
+          "wickets": "0",
+          "economy": "4.00",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Edwards",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Ackermann",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "van",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Milind",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Patel",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Ranjane",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/canada-vs-united-arab-emirates-20th-match-group-d-1512738/full-scorecard",
+      "batting": [
+        {
+          "player": "Yuvraj Samra",
+          "runs": "5",
+          "balls": "5",
+          "mins": "15",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Dilpreet Bajwa (c)",
+          "runs": "11",
+          "balls": "11",
+          "mins": "10",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Navneet Dhaliwal",
+          "runs": "34",
+          "balls": "28",
+          "mins": "54",
+          "fours": "4",
+          "sixes": "0",
+          "sr": "121.42"
+        },
+        {
+          "player": "Nicholas Kirton",
+          "runs": "4",
+          "balls": "6",
+          "mins": "12",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "66.66"
+        },
+        {
+          "player": "Harsh Thaker",
+          "runs": "50",
+          "balls": "41",
+          "mins": "60",
+          "fours": "2",
+          "sixes": "3",
+          "sr": "121.95"
+        },
+        {
+          "player": "Shreyas Movva",
+          "runs": "21",
+          "balls": "21",
+          "mins": "30",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Jaskaran Singh",
+          "runs": "4",
+          "balls": "4",
+          "mins": "15",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Saad Bin Zafar",
+          "runs": "5",
+          "balls": "3",
+          "mins": "4",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "166.66"
+        },
+        {
+          "player": "Dilon Heyliger",
+          "runs": "6",
+          "balls": "1",
+          "mins": "2",
+          "fours": "0",
+          "sixes": "1",
+          "sr": "600.00"
+        },
+        {
+          "player": "Aryansh Sharma",
+          "runs": "74",
+          "balls": "53",
+          "mins": "97",
+          "fours": "6",
+          "sixes": "3",
+          "sr": "139.62"
+        },
+        {
+          "player": "Muhammad Waseem (c)",
+          "runs": "4",
+          "balls": "8",
+          "mins": "12",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Alishan Sharafu",
+          "runs": "5",
+          "balls": "13",
+          "mins": "21",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "38.46"
+        },
+        {
+          "player": "Mayank Kumar",
+          "runs": "4",
+          "balls": "6",
+          "mins": "11",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "66.66"
+        },
+        {
+          "player": "Harshit Kaushik",
+          "runs": "5",
+          "balls": "9",
+          "mins": "6",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "55.55"
+        },
+        {
+          "player": "Sohaib Khan",
+          "runs": "51",
+          "balls": "29",
+          "mins": "41",
+          "fours": "4",
+          "sixes": "4",
+          "sr": "175.86"
+        },
+        {
+          "player": "Muhammad Arfan",
+          "runs": "1",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Haider Ali",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "29",
+          "wickets": "0",
+          "economy": "7.25",
+          "dots": "8",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Junaid Siddique",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "35",
+          "wickets": "5",
+          "economy": "8.75",
+          "dots": "11",
+          "fours": "6",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Muhammad Arfan",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "33",
+          "wickets": "0",
+          "economy": "8.25",
+          "dots": "5",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Muhammad Jawadullah",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "16",
+          "wickets": "1",
+          "economy": "4.00",
+          "dots": "10",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Muhammad Farooq",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "19",
+          "wickets": "0",
+          "economy": "9.50",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Harshit Kaushik",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "17",
+          "wickets": "0",
+          "economy": "8.50",
+          "dots": "3",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Kaleem Sana",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "29",
+          "wickets": "1",
+          "economy": "7.25",
+          "dots": "8",
+          "fours": "0",
+          "sixes": "1",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Dilon Heyliger",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "33",
+          "wickets": "0",
+          "economy": "8.25",
+          "dots": "11",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Jaskaran Singh",
+          "overs": "3.4",
+          "maidens": "0",
+          "runs": "45",
+          "wickets": "1",
+          "economy": "12.27",
+          "dots": "9",
+          "fours": "3",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Saad Bin Zafar",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "14",
+          "wickets": "3",
+          "economy": "3.50",
+          "dots": "12",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Ansh Patel",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "25",
+          "wickets": "0",
+          "economy": "8.33",
+          "dots": "8",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Dilpreet Bajwa",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "4",
+          "wickets": "0",
+          "economy": "4.00",
+          "dots": "5",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Sharafu",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Muhammad",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Muhammad Arfan",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "Sharma",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Kumar",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Haider",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Dhaliwal",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Kirton",
+          "catches": 3,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Kaleem",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/australia-vs-zimbabwe-19th-match-group-b-1512737/full-scorecard",
+      "batting": [
+        {
+          "player": "Brian Bennett",
+          "runs": "64",
+          "balls": "56",
+          "mins": "99",
+          "fours": "7",
+          "sixes": "0",
+          "sr": "114.28"
+        },
+        {
+          "player": "Tadiwanashe Marumani",
+          "runs": "35",
+          "balls": "21",
+          "mins": "36",
+          "fours": "7",
+          "sixes": "0",
+          "sr": "166.66"
+        },
+        {
+          "player": "Ryan Burl",
+          "runs": "35",
+          "balls": "30",
+          "mins": "45",
+          "fours": "4",
+          "sixes": "0",
+          "sr": "116.66"
+        },
+        {
+          "player": "Sikandar Raza (c)",
+          "runs": "25",
+          "balls": "13",
+          "mins": "18",
+          "fours": "2",
+          "sixes": "1",
+          "sr": "192.30"
+        },
+        {
+          "player": "Josh Inglis",
+          "runs": "8",
+          "balls": "4",
+          "mins": "5",
+          "fours": "0",
+          "sixes": "1",
+          "sr": "200.00"
+        },
+        {
+          "player": "Travis Head (c)",
+          "runs": "17",
+          "balls": "15",
+          "mins": "23",
+          "fours": "3",
+          "sixes": "0",
+          "sr": "113.33"
+        },
+        {
+          "player": "Cameron Green",
+          "runs": "0",
+          "balls": "2",
+          "mins": "7",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Tim David",
+          "runs": "0",
+          "balls": "2",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Glenn Maxwell",
+          "runs": "31",
+          "balls": "32",
+          "mins": "59",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "96.87"
+        },
+        {
+          "player": "Matt Renshaw",
+          "runs": "65",
+          "balls": "44",
+          "mins": "74",
+          "fours": "5",
+          "sixes": "1",
+          "sr": "147.72"
+        },
+        {
+          "player": "Marcus Stoinis",
+          "runs": "6",
+          "balls": "4",
+          "mins": "6",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "150.00"
+        },
+        {
+          "player": "Ben Dwarshuis",
+          "runs": "6",
+          "balls": "7",
+          "mins": "9",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "85.71"
+        },
+        {
+          "player": "Nathan Ellis",
+          "runs": "7",
+          "balls": "4",
+          "mins": "11",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "175.00"
+        },
+        {
+          "player": "Adam Zampa",
+          "runs": "2",
+          "balls": "2",
+          "mins": "2",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Matthew Kuhnemann",
+          "runs": "0",
+          "balls": "1",
+          "mins": "2",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Ben Dwarshuis",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "40",
+          "wickets": "0",
+          "economy": "10.00",
+          "dots": "8",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Marcus Stoinis",
+          "overs": "2.5",
+          "maidens": "0",
+          "runs": "17",
+          "wickets": "1",
+          "economy": "6.00",
+          "dots": "9",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Glenn Maxwell",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "14",
+          "wickets": "0",
+          "economy": "14.00",
+          "dots": "1",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Matthew Kuhnemann",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "24",
+          "wickets": "0",
+          "economy": "8.00",
+          "dots": "5",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Nathan Ellis",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "34",
+          "wickets": "0",
+          "economy": "8.50",
+          "dots": "9",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Adam Zampa",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "31",
+          "wickets": "0",
+          "economy": "7.75",
+          "dots": "6",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Cameron Green",
+          "overs": "1.1",
+          "maidens": "0",
+          "runs": "6",
+          "wickets": "1",
+          "economy": "5.14",
+          "dots": "4",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Sikandar Raza",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "17",
+          "wickets": "0",
+          "economy": "8.50",
+          "dots": "3",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Blessing Muzarabani",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "17",
+          "wickets": "4",
+          "economy": "4.25",
+          "dots": "13",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Brad Evans",
+          "overs": "3.3",
+          "maidens": "0",
+          "runs": "23",
+          "wickets": "3",
+          "economy": "6.57",
+          "dots": "9",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Dion Myers",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "9",
+          "wickets": "0",
+          "economy": "9.00",
+          "dots": "2",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Graeme Cremer",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "33",
+          "wickets": "0",
+          "economy": "8.25",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Wellington Masakadza",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "36",
+          "wickets": "1",
+          "economy": "9.00",
+          "dots": "6",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Ryan Burl",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "9",
+          "wickets": "1",
+          "economy": "9.00",
+          "dots": "1",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Inglis",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "sub",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Musekiwa",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Marumani",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Cremer",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Burl",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Munyonga",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Evans",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/netherlands-vs-pakistan-1st-match-group-a-1512719/full-scorecard",
+      "batting": [
+        {
+          "player": "Michael Levitt",
+          "runs": "24",
+          "balls": "15",
+          "mins": "23",
+          "fours": "3",
+          "sixes": "1",
+          "sr": "160.00"
+        },
+        {
+          "player": "Max ODowd",
+          "runs": "5",
+          "balls": "7",
+          "mins": "16",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "71.42"
+        },
+        {
+          "player": "Bas de Leede",
+          "runs": "30",
+          "balls": "25",
+          "mins": "42",
+          "fours": "4",
+          "sixes": "0",
+          "sr": "120.00"
+        },
+        {
+          "player": "Colin Ackermann",
+          "runs": "20",
+          "balls": "14",
+          "mins": "16",
+          "fours": "4",
+          "sixes": "0",
+          "sr": "142.85"
+        },
+        {
+          "player": "Scott Edwards (c)",
+          "runs": "37",
+          "balls": "29",
+          "mins": "32",
+          "fours": "3",
+          "sixes": "1",
+          "sr": "127.58"
+        },
+        {
+          "player": "Zach LionCachet",
+          "runs": "9",
+          "balls": "8",
+          "mins": "18",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "112.50"
+        },
+        {
+          "player": "Logan van Beek",
+          "runs": "0",
+          "balls": "1",
+          "mins": "2",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Aryan Dutt",
+          "runs": "13",
+          "balls": "8",
+          "mins": "15",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "162.50"
+        },
+        {
+          "player": "Roelof van der Merwe",
+          "runs": "4",
+          "balls": "9",
+          "mins": "8",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "44.44"
+        },
+        {
+          "player": "Kyle Klein",
+          "runs": "2",
+          "balls": "2",
+          "mins": "6",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Paul van Meekeren",
+          "runs": "0",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Sahibzada Farhan",
+          "runs": "47",
+          "balls": "31",
+          "mins": "53",
+          "fours": "4",
+          "sixes": "2",
+          "sr": "151.61"
+        },
+        {
+          "player": "Saim Ayub",
+          "runs": "24",
+          "balls": "13",
+          "mins": "11",
+          "fours": "4",
+          "sixes": "1",
+          "sr": "184.61"
+        },
+        {
+          "player": "Salman Agha (c)",
+          "runs": "12",
+          "balls": "8",
+          "mins": "11",
+          "fours": "3",
+          "sixes": "0",
+          "sr": "150.00"
+        },
+        {
+          "player": "Babar Azam",
+          "runs": "15",
+          "balls": "18",
+          "mins": "37",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "83.33"
+        },
+        {
+          "player": "Usman Khan",
+          "runs": "0",
+          "balls": "2",
+          "mins": "2",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Shadab Khan",
+          "runs": "8",
+          "balls": "12",
+          "mins": "26",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "66.66"
+        },
+        {
+          "player": "Mohammad Nawaz",
+          "runs": "6",
+          "balls": "13",
+          "mins": "19",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "46.15"
+        },
+        {
+          "player": "Faheem Ashraf",
+          "runs": "29",
+          "balls": "11",
+          "mins": "19",
+          "fours": "2",
+          "sixes": "3",
+          "sr": "263.63"
+        },
+        {
+          "player": "Shaheen Shah Afridi",
+          "runs": "5",
+          "balls": "9",
+          "mins": "16",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "55.55"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Shaheen Shah Afridi",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "28",
+          "wickets": "1",
+          "economy": "9.33",
+          "dots": "8",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Salman Mirza",
+          "overs": "3.5",
+          "maidens": "0",
+          "runs": "24",
+          "wickets": "3",
+          "economy": "6.26",
+          "dots": "14",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mohammad Nawaz",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "38",
+          "wickets": "2",
+          "economy": "9.50",
+          "dots": "6",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Shadab Khan",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "26",
+          "wickets": "0",
+          "economy": "6.50",
+          "dots": "6",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Abrar Ahmed",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "23",
+          "wickets": "2",
+          "economy": "5.75",
+          "dots": "8",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Saim Ayub",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "7",
+          "wickets": "2",
+          "economy": "7.00",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Aryan Dutt",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "33",
+          "wickets": "2",
+          "economy": "8.25",
+          "dots": "11",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Logan van Beek",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "46",
+          "wickets": "1",
+          "economy": "11.50",
+          "dots": "11",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Kyle Klein",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "23",
+          "wickets": "1",
+          "economy": "7.66",
+          "dots": "7",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Roelof van der Merwe",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "13",
+          "wickets": "1",
+          "economy": "4.33",
+          "dots": "5",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Paul van Meekeren",
+          "overs": "4",
+          "maidens": "1",
+          "runs": "20",
+          "wickets": "2",
+          "economy": "5.00",
+          "dots": "12",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Bas de Leede",
+          "overs": "1.3",
+          "maidens": "0",
+          "runs": "13",
+          "wickets": "0",
+          "economy": "8.66",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Shaheen",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Usman",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Babar",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Sahibzada",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Mohammad",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Salman",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "van",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Levitt",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Klein",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Edwards",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/scotland-vs-west-indies-2nd-match-group-c-1512720/full-scorecard",
+      "batting": [
+        {
+          "player": "Brandon King",
+          "runs": "35",
+          "balls": "30",
+          "mins": "42",
+          "fours": "4",
+          "sixes": "1",
+          "sr": "116.66"
+        },
+        {
+          "player": "Shai Hope (c)",
+          "runs": "19",
+          "balls": "22",
+          "mins": "36",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "86.36"
+        },
+        {
+          "player": "Shimron Hetmyer",
+          "runs": "64",
+          "balls": "36",
+          "mins": "54",
+          "fours": "2",
+          "sixes": "6",
+          "sr": "177.77"
+        },
+        {
+          "player": "Rovman Powell",
+          "runs": "24",
+          "balls": "14",
+          "mins": "32",
+          "fours": "1",
+          "sixes": "2",
+          "sr": "171.42"
+        },
+        {
+          "player": "Sherfane Rutherford",
+          "runs": "26",
+          "balls": "13",
+          "mins": "19",
+          "fours": "4",
+          "sixes": "1",
+          "sr": "200.00"
+        },
+        {
+          "player": "Romario Shepherd",
+          "runs": "6",
+          "balls": "3",
+          "mins": "6",
+          "fours": "0",
+          "sixes": "1",
+          "sr": "200.00"
+        },
+        {
+          "player": "Matthew Forde",
+          "runs": "1",
+          "balls": "2",
+          "mins": "4",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "George Munsey",
+          "runs": "19",
+          "balls": "15",
+          "mins": "28",
+          "fours": "3",
+          "sixes": "0",
+          "sr": "126.66"
+        },
+        {
+          "player": "Michael Jones",
+          "runs": "1",
+          "balls": "5",
+          "mins": "7",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "20.00"
+        },
+        {
+          "player": "Brandon McMullen",
+          "runs": "14",
+          "balls": "12",
+          "mins": "15",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "116.66"
+        },
+        {
+          "player": "Richie Berrington (c)",
+          "runs": "42",
+          "balls": "24",
+          "mins": "45",
+          "fours": "3",
+          "sixes": "2",
+          "sr": "175.00"
+        },
+        {
+          "player": "Tom Bruce",
+          "runs": "35",
+          "balls": "28",
+          "mins": "44",
+          "fours": "1",
+          "sixes": "2",
+          "sr": "125.00"
+        },
+        {
+          "player": "Matthew Cross",
+          "runs": "11",
+          "balls": "11",
+          "mins": "17",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Mark Watt",
+          "runs": "15",
+          "balls": "12",
+          "mins": "26",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "125.00"
+        },
+        {
+          "player": "Michael Leask",
+          "runs": "0",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Oliver Davidson",
+          "runs": "0",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Safyaan Sharif",
+          "runs": "0",
+          "balls": "2",
+          "mins": "2",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Brad Currie",
+          "runs": "2",
+          "balls": "3",
+          "mins": "9",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "66.66"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Brandon McMullen",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "7",
+          "wickets": "0",
+          "economy": "7.00",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Brad Currie",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "23",
+          "wickets": "2",
+          "economy": "5.75",
+          "dots": "13",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mark Watt",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "38",
+          "wickets": "0",
+          "economy": "9.50",
+          "dots": "8",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Safyaan Sharif",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "46",
+          "wickets": "1",
+          "economy": "11.50",
+          "dots": "7",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Oliver Davidson",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "23",
+          "wickets": "1",
+          "economy": "7.66",
+          "dots": "5",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Michael Leask",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "42",
+          "wickets": "1",
+          "economy": "10.50",
+          "dots": "8",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Matthew Forde",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "15",
+          "wickets": "0",
+          "economy": "7.50",
+          "dots": "5",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Jason Holder",
+          "overs": "3.5",
+          "maidens": "0",
+          "runs": "30",
+          "wickets": "3",
+          "economy": "7.82",
+          "dots": "9",
+          "fours": "3",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Romario Shepherd",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "20",
+          "wickets": "5",
+          "economy": "6.66",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Shamar Joseph",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "26",
+          "wickets": "1",
+          "economy": "6.50",
+          "dots": "11",
+          "fours": "2",
+          "sixes": "1",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Gudakesh Motie",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "29",
+          "wickets": "1",
+          "economy": "7.25",
+          "dots": "7",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Akeal Hosein",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "26",
+          "wickets": "0",
+          "economy": "13.00",
+          "dots": "1",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Munsey",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "McMullen",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Jones",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Hetmyer",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Rutherford",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Joseph",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Shepherd",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Powell",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Holder",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/india-vs-united-states-of-america-3rd-match-group-a-1512721/full-scorecard",
+      "batting": [
+        {
+          "player": "Ishan Kishan",
+          "runs": "20",
+          "balls": "16",
+          "mins": "27",
+          "fours": "1",
+          "sixes": "2",
+          "sr": "125.00"
+        },
+        {
+          "player": "Abhishek Sharma",
+          "runs": "0",
+          "balls": "1",
+          "mins": "8",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Tilak Varma",
+          "runs": "25",
+          "balls": "16",
+          "mins": "25",
+          "fours": "3",
+          "sixes": "1",
+          "sr": "156.25"
+        },
+        {
+          "player": "Suryakumar Yadav (c)",
+          "runs": "84",
+          "balls": "49",
+          "mins": "77",
+          "fours": "10",
+          "sixes": "4",
+          "sr": "171.42"
+        },
+        {
+          "player": "Shivam Dube",
+          "runs": "0",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Rinku Singh",
+          "runs": "6",
+          "balls": "14",
+          "mins": "20",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "42.85"
+        },
+        {
+          "player": "Hardik Pandya",
+          "runs": "5",
+          "balls": "6",
+          "mins": "4",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "83.33"
+        },
+        {
+          "player": "Axar Patel",
+          "runs": "14",
+          "balls": "11",
+          "mins": "23",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "127.27"
+        },
+        {
+          "player": "Arshdeep Singh",
+          "runs": "4",
+          "balls": "6",
+          "mins": "16",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "66.66"
+        },
+        {
+          "player": "Varun Chakravarthy",
+          "runs": "0",
+          "balls": "0",
+          "mins": "6",
+          "fours": "0",
+          "sixes": "0",
+          "sr": ""
+        },
+        {
+          "player": "Andries Gous",
+          "runs": "6",
+          "balls": "9",
+          "mins": "8",
+          "fours": "0",
+          "sixes": "1",
+          "sr": "66.66"
+        },
+        {
+          "player": "Saiteja Mukkamalla",
+          "runs": "2",
+          "balls": "7",
+          "mins": "17",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "28.57"
+        },
+        {
+          "player": "Monank Patel (c)",
+          "runs": "0",
+          "balls": "2",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Milind Kumar",
+          "runs": "34",
+          "balls": "34",
+          "mins": "44",
+          "fours": "3",
+          "sixes": "1",
+          "sr": "100.00"
+        },
+        {
+          "player": "Sanjay Krishnamurthi",
+          "runs": "37",
+          "balls": "31",
+          "mins": "55",
+          "fours": "1",
+          "sixes": "2",
+          "sr": "119.35"
+        },
+        {
+          "player": "Shubham Ranjane",
+          "runs": "37",
+          "balls": "22",
+          "mins": "40",
+          "fours": "2",
+          "sixes": "3",
+          "sr": "168.18"
+        },
+        {
+          "player": "Harmeet Singh",
+          "runs": "0",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Mohammad Mohsin",
+          "runs": "8",
+          "balls": "9",
+          "mins": "10",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "88.88"
+        },
+        {
+          "player": "Shadley van Schalkwyk",
+          "runs": "2",
+          "balls": "5",
+          "mins": "11",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "40.00"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Saurabh Netravalkar",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "65",
+          "wickets": "0",
+          "economy": "16.25",
+          "dots": "6",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Ali Khan",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "13",
+          "wickets": "1",
+          "economy": "6.50",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Shadley van Schalkwyk",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "25",
+          "wickets": "4",
+          "economy": "6.25",
+          "dots": "12",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mohammad Mohsin",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "16",
+          "wickets": "1",
+          "economy": "4.00",
+          "dots": "13",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Shubham Ranjane",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "16",
+          "wickets": "0",
+          "economy": "8.00",
+          "dots": "6",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Harmeet Singh",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "26",
+          "wickets": "2",
+          "economy": "6.50",
+          "dots": "11",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Arshdeep Singh",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "18",
+          "wickets": "2",
+          "economy": "4.50",
+          "dots": "13",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mohammed Siraj",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "29",
+          "wickets": "3",
+          "economy": "7.25",
+          "dots": "13",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Varun Chakravarthy",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "24",
+          "wickets": "1",
+          "economy": "6.00",
+          "dots": "10",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Axar Patel",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "24",
+          "wickets": "2",
+          "economy": "6.00",
+          "dots": "10",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Hardik Pandya",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "34",
+          "wickets": "0",
+          "economy": "8.50",
+          "dots": "8",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Milind",
+          "catches": 3,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Krishnamurthi",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Patel",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Netravalkar",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Mukkamalla",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Mohammad",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Mohammad MohsinGous",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "Tilak",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Varun",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Dube",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Ishan",
+          "catches": 0,
+          "runouts": 0,
+          "stumpings": 1
+        },
+        {
+          "player": "Singh",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Mohammed",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/afghanistan-vs-new-zealand-4th-match-group-d-1512722/full-scorecard",
+      "batting": [
+        {
+          "player": "Rahmanullah Gurbaz",
+          "runs": "27",
+          "balls": "22",
+          "mins": "32",
+          "fours": "2",
+          "sixes": "1",
+          "sr": "122.72"
+        },
+        {
+          "player": "Ibrahim Zadran",
+          "runs": "10",
+          "balls": "12",
+          "mins": "25",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "83.33"
+        },
+        {
+          "player": "Gulbadin Naib",
+          "runs": "63",
+          "balls": "35",
+          "mins": "59",
+          "fours": "3",
+          "sixes": "4",
+          "sr": "180.00"
+        },
+        {
+          "player": "Sediqullah Atal",
+          "runs": "29",
+          "balls": "24",
+          "mins": "40",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "120.83"
+        },
+        {
+          "player": "Darwish Rasooli",
+          "runs": "20",
+          "balls": "13",
+          "mins": "18",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "153.84"
+        },
+        {
+          "player": "Azmatullah Omarzai",
+          "runs": "14",
+          "balls": "7",
+          "mins": "13",
+          "fours": "0",
+          "sixes": "2",
+          "sr": "200.00"
+        },
+        {
+          "player": "Mohammad Nabi",
+          "runs": "10",
+          "balls": "7",
+          "mins": "8",
+          "fours": "0",
+          "sixes": "1",
+          "sr": "142.85"
+        },
+        {
+          "player": "Tim Seifert",
+          "runs": "65",
+          "balls": "42",
+          "mins": "62",
+          "fours": "7",
+          "sixes": "3",
+          "sr": "154.76"
+        },
+        {
+          "player": "Finn Allen",
+          "runs": "1",
+          "balls": "2",
+          "mins": "7",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Rachin Ravindra",
+          "runs": "0",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Glenn Phillips",
+          "runs": "42",
+          "balls": "25",
+          "mins": "37",
+          "fours": "7",
+          "sixes": "1",
+          "sr": "168.00"
+        },
+        {
+          "player": "Mark Chapman",
+          "runs": "28",
+          "balls": "17",
+          "mins": "30",
+          "fours": "2",
+          "sixes": "1",
+          "sr": "164.70"
+        },
+        {
+          "player": "Daryl Mitchell",
+          "runs": "25",
+          "balls": "14",
+          "mins": "28",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "178.57"
+        },
+        {
+          "player": "Mitchell Santner (c)",
+          "runs": "17",
+          "balls": "8",
+          "mins": "12",
+          "fours": "2",
+          "sixes": "1",
+          "sr": "212.50"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Matt Henry",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "27",
+          "wickets": "1",
+          "economy": "6.75",
+          "dots": "11",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Jacob Duffy",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "30",
+          "wickets": "1",
+          "economy": "10.00",
+          "dots": "8",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Lockie Ferguson",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "40",
+          "wickets": "2",
+          "economy": "10.00",
+          "dots": "6",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "James Neesham",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "33",
+          "wickets": "0",
+          "economy": "11.00",
+          "dots": "3",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mitchell Santner",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "23",
+          "wickets": "0",
+          "economy": "5.75",
+          "dots": "6",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Glenn Phillips",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "12",
+          "wickets": "0",
+          "economy": "12.00",
+          "dots": "0",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Rachin Ravindra",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "14",
+          "wickets": "1",
+          "economy": "14.00",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Fazalhaq Farooqi",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "25",
+          "wickets": "0",
+          "economy": "12.50",
+          "dots": "5",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mujeeb Ur Rahman",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "31",
+          "wickets": "2",
+          "economy": "7.75",
+          "dots": "11",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Azmatullah Omarzai",
+          "overs": "3.5",
+          "maidens": "0",
+          "runs": "40",
+          "wickets": "1",
+          "economy": "10.43",
+          "dots": "7",
+          "fours": "2",
+          "sixes": "1",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Rashid Khan",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "36",
+          "wickets": "1",
+          "economy": "9.00",
+          "dots": "5",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Ziaur Rahman",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "33",
+          "wickets": "0",
+          "economy": "11.00",
+          "dots": "4",
+          "fours": "1",
+          "sixes": "1",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mohammad Nabi",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "18",
+          "wickets": "1",
+          "economy": "18.00",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Phillips",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Seifert",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "NeeshamFerguson",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "Azmatullah",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Rashid",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/england-vs-nepal-5th-match-group-c-1512723/full-scorecard",
+      "batting": [
+        {
+          "player": "Phil Salt",
+          "runs": "1",
+          "balls": "2",
+          "mins": "7",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Jos Buttler",
+          "runs": "26",
+          "balls": "17",
+          "mins": "23",
+          "fours": "5",
+          "sixes": "0",
+          "sr": "152.94"
+        },
+        {
+          "player": "Jacob Bethell",
+          "runs": "55",
+          "balls": "35",
+          "mins": "59",
+          "fours": "4",
+          "sixes": "4",
+          "sr": "157.14"
+        },
+        {
+          "player": "Tom Banton",
+          "runs": "2",
+          "balls": "5",
+          "mins": "10",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "40.00"
+        },
+        {
+          "player": "Harry Brook (c)",
+          "runs": "53",
+          "balls": "32",
+          "mins": "53",
+          "fours": "4",
+          "sixes": "3",
+          "sr": "165.62"
+        },
+        {
+          "player": "Sam Curran",
+          "runs": "2",
+          "balls": "8",
+          "mins": "7",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "25.00"
+        },
+        {
+          "player": "Will Jacks",
+          "runs": "39",
+          "balls": "18",
+          "mins": "21",
+          "fours": "1",
+          "sixes": "4",
+          "sr": "216.66"
+        },
+        {
+          "player": "Jofra Archer",
+          "runs": "1",
+          "balls": "3",
+          "mins": "8",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "33.33"
+        },
+        {
+          "player": "Liam Dawson",
+          "runs": "0",
+          "balls": "0",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": ""
+        },
+        {
+          "player": "Kushal Bhurtel",
+          "runs": "29",
+          "balls": "17",
+          "mins": "25",
+          "fours": "4",
+          "sixes": "1",
+          "sr": "170.58"
+        },
+        {
+          "player": "Aasif Sheikh",
+          "runs": "7",
+          "balls": "9",
+          "mins": "17",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "77.77"
+        },
+        {
+          "player": "Rohit Paudel (c)",
+          "runs": "39",
+          "balls": "34",
+          "mins": "52",
+          "fours": "2",
+          "sixes": "2",
+          "sr": "114.70"
+        },
+        {
+          "player": "Dipendra Singh Airee",
+          "runs": "44",
+          "balls": "29",
+          "mins": "36",
+          "fours": "6",
+          "sixes": "1",
+          "sr": "151.72"
+        },
+        {
+          "player": "Aarif Sheikh",
+          "runs": "10",
+          "balls": "8",
+          "mins": "16",
+          "fours": "0",
+          "sixes": "1",
+          "sr": "125.00"
+        },
+        {
+          "player": "Lokesh Bam",
+          "runs": "39",
+          "balls": "20",
+          "mins": "31",
+          "fours": "4",
+          "sixes": "2",
+          "sr": "195.00"
+        },
+        {
+          "player": "Gulsan Jha",
+          "runs": "1",
+          "balls": "2",
+          "mins": "13",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Karan KC",
+          "runs": "1",
+          "balls": "1",
+          "mins": "8",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Karan KC",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "35",
+          "wickets": "0",
+          "economy": "11.66",
+          "dots": "6",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Sher Malla",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "35",
+          "wickets": "1",
+          "economy": "11.66",
+          "dots": "5",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Dipendra Singh Airee",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "23",
+          "wickets": "2",
+          "economy": "7.66",
+          "dots": "7",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Nandan Yadav",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "25",
+          "wickets": "2",
+          "economy": "8.33",
+          "dots": "8",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Sandeep Lamichhane",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "25",
+          "wickets": "1",
+          "economy": "6.25",
+          "dots": "11",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Kushal Bhurtel",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "40",
+          "wickets": "0",
+          "economy": "10.00",
+          "dots": "9",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Luke Wood",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "31",
+          "wickets": "1",
+          "economy": "10.33",
+          "dots": "8",
+          "fours": "3",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Jofra Archer",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "42",
+          "wickets": "1",
+          "economy": "10.50",
+          "dots": "9",
+          "fours": "3",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Liam Dawson",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "21",
+          "wickets": "2",
+          "economy": "5.25",
+          "dots": "10",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Will Jacks",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "17",
+          "wickets": "1",
+          "economy": "8.50",
+          "dots": "3",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Adil Rashid",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "42",
+          "wickets": "0",
+          "economy": "14.00",
+          "dots": "3",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Sam Curran",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "27",
+          "wickets": "1",
+          "economy": "6.75",
+          "dots": "8",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Lamichhane",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Aasif",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Lokesh",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Malla",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Aasif SheikhKaran KC",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "b",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Wood",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Salt",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Banton",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Buttler",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/sri-lanka-vs-ireland-6th-match-group-b-1512724/full-scorecard",
+      "batting": [
+        {
+          "player": "Pathum Nissanka",
+          "runs": "24",
+          "balls": "23",
+          "mins": "41",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "104.34"
+        },
+        {
+          "player": "Kamil Mishara",
+          "runs": "14",
+          "balls": "11",
+          "mins": "19",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "127.27"
+        },
+        {
+          "player": "Kusal Mendis",
+          "runs": "56",
+          "balls": "43",
+          "mins": "92",
+          "fours": "5",
+          "sixes": "0",
+          "sr": "130.23"
+        },
+        {
+          "player": "Pavan Rathnayake",
+          "runs": "5",
+          "balls": "9",
+          "mins": "7",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "55.55"
+        },
+        {
+          "player": "Dunith Wellalage",
+          "runs": "10",
+          "balls": "13",
+          "mins": "18",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "76.92"
+        },
+        {
+          "player": "Kamindu Mendis",
+          "runs": "44",
+          "balls": "19",
+          "mins": "29",
+          "fours": "4",
+          "sixes": "2",
+          "sr": "231.57"
+        },
+        {
+          "player": "Dasun Shanaka (c)",
+          "runs": "0",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Wanindu Hasaranga",
+          "runs": "1",
+          "balls": "2",
+          "mins": "7",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Paul Stirling (c)",
+          "runs": "6",
+          "balls": "13",
+          "mins": "17",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "46.15"
+        },
+        {
+          "player": "Ross Adair",
+          "runs": "34",
+          "balls": "23",
+          "mins": "40",
+          "fours": "5",
+          "sixes": "1",
+          "sr": "147.82"
+        },
+        {
+          "player": "Harry Tector",
+          "runs": "40",
+          "balls": "34",
+          "mins": "62",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "117.64"
+        },
+        {
+          "player": "Lorcan Tucker",
+          "runs": "21",
+          "balls": "18",
+          "mins": "34",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "116.66"
+        },
+        {
+          "player": "Curtis Campher",
+          "runs": "13",
+          "balls": "11",
+          "mins": "17",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "118.18"
+        },
+        {
+          "player": "Ben Calitz",
+          "runs": "4",
+          "balls": "4",
+          "mins": "5",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Gareth Delany",
+          "runs": "0",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "George Dockrell",
+          "runs": "9",
+          "balls": "7",
+          "mins": "16",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "128.57"
+        },
+        {
+          "player": "Mark Adair",
+          "runs": "10",
+          "balls": "6",
+          "mins": "7",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "166.66"
+        },
+        {
+          "player": "Barry McCarthy",
+          "runs": "0",
+          "balls": "0",
+          "mins": "5",
+          "fours": "0",
+          "sixes": "0",
+          "sr": ""
+        },
+        {
+          "player": "Matthew Humphreys",
+          "runs": "0",
+          "balls": "2",
+          "mins": "2",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Matthew Humphreys",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "44",
+          "wickets": "0",
+          "economy": "11.00",
+          "dots": "4",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mark Adair",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "33",
+          "wickets": "1",
+          "economy": "8.25",
+          "dots": "8",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Barry McCarthy",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "40",
+          "wickets": "2",
+          "economy": "13.33",
+          "dots": "8",
+          "fours": "5",
+          "sixes": "1",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "George Dockrell",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "17",
+          "wickets": "2",
+          "economy": "4.25",
+          "dots": "9",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Gareth Delany",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "24",
+          "wickets": "1",
+          "economy": "6.00",
+          "dots": "6",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Harry Tector",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "5",
+          "wickets": "0",
+          "economy": "5.00",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Dushmantha Chameera",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "25",
+          "wickets": "1",
+          "economy": "8.33",
+          "dots": "8",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Maheesh Theekshana",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "23",
+          "wickets": "3",
+          "economy": "5.75",
+          "dots": "10",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Matheesha Pathirana",
+          "overs": "2.5",
+          "maidens": "0",
+          "runs": "26",
+          "wickets": "2",
+          "economy": "9.17",
+          "dots": "6",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Dunith Wellalage",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "28",
+          "wickets": "1",
+          "economy": "7.00",
+          "dots": "9",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Wanindu Hasaranga",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "25",
+          "wickets": "3",
+          "economy": "6.25",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Dasun Shanaka",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "12",
+          "wickets": "0",
+          "economy": "6.00",
+          "dots": "3",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Stirling",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "McCarthy",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Dockrell",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "MR",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Rathnayake",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Mishara",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Shanaka",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "BKG",
+          "catches": 0,
+          "runouts": 0,
+          "stumpings": 1
+        },
+        {
+          "player": "Chameera",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "PHKD",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/italy-vs-scotland-7th-match-group-c-1512725/full-scorecard",
+      "batting": [
+        {
+          "player": "George Munsey",
+          "runs": "84",
+          "balls": "54",
+          "mins": "60",
+          "fours": "13",
+          "sixes": "2",
+          "sr": "155.55"
+        },
+        {
+          "player": "Michael Jones",
+          "runs": "37",
+          "balls": "30",
+          "mins": "66",
+          "fours": "1",
+          "sixes": "2",
+          "sr": "123.33"
+        },
+        {
+          "player": "Brandon McMullen",
+          "runs": "41",
+          "balls": "18",
+          "mins": "30",
+          "fours": "0",
+          "sixes": "4",
+          "sr": "227.77"
+        },
+        {
+          "player": "Richie Berrington (c)",
+          "runs": "15",
+          "balls": "11",
+          "mins": "17",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "136.36"
+        },
+        {
+          "player": "Tom Bruce",
+          "runs": "1",
+          "balls": "2",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Michael Leask",
+          "runs": "22",
+          "balls": "5",
+          "mins": "4",
+          "fours": "2",
+          "sixes": "2",
+          "sr": "440.00"
+        },
+        {
+          "player": "Justin Mosca",
+          "runs": "0",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Anthony Mosca",
+          "runs": "13",
+          "balls": "12",
+          "mins": "22",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "108.33"
+        },
+        {
+          "player": "JJ Smuts",
+          "runs": "22",
+          "balls": "11",
+          "mins": "13",
+          "fours": "2",
+          "sixes": "2",
+          "sr": "200.00"
+        },
+        {
+          "player": "Harry Manenti",
+          "runs": "37",
+          "balls": "25",
+          "mins": "38",
+          "fours": "1",
+          "sixes": "3",
+          "sr": "148.00"
+        },
+        {
+          "player": "Ben Manenti",
+          "runs": "52",
+          "balls": "31",
+          "mins": "38",
+          "fours": "5",
+          "sixes": "1",
+          "sr": "167.74"
+        },
+        {
+          "player": "Grant Stewart",
+          "runs": "2",
+          "balls": "6",
+          "mins": "10",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "33.33"
+        },
+        {
+          "player": "GianPiero Meade",
+          "runs": "0",
+          "balls": "2",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Crishan Kalugamage",
+          "runs": "3",
+          "balls": "6",
+          "mins": "10",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Thomas Draca",
+          "runs": "2",
+          "balls": "5",
+          "mins": "4",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "40.00"
+        },
+        {
+          "player": "Ali Hasan",
+          "runs": "0",
+          "balls": "2",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Ali Hasan",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "21",
+          "wickets": "1",
+          "economy": "5.25",
+          "dots": "11",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Grant Stewart",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "44",
+          "wickets": "1",
+          "economy": "11.00",
+          "dots": "6",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Thomas Draca",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "37",
+          "wickets": "1",
+          "economy": "18.50",
+          "dots": "3",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "JJ Smuts",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "38",
+          "wickets": "1",
+          "economy": "9.50",
+          "dots": "8",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Ben Manenti",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "20",
+          "wickets": "0",
+          "economy": "10.00",
+          "dots": "7",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Harry Manenti",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "15",
+          "wickets": "0",
+          "economy": "15.00",
+          "dots": "1",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Crishan Kalugamage",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "32",
+          "wickets": "0",
+          "economy": "10.66",
+          "dots": "2",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Michael Leask",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "17",
+          "wickets": "4",
+          "economy": "4.25",
+          "dots": "14",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Brad Currie",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "12",
+          "wickets": "1",
+          "economy": "6.00",
+          "dots": "6",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Brad Wheal",
+          "overs": "2.4",
+          "maidens": "0",
+          "runs": "29",
+          "wickets": "1",
+          "economy": "10.87",
+          "dots": "5",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mark Watt",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "24",
+          "wickets": "2",
+          "economy": "6.00",
+          "dots": "11",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Oliver Davidson",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "39",
+          "wickets": "1",
+          "economy": "13.00",
+          "dots": "4",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Brandon McMullen",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "13",
+          "wickets": "0",
+          "economy": "13.00",
+          "dots": "1",
+          "fours": "0",
+          "sixes": "1",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "HJ",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Meade",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "J",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Munsey",
+          "catches": 4,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Berrington",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Jones",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "McMullen",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/oman-vs-zimbabwe-8th-match-group-b-1512726/full-scorecard",
+      "batting": [
+        {
+          "player": "Aamir Kaleem",
+          "runs": "5",
+          "balls": "7",
+          "mins": "19",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "71.42"
+        },
+        {
+          "player": "Jatinder Singh (c)",
+          "runs": "5",
+          "balls": "5",
+          "mins": "6",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Hammad Mirza",
+          "runs": "0",
+          "balls": "5",
+          "mins": "5",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Karan Sonavale",
+          "runs": "0",
+          "balls": "6",
+          "mins": "8",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Wasim Ali",
+          "runs": "3",
+          "balls": "8",
+          "mins": "18",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "37.50"
+        },
+        {
+          "player": "Sufyan Mehmood",
+          "runs": "25",
+          "balls": "39",
+          "mins": "54",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "64.10"
+        },
+        {
+          "player": "Vinayak Shukla",
+          "runs": "28",
+          "balls": "21",
+          "mins": "29",
+          "fours": "4",
+          "sixes": "0",
+          "sr": "133.33"
+        },
+        {
+          "player": "Jiten Ramanandi",
+          "runs": "1",
+          "balls": "3",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "33.33"
+        },
+        {
+          "player": "Nadeem Khan",
+          "runs": "20",
+          "balls": "18",
+          "mins": "25",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "111.11"
+        },
+        {
+          "player": "Shakeel Ahmed",
+          "runs": "4",
+          "balls": "5",
+          "mins": "14",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "80.00"
+        },
+        {
+          "player": "Shah Faisal",
+          "runs": "5",
+          "balls": "2",
+          "mins": "4",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "250.00"
+        },
+        {
+          "player": "Brian Bennett",
+          "runs": "48",
+          "balls": "36",
+          "mins": "61",
+          "fours": "7",
+          "sixes": "0",
+          "sr": "133.33"
+        },
+        {
+          "player": "Tadiwanashe Marumani",
+          "runs": "21",
+          "balls": "11",
+          "mins": "15",
+          "fours": "5",
+          "sixes": "0",
+          "sr": "190.90"
+        },
+        {
+          "player": "Dion Myers",
+          "runs": "0",
+          "balls": "2",
+          "mins": "2",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Brendan Taylor",
+          "runs": "31",
+          "balls": "30",
+          "mins": "39",
+          "fours": "3",
+          "sixes": "0",
+          "sr": "103.33"
+        },
+        {
+          "player": "Sikandar Raza (c)",
+          "runs": "5",
+          "balls": "2",
+          "mins": "3",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "250.00"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Richard Ngarava",
+          "overs": "4",
+          "maidens": "1",
+          "runs": "17",
+          "wickets": "3",
+          "economy": "4.25",
+          "dots": "16",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Blessing Muzarabani",
+          "overs": "4",
+          "maidens": "1",
+          "runs": "16",
+          "wickets": "3",
+          "economy": "4.00",
+          "dots": "15",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Brad Evans",
+          "overs": "3.5",
+          "maidens": "0",
+          "runs": "18",
+          "wickets": "3",
+          "economy": "4.69",
+          "dots": "12",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Sikandar Raza",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "17",
+          "wickets": "1",
+          "economy": "4.25",
+          "dots": "8",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Brian Bennett",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "18",
+          "wickets": "0",
+          "economy": "9.00",
+          "dots": "6",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Wellington Masakadza",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "12",
+          "wickets": "0",
+          "economy": "6.00",
+          "dots": "5",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Shah Faisal",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "13",
+          "wickets": "0",
+          "economy": "6.50",
+          "dots": "8",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Shakeel Ahmed",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "27",
+          "wickets": "0",
+          "economy": "13.50",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Sufyan Mehmood",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "12",
+          "wickets": "2",
+          "economy": "4.00",
+          "dots": "9",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Nadeem Khan",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "28",
+          "wickets": "0",
+          "economy": "9.33",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Wasim Ali",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "10",
+          "wickets": "0",
+          "economy": "5.00",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Jiten Ramanandi",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "9",
+          "wickets": "0",
+          "economy": "9.00",
+          "dots": "0",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Karan Sonavale",
+          "overs": "0.3",
+          "maidens": "0",
+          "runs": "6",
+          "wickets": "0",
+          "economy": "12.00",
+          "dots": "0",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Myers",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Taylor",
+          "catches": 3,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Musekiwa",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Bennett",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Wasim",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Shukla",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/canada-vs-south-africa-9th-match-group-d-1512727/full-scorecard",
+      "batting": [
+        {
+          "player": "Aiden Markram (c)",
+          "runs": "59",
+          "balls": "32",
+          "mins": "51",
+          "fours": "10",
+          "sixes": "1",
+          "sr": "184.37"
+        },
+        {
+          "player": "Quinton de Kock",
+          "runs": "25",
+          "balls": "22",
+          "mins": "32",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "113.63"
+        },
+        {
+          "player": "Ryan Rickelton",
+          "runs": "33",
+          "balls": "21",
+          "mins": "29",
+          "fours": "3",
+          "sixes": "1",
+          "sr": "157.14"
+        },
+        {
+          "player": "Dewald Brevis",
+          "runs": "6",
+          "balls": "6",
+          "mins": "15",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "David Miller",
+          "runs": "39",
+          "balls": "23",
+          "mins": "37",
+          "fours": "1",
+          "sixes": "3",
+          "sr": "169.56"
+        },
+        {
+          "player": "Tristan Stubbs",
+          "runs": "34",
+          "balls": "19",
+          "mins": "34",
+          "fours": "2",
+          "sixes": "2",
+          "sr": "178.94"
+        },
+        {
+          "player": "Dilpreet Bajwa (c)",
+          "runs": "0",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Yuvraj Samra",
+          "runs": "12",
+          "balls": "8",
+          "mins": "13",
+          "fours": "3",
+          "sixes": "0",
+          "sr": "150.00"
+        },
+        {
+          "player": "Navneet Dhaliwal",
+          "runs": "64",
+          "balls": "49",
+          "mins": "99",
+          "fours": "7",
+          "sixes": "1",
+          "sr": "130.61"
+        },
+        {
+          "player": "Nicholas Kirton",
+          "runs": "4",
+          "balls": "3",
+          "mins": "2",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "133.33"
+        },
+        {
+          "player": "Shreyas Movva",
+          "runs": "9",
+          "balls": "11",
+          "mins": "13",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "81.81"
+        },
+        {
+          "player": "Harsh Thaker",
+          "runs": "33",
+          "balls": "29",
+          "mins": "42",
+          "fours": "2",
+          "sixes": "2",
+          "sr": "113.79"
+        },
+        {
+          "player": "Saad Bin Zafar",
+          "runs": "11",
+          "balls": "12",
+          "mins": "14",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "91.66"
+        },
+        {
+          "player": "Jaskaran Singh",
+          "runs": "0",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Dilon Heyliger",
+          "runs": "4",
+          "balls": "5",
+          "mins": "12",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "80.00"
+        },
+        {
+          "player": "Kaleem Sana",
+          "runs": "5",
+          "balls": "3",
+          "mins": "3",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "166.66"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Kaleem Sana",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "38",
+          "wickets": "0",
+          "economy": "9.50",
+          "dots": "6",
+          "fours": "4",
+          "sixes": "2",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Dilon Heyliger",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "13",
+          "wickets": "0",
+          "economy": "13.00",
+          "dots": "3",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Saad Bin Zafar",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "38",
+          "wickets": "0",
+          "economy": "12.66",
+          "dots": "3",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Dilpreet Bajwa",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "40",
+          "wickets": "1",
+          "economy": "10.00",
+          "dots": "4",
+          "fours": "1",
+          "sixes": "1",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Jaskaran Singh",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "49",
+          "wickets": "0",
+          "economy": "12.25",
+          "dots": "8",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Ansh Patel",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "31",
+          "wickets": "3",
+          "economy": "7.75",
+          "dots": "8",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Lungi Ngidi",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "31",
+          "wickets": "4",
+          "economy": "7.75",
+          "dots": "14",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Marco Jansen",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "30",
+          "wickets": "2",
+          "economy": "7.50",
+          "dots": "12",
+          "fours": "3",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Kagiso Rabada",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "40",
+          "wickets": "1",
+          "economy": "10.00",
+          "dots": "9",
+          "fours": "2",
+          "sixes": "2",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Corbin Bosch",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "27",
+          "wickets": "1",
+          "economy": "6.75",
+          "dots": "8",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Keshav Maharaj",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "28",
+          "wickets": "0",
+          "economy": "7.00",
+          "dots": "6",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Heyliger",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Thaker",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Kirton",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "de",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Stubbs",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Rabada",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Bosch",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/namibia-vs-netherlands-10th-match-group-a-1512728/full-scorecard",
+      "batting": [
+        {
+          "player": "Louren Steenkamp",
+          "runs": "6",
+          "balls": "6",
+          "mins": "11",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Jan Frylinck",
+          "runs": "30",
+          "balls": "26",
+          "mins": "42",
+          "fours": "3",
+          "sixes": "1",
+          "sr": "115.38"
+        },
+        {
+          "player": "Jan Nicol LoftieEaton",
+          "runs": "42",
+          "balls": "38",
+          "mins": "57",
+          "fours": "1",
+          "sixes": "2",
+          "sr": "110.52"
+        },
+        {
+          "player": "Gerhard Erasmus (c)",
+          "runs": "18",
+          "balls": "9",
+          "mins": "14",
+          "fours": "2",
+          "sixes": "1",
+          "sr": "200.00"
+        },
+        {
+          "player": "JJ Smit",
+          "runs": "22",
+          "balls": "15",
+          "mins": "21",
+          "fours": "1",
+          "sixes": "2",
+          "sr": "146.66"
+        },
+        {
+          "player": "Zane Green",
+          "runs": "9",
+          "balls": "10",
+          "mins": "17",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "90.00"
+        },
+        {
+          "player": "Ruben Trumpelmann",
+          "runs": "9",
+          "balls": "8",
+          "mins": "11",
+          "fours": "0",
+          "sixes": "1",
+          "sr": "112.50"
+        },
+        {
+          "player": "Dylan Leicher",
+          "runs": "6",
+          "balls": "5",
+          "mins": "10",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "120.00"
+        },
+        {
+          "player": "Willem Myburgh",
+          "runs": "4",
+          "balls": "4",
+          "mins": "6",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Michael Levitt",
+          "runs": "28",
+          "balls": "15",
+          "mins": "23",
+          "fours": "1",
+          "sixes": "3",
+          "sr": "186.66"
+        },
+        {
+          "player": "Max ODowd",
+          "runs": "7",
+          "balls": "8",
+          "mins": "9",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "87.50"
+        },
+        {
+          "player": "Bas de Leede",
+          "runs": "72",
+          "balls": "48",
+          "mins": "65",
+          "fours": "5",
+          "sixes": "4",
+          "sr": "150.00"
+        },
+        {
+          "player": "Colin Ackermann",
+          "runs": "32",
+          "balls": "28",
+          "mins": "30",
+          "fours": "0",
+          "sixes": "1",
+          "sr": "114.28"
+        },
+        {
+          "player": "Scott Edwards (c)",
+          "runs": "18",
+          "balls": "9",
+          "mins": "16",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "200.00"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Aryan Dutt",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "13",
+          "wickets": "1",
+          "economy": "4.33",
+          "dots": "6",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Logan van Beek",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "13",
+          "wickets": "2",
+          "economy": "4.33",
+          "dots": "10",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Fred Klaassen",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "25",
+          "wickets": "1",
+          "economy": "8.33",
+          "dots": "8",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Colin Ackermann",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "33",
+          "wickets": "0",
+          "economy": "11.00",
+          "dots": "6",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Zach LionCachet",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "6",
+          "wickets": "0",
+          "economy": "6.00",
+          "dots": "3",
+          "fours": "0",
+          "sixes": "1",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Timm van der Gugten",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "21",
+          "wickets": "0",
+          "economy": "10.50",
+          "dots": "3",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Bas de Leede",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "20",
+          "wickets": "2",
+          "economy": "6.66",
+          "dots": "5",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Roelof van der Merwe",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "22",
+          "wickets": "0",
+          "economy": "11.00",
+          "dots": "3",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Bernard Scholtz",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "27",
+          "wickets": "1",
+          "economy": "6.75",
+          "dots": "10",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Ruben Trumpelmann",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "30",
+          "wickets": "1",
+          "economy": "7.50",
+          "dots": "7",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "JJ Smit",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "25",
+          "wickets": "0",
+          "economy": "8.33",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Max Heingo",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "22",
+          "wickets": "0",
+          "economy": "11.00",
+          "dots": "5",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Willem Myburgh",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "12",
+          "wickets": "0",
+          "economy": "6.00",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Gerhard Erasmus",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "11",
+          "wickets": "0",
+          "economy": "11.00",
+          "dots": "1",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Jan Nicol LoftieEaton",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "31",
+          "wickets": "1",
+          "economy": "15.50",
+          "dots": "1",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Edwards",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 1
+        },
+        {
+          "player": "van",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Dutt",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Levitt",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "de Leede",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "van BeekEdwards",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "Myburgh",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Erasmus",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/new-zealand-vs-united-arab-emirates-11th-match-group-d-1512729/full-scorecard",
+      "batting": [
+        {
+          "player": "Aryansh Sharma",
+          "runs": "8",
+          "balls": "6",
+          "mins": "7",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "133.33"
+        },
+        {
+          "player": "Muhammad Waseem (c)",
+          "runs": "66",
+          "balls": "45",
+          "mins": "96",
+          "fours": "4",
+          "sixes": "3",
+          "sr": "146.66"
+        },
+        {
+          "player": "Alishan Sharafu",
+          "runs": "55",
+          "balls": "47",
+          "mins": "57",
+          "fours": "5",
+          "sixes": "2",
+          "sr": "117.02"
+        },
+        {
+          "player": "Harshit Kaushik",
+          "runs": "2",
+          "balls": "6",
+          "mins": "5",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "33.33"
+        },
+        {
+          "player": "Mayank Kumar",
+          "runs": "21",
+          "balls": "13",
+          "mins": "17",
+          "fours": "2",
+          "sixes": "1",
+          "sr": "161.53"
+        },
+        {
+          "player": "Sohaib Khan",
+          "runs": "7",
+          "balls": "3",
+          "mins": "4",
+          "fours": "0",
+          "sixes": "1",
+          "sr": "233.33"
+        },
+        {
+          "player": "Muhammad Arfan",
+          "runs": "0",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Tim Seifert",
+          "runs": "89",
+          "balls": "42",
+          "mins": "76",
+          "fours": "12",
+          "sixes": "3",
+          "sr": "211.90"
+        },
+        {
+          "player": "Finn Allen",
+          "runs": "84",
+          "balls": "50",
+          "mins": "76",
+          "fours": "5",
+          "sixes": "5",
+          "sr": "168.00"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Matt Henry",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "37",
+          "wickets": "2",
+          "economy": "9.25",
+          "dots": "10",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Jacob Duffy",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "16",
+          "wickets": "1",
+          "economy": "8.00",
+          "dots": "6",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Lockie Ferguson",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "35",
+          "wickets": "1",
+          "economy": "8.75",
+          "dots": "8",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mitchell Santner",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "23",
+          "wickets": "1",
+          "economy": "5.75",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Rachin Ravindra",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "19",
+          "wickets": "0",
+          "economy": "6.33",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "James Neesham",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "7",
+          "wickets": "0",
+          "economy": "7.00",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Glenn Phillips",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "30",
+          "wickets": "1",
+          "economy": "15.00",
+          "dots": "3",
+          "fours": "1",
+          "sixes": "1",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Haider Ali",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "27",
+          "wickets": "0",
+          "economy": "6.75",
+          "dots": "8",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Muhammad Rohid",
+          "overs": "3.2",
+          "maidens": "0",
+          "runs": "51",
+          "wickets": "0",
+          "economy": "15.30",
+          "dots": "1",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Junaid Siddique",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "47",
+          "wickets": "0",
+          "economy": "11.75",
+          "dots": "6",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Dhruv Parashar",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "14",
+          "wickets": "0",
+          "economy": "14.00",
+          "dots": "0",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Muhammad Arfan",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "36",
+          "wickets": "0",
+          "economy": "12.00",
+          "dots": "0",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Phillips",
+          "catches": 3,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Mitchell",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Neesham",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Santner",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/pakistan-vs-united-states-of-america-12th-match-group-a-1512730/full-scorecard",
+      "batting": [
+        {
+          "player": "Saim Ayub",
+          "runs": "19",
+          "balls": "17",
+          "mins": "26",
+          "fours": "1",
+          "sixes": "2",
+          "sr": "111.76"
+        },
+        {
+          "player": "Sahibzada Farhan",
+          "runs": "73",
+          "balls": "41",
+          "mins": "75",
+          "fours": "6",
+          "sixes": "5",
+          "sr": "178.04"
+        },
+        {
+          "player": "Salman Agha (c)",
+          "runs": "1",
+          "balls": "3",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "33.33"
+        },
+        {
+          "player": "Babar Azam",
+          "runs": "46",
+          "balls": "32",
+          "mins": "36",
+          "fours": "4",
+          "sixes": "1",
+          "sr": "143.75"
+        },
+        {
+          "player": "Mohammad Nawaz",
+          "runs": "5",
+          "balls": "10",
+          "mins": "26",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Shadab Khan",
+          "runs": "30",
+          "balls": "12",
+          "mins": "15",
+          "fours": "4",
+          "sixes": "1",
+          "sr": "250.00"
+        },
+        {
+          "player": "Faheem Ashraf",
+          "runs": "1",
+          "balls": "2",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Usman Khan",
+          "runs": "0",
+          "balls": "1",
+          "mins": "4",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Shaheen Shah Afridi",
+          "runs": "9",
+          "balls": "4",
+          "mins": "4",
+          "fours": "0",
+          "sixes": "1",
+          "sr": "225.00"
+        },
+        {
+          "player": "Abrar Ahmed",
+          "runs": "0",
+          "balls": "0",
+          "mins": "2",
+          "fours": "0",
+          "sixes": "0",
+          "sr": ""
+        },
+        {
+          "player": "Andries Gous",
+          "runs": "13",
+          "balls": "13",
+          "mins": "22",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Shayan Jahangir",
+          "runs": "49",
+          "balls": "34",
+          "mins": "47",
+          "fours": "5",
+          "sixes": "2",
+          "sr": "144.11"
+        },
+        {
+          "player": "Monank Patel (c)",
+          "runs": "3",
+          "balls": "10",
+          "mins": "16",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "30.00"
+        },
+        {
+          "player": "Milind Kumar",
+          "runs": "29",
+          "balls": "22",
+          "mins": "31",
+          "fours": "2",
+          "sixes": "1",
+          "sr": "131.81"
+        },
+        {
+          "player": "Shubham Ranjane",
+          "runs": "51",
+          "balls": "30",
+          "mins": "41",
+          "fours": "3",
+          "sixes": "3",
+          "sr": "170.00"
+        },
+        {
+          "player": "Sanjay Krishnamurthi",
+          "runs": "0",
+          "balls": "2",
+          "mins": "2",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Harmeet Singh",
+          "runs": "6",
+          "balls": "5",
+          "mins": "10",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "120.00"
+        },
+        {
+          "player": "Mohammad Mohsin",
+          "runs": "0",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Shadley van Schalkwyk",
+          "runs": "1",
+          "balls": "2",
+          "mins": "7",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Ehsan Adil",
+          "runs": "1",
+          "balls": "2",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Saurabh Netravalkar",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "40",
+          "wickets": "1",
+          "economy": "10.00",
+          "dots": "12",
+          "fours": "0",
+          "sixes": "1",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Ehsan Adil",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "39",
+          "wickets": "0",
+          "economy": "13.00",
+          "dots": "4",
+          "fours": "2",
+          "sixes": "1",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Shadley van Schalkwyk",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "25",
+          "wickets": "4",
+          "economy": "6.25",
+          "dots": "11",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Milind Kumar",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "16",
+          "wickets": "0",
+          "economy": "16.00",
+          "dots": "3",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mohammad Mohsin",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "27",
+          "wickets": "1",
+          "economy": "6.75",
+          "dots": "11",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Harmeet Singh",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "41",
+          "wickets": "1",
+          "economy": "10.25",
+          "dots": "3",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Shaheen Shah Afridi",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "42",
+          "wickets": "1",
+          "economy": "10.50",
+          "dots": "8",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Saim Ayub",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "11",
+          "wickets": "0",
+          "economy": "11.00",
+          "dots": "3",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Abrar Ahmed",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "30",
+          "wickets": "1",
+          "economy": "7.50",
+          "dots": "9",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mohammad Nawaz",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "21",
+          "wickets": "1",
+          "economy": "7.00",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Shadab Khan",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "26",
+          "wickets": "2",
+          "economy": "6.50",
+          "dots": "6",
+          "fours": "0",
+          "sixes": "1",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Usman Tariq",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "27",
+          "wickets": "3",
+          "economy": "6.75",
+          "dots": "9",
+          "fours": "3",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Netravalkar",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Krishnamurthi",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Shayan",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Milind",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Gous",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "GousNetravalkar",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "Shayan JahangirGous",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "Salman",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Shaheen",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "b",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Mohammad",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/afghanistan-vs-south-africa-13th-match-group-d-1512731/full-scorecard",
+      "batting": [
+        {
+          "player": "Aiden Markram (c)",
+          "runs": "5",
+          "balls": "8",
+          "mins": "10",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "62.50"
+        },
+        {
+          "player": "Quinton de Kock",
+          "runs": "59",
+          "balls": "41",
+          "mins": "51",
+          "fours": "5",
+          "sixes": "3",
+          "sr": "143.90"
+        },
+        {
+          "player": "Ryan Rickelton",
+          "runs": "61",
+          "balls": "28",
+          "mins": "42",
+          "fours": "5",
+          "sixes": "4",
+          "sr": "217.85"
+        },
+        {
+          "player": "Dewald Brevis",
+          "runs": "23",
+          "balls": "19",
+          "mins": "23",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "121.05"
+        },
+        {
+          "player": "David Miller",
+          "runs": "20",
+          "balls": "15",
+          "mins": "32",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "133.33"
+        },
+        {
+          "player": "Tristan Stubbs",
+          "runs": "1",
+          "balls": "2",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Marco Jansen",
+          "runs": "16",
+          "balls": "7",
+          "mins": "9",
+          "fours": "2",
+          "sixes": "1",
+          "sr": "228.57"
+        },
+        {
+          "player": "Rahmanullah Gurbaz",
+          "runs": "84",
+          "balls": "42",
+          "mins": "58",
+          "fours": "4",
+          "sixes": "7",
+          "sr": "200.00"
+        },
+        {
+          "player": "Ibrahim Zadran",
+          "runs": "12",
+          "balls": "10",
+          "mins": "20",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "120.00"
+        },
+        {
+          "player": "Gulbadin Naib",
+          "runs": "0",
+          "balls": "2",
+          "mins": "2",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Sediqullah Atal",
+          "runs": "0",
+          "balls": "3",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Darwish Rasooli",
+          "runs": "15",
+          "balls": "18",
+          "mins": "30",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "83.33"
+        },
+        {
+          "player": "Azmatullah Omarzai",
+          "runs": "22",
+          "balls": "17",
+          "mins": "30",
+          "fours": "3",
+          "sixes": "0",
+          "sr": "129.41"
+        },
+        {
+          "player": "Mohammad Nabi",
+          "runs": "5",
+          "balls": "6",
+          "mins": "16",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "83.33"
+        },
+        {
+          "player": "Rashid Khan (c)",
+          "runs": "20",
+          "balls": "12",
+          "mins": "17",
+          "fours": "3",
+          "sixes": "0",
+          "sr": "166.66"
+        },
+        {
+          "player": "Mujeeb Ur Rahman",
+          "runs": "0",
+          "balls": "1",
+          "mins": "8",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Noor Ahmad",
+          "runs": "15",
+          "balls": "9",
+          "mins": "8",
+          "fours": "0",
+          "sixes": "2",
+          "sr": "166.66"
+        },
+        {
+          "player": "Fazalhaq Farooqi",
+          "runs": "0",
+          "balls": "0",
+          "mins": "6",
+          "fours": "0",
+          "sixes": "0",
+          "sr": ""
+        },
+        {
+          "player": "Azmatullah Omarzai",
+          "runs": "16",
+          "balls": "5",
+          "mins": "",
+          "fours": "2",
+          "sixes": "1",
+          "sr": "320.00"
+        },
+        {
+          "player": "Rahmanullah Gurbaz",
+          "runs": "1",
+          "balls": "1",
+          "mins": "",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "David Miller",
+          "runs": "1",
+          "balls": "1",
+          "mins": "",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Dewald Brevis",
+          "runs": "6",
+          "balls": "2",
+          "mins": "",
+          "fours": "0",
+          "sixes": "1",
+          "sr": "300.00"
+        },
+        {
+          "player": "Tristan Stubbs",
+          "runs": "10",
+          "balls": "3",
+          "mins": "",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "333.33"
+        },
+        {
+          "player": "Tristan Stubbs",
+          "runs": "7",
+          "balls": "2",
+          "mins": "",
+          "fours": "0",
+          "sixes": "1",
+          "sr": "350.00"
+        },
+        {
+          "player": "David Miller",
+          "runs": "16",
+          "balls": "4",
+          "mins": "",
+          "fours": "0",
+          "sixes": "2",
+          "sr": "400.00"
+        },
+        {
+          "player": "Mohammad Nabi",
+          "runs": "0",
+          "balls": "2",
+          "mins": "",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Azmatullah Omarzai",
+          "runs": "0",
+          "balls": "0",
+          "mins": "",
+          "fours": "0",
+          "sixes": "0",
+          "sr": ""
+        },
+        {
+          "player": "Rahmanullah Gurbaz",
+          "runs": "18",
+          "balls": "4",
+          "mins": "",
+          "fours": "0",
+          "sixes": "3",
+          "sr": "450.00"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Fazalhaq Farooqi",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "32",
+          "wickets": "1",
+          "economy": "8.00",
+          "dots": "12",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mujeeb Ur Rahman",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "30",
+          "wickets": "0",
+          "economy": "10.00",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Azmatullah Omarzai",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "41",
+          "wickets": "3",
+          "economy": "10.25",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mohammad Nabi",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "20",
+          "wickets": "0",
+          "economy": "10.00",
+          "dots": "1",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Rashid Khan",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "28",
+          "wickets": "2",
+          "economy": "7.00",
+          "dots": "9",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Noor Ahmad",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "35",
+          "wickets": "0",
+          "economy": "11.66",
+          "dots": "4",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Lungi Ngidi",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "26",
+          "wickets": "3",
+          "economy": "6.50",
+          "dots": "13",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Marco Jansen",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "42",
+          "wickets": "1",
+          "economy": "10.50",
+          "dots": "7",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Kagiso Rabada",
+          "overs": "3.4",
+          "maidens": "0",
+          "runs": "38",
+          "wickets": "1",
+          "economy": "10.36",
+          "dots": "8",
+          "fours": "2",
+          "sixes": "2",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "George Linde",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "39",
+          "wickets": "1",
+          "economy": "13.00",
+          "dots": "5",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Keshav Maharaj",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "27",
+          "wickets": "1",
+          "economy": "6.75",
+          "dots": "7",
+          "fours": "3",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Aiden Markram",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "14",
+          "wickets": "0",
+          "economy": "14.00",
+          "dots": "0",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Lungi Ngidi",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "17",
+          "wickets": "0",
+          "economy": "17.00",
+          "dots": "0",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Fazalhaq Farooqi",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "17",
+          "wickets": "1",
+          "economy": "17.00",
+          "dots": "",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Azmatullah Omarzai",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "23",
+          "wickets": "0",
+          "economy": "23.00",
+          "dots": "",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Keshav Maharaj",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "19",
+          "wickets": "2",
+          "economy": "19.00",
+          "dots": "3",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Mohammad",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Ibrahim",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Mujeeb",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Sediqullah",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Linde",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "b",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Jansen",
+          "catches": 1,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "de KockMaharaj",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "Stubbs",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Markram",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Miller",
+          "catches": 3,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "JansenRabada",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "Rahmanullah",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/australia-vs-ireland-14th-match-group-b-1512732/full-scorecard",
+      "batting": [
+        {
+          "player": "Travis Head (c)",
+          "runs": "6",
+          "balls": "7",
+          "mins": "5",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "85.71"
+        },
+        {
+          "player": "Josh Inglis",
+          "runs": "37",
+          "balls": "17",
+          "mins": "35",
+          "fours": "6",
+          "sixes": "1",
+          "sr": "217.64"
+        },
+        {
+          "player": "Cameron Green",
+          "runs": "21",
+          "balls": "11",
+          "mins": "18",
+          "fours": "1",
+          "sixes": "2",
+          "sr": "190.90"
+        },
+        {
+          "player": "Matt Renshaw",
+          "runs": "37",
+          "balls": "33",
+          "mins": "60",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "112.12"
+        },
+        {
+          "player": "Glenn Maxwell",
+          "runs": "9",
+          "balls": "9",
+          "mins": "12",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Marcus Stoinis",
+          "runs": "45",
+          "balls": "29",
+          "mins": "44",
+          "fours": "2",
+          "sixes": "1",
+          "sr": "155.17"
+        },
+        {
+          "player": "Cooper Connolly",
+          "runs": "11",
+          "balls": "8",
+          "mins": "19",
+          "fours": "0",
+          "sixes": "1",
+          "sr": "137.50"
+        },
+        {
+          "player": "Xavier Bartlett",
+          "runs": "11",
+          "balls": "6",
+          "mins": "12",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "183.33"
+        },
+        {
+          "player": "Paul Stirling (c)",
+          "runs": "1",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Ross Adair",
+          "runs": "12",
+          "balls": "9",
+          "mins": "11",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "133.33"
+        },
+        {
+          "player": "Harry Tector",
+          "runs": "0",
+          "balls": "3",
+          "mins": "7",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Lorcan Tucker",
+          "runs": "24",
+          "balls": "27",
+          "mins": "56",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "88.88"
+        },
+        {
+          "player": "Curtis Campher",
+          "runs": "4",
+          "balls": "2",
+          "mins": "2",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "200.00"
+        },
+        {
+          "player": "Ben Calitz",
+          "runs": "2",
+          "balls": "4",
+          "mins": "8",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Gareth Delany",
+          "runs": "11",
+          "balls": "12",
+          "mins": "16",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "91.66"
+        },
+        {
+          "player": "George Dockrell",
+          "runs": "41",
+          "balls": "29",
+          "mins": "37",
+          "fours": "3",
+          "sixes": "2",
+          "sr": "141.37"
+        },
+        {
+          "player": "Mark Adair",
+          "runs": "12",
+          "balls": "6",
+          "mins": "9",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "200.00"
+        },
+        {
+          "player": "Barry McCarthy",
+          "runs": "2",
+          "balls": "4",
+          "mins": "9",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Matthew Humphreys",
+          "runs": "3",
+          "balls": "4",
+          "mins": "7",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "75.00"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Matthew Humphreys",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "33",
+          "wickets": "1",
+          "economy": "8.25",
+          "dots": "9",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Mark Adair",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "44",
+          "wickets": "2",
+          "economy": "11.00",
+          "dots": "9",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Barry McCarthy",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "37",
+          "wickets": "0",
+          "economy": "12.33",
+          "dots": "3",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Gareth Delany",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "12",
+          "wickets": "0",
+          "economy": "6.00",
+          "dots": "4",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "George Dockrell",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "31",
+          "wickets": "1",
+          "economy": "7.75",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Harry Tector",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "24",
+          "wickets": "1",
+          "economy": "8.00",
+          "dots": "3",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Xavier Bartlett",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "22",
+          "wickets": "0",
+          "economy": "11.00",
+          "dots": "4",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Matthew Kuhnemann",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "29",
+          "wickets": "1",
+          "economy": "7.25",
+          "dots": "14",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Nathan Ellis",
+          "overs": "3.5",
+          "maidens": "1",
+          "runs": "12",
+          "wickets": "4",
+          "economy": "3.13",
+          "dots": "15",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Adam Zampa",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "23",
+          "wickets": "4",
+          "economy": "5.75",
+          "dots": "13",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Cooper Connolly",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "26",
+          "wickets": "0",
+          "economy": "8.66",
+          "dots": "4",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "CalitzMR Adair",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "Stirling",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Dockrell",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Tucker",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Calitz",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Green",
+          "catches": 3,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Connolly",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Inglis",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 1
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/england-vs-west-indies-15th-match-group-c-1512733/full-scorecard",
+      "batting": [
+        {
+          "player": "Brandon King",
+          "runs": "1",
+          "balls": "3",
+          "mins": "9",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "33.33"
+        },
+        {
+          "player": "Shai Hope (c)",
+          "runs": "0",
+          "balls": "3",
+          "mins": "5",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Shimron Hetmyer",
+          "runs": "23",
+          "balls": "12",
+          "mins": "24",
+          "fours": "2",
+          "sixes": "2",
+          "sr": "191.66"
+        },
+        {
+          "player": "Roston Chase",
+          "runs": "34",
+          "balls": "29",
+          "mins": "38",
+          "fours": "6",
+          "sixes": "0",
+          "sr": "117.24"
+        },
+        {
+          "player": "Sherfane Rutherford",
+          "runs": "76",
+          "balls": "42",
+          "mins": "69",
+          "fours": "2",
+          "sixes": "7",
+          "sr": "180.95"
+        },
+        {
+          "player": "Rovman Powell",
+          "runs": "14",
+          "balls": "13",
+          "mins": "24",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "107.69"
+        },
+        {
+          "player": "Jason Holder",
+          "runs": "33",
+          "balls": "17",
+          "mins": "25",
+          "fours": "1",
+          "sixes": "4",
+          "sr": "194.11"
+        },
+        {
+          "player": "Romario Shepherd",
+          "runs": "1",
+          "balls": "1",
+          "mins": "2",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Phil Salt",
+          "runs": "30",
+          "balls": "14",
+          "mins": "15",
+          "fours": "4",
+          "sixes": "2",
+          "sr": "214.28"
+        },
+        {
+          "player": "Jos Buttler",
+          "runs": "21",
+          "balls": "14",
+          "mins": "35",
+          "fours": "2",
+          "sixes": "1",
+          "sr": "150.00"
+        },
+        {
+          "player": "Jacob Bethell",
+          "runs": "33",
+          "balls": "23",
+          "mins": "32",
+          "fours": "4",
+          "sixes": "1",
+          "sr": "143.47"
+        },
+        {
+          "player": "Tom Banton",
+          "runs": "2",
+          "balls": "4",
+          "mins": "5",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Harry Brook (c)",
+          "runs": "17",
+          "balls": "14",
+          "mins": "27",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "121.42"
+        },
+        {
+          "player": "Sam Curran",
+          "runs": "43",
+          "balls": "30",
+          "mins": "54",
+          "fours": "3",
+          "sixes": "2",
+          "sr": "143.33"
+        },
+        {
+          "player": "Will Jacks",
+          "runs": "2",
+          "balls": "3",
+          "mins": "5",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "66.66"
+        },
+        {
+          "player": "Jamie Overton",
+          "runs": "5",
+          "balls": "6",
+          "mins": "6",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "83.33"
+        },
+        {
+          "player": "Jofra Archer",
+          "runs": "6",
+          "balls": "4",
+          "mins": "7",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "150.00"
+        },
+        {
+          "player": "Liam Dawson",
+          "runs": "1",
+          "balls": "1",
+          "mins": "6",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Adil Rashid",
+          "runs": "0",
+          "balls": "1",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Jofra Archer",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "48",
+          "wickets": "1",
+          "economy": "12.00",
+          "dots": "9",
+          "fours": "3",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Sam Curran",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "36",
+          "wickets": "1",
+          "economy": "12.00",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Will Jacks",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "32",
+          "wickets": "0",
+          "economy": "16.00",
+          "dots": "4",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Jamie Overton",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "33",
+          "wickets": "2",
+          "economy": "8.25",
+          "dots": "12",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Adil Rashid",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "16",
+          "wickets": "2",
+          "economy": "4.00",
+          "dots": "11",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Liam Dawson",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "27",
+          "wickets": "0",
+          "economy": "9.00",
+          "dots": "6",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Akeal Hosein",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "32",
+          "wickets": "1",
+          "economy": "8.00",
+          "dots": "8",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Jason Holder",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "34",
+          "wickets": "0",
+          "economy": "17.00",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Romario Shepherd",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "7",
+          "wickets": "1",
+          "economy": "7.00",
+          "dots": "3",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Shamar Joseph",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "30",
+          "wickets": "1",
+          "economy": "7.50",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Roston Chase",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "29",
+          "wickets": "2",
+          "economy": "7.25",
+          "dots": "9",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Gudakesh Motie",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "33",
+          "wickets": "3",
+          "economy": "8.25",
+          "dots": "6",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Salt",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Banton",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Curran",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Overton",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Rutherford",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Powell",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "King",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "b",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Holder",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "HolderJoseph",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "Chase",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/sri-lanka-vs-oman-16th-match-group-b-1512734/full-scorecard",
+      "batting": [
+        {
+          "player": "Pathum Nissanka",
+          "runs": "13",
+          "balls": "11",
+          "mins": "27",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "118.18"
+        },
+        {
+          "player": "Kamil Mishara",
+          "runs": "8",
+          "balls": "7",
+          "mins": "8",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "114.28"
+        },
+        {
+          "player": "Kusal Mendis",
+          "runs": "61",
+          "balls": "45",
+          "mins": "81",
+          "fours": "7",
+          "sixes": "0",
+          "sr": "135.55"
+        },
+        {
+          "player": "Pavan Rathnayake",
+          "runs": "60",
+          "balls": "28",
+          "mins": "36",
+          "fours": "8",
+          "sixes": "1",
+          "sr": "214.28"
+        },
+        {
+          "player": "Dasun Shanaka (c)",
+          "runs": "50",
+          "balls": "20",
+          "mins": "20",
+          "fours": "2",
+          "sixes": "5",
+          "sr": "250.00"
+        },
+        {
+          "player": "Kamindu Mendis",
+          "runs": "19",
+          "balls": "7",
+          "mins": "10",
+          "fours": "1",
+          "sixes": "2",
+          "sr": "271.42"
+        },
+        {
+          "player": "Dunith Wellalage",
+          "runs": "6",
+          "balls": "4",
+          "mins": "8",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "150.00"
+        },
+        {
+          "player": "Aamir Kaleem",
+          "runs": "6",
+          "balls": "5",
+          "mins": "8",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "120.00"
+        },
+        {
+          "player": "Jatinder Singh (c)",
+          "runs": "1",
+          "balls": "2",
+          "mins": "6",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Hammad Mirza",
+          "runs": "9",
+          "balls": "12",
+          "mins": "19",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "75.00"
+        },
+        {
+          "player": "Mohammad Nadeem",
+          "runs": "53",
+          "balls": "56",
+          "mins": "81",
+          "fours": "3",
+          "sixes": "1",
+          "sr": "94.64"
+        },
+        {
+          "player": "Wasim Ali",
+          "runs": "27",
+          "balls": "20",
+          "mins": "24",
+          "fours": "0",
+          "sixes": "3",
+          "sr": "135.00"
+        },
+        {
+          "player": "Vinayak Shukla",
+          "runs": "1",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Jiten Ramanandi",
+          "runs": "0",
+          "balls": "1",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Nadeem Khan",
+          "runs": "2",
+          "balls": "3",
+          "mins": "4",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "66.66"
+        },
+        {
+          "player": "Sufyan Mehmood",
+          "runs": "1",
+          "balls": "1",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Shah Faisal",
+          "runs": "1",
+          "balls": "8",
+          "mins": "8",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "12.50"
+        },
+        {
+          "player": "Jay Odedra",
+          "runs": "4",
+          "balls": "12",
+          "mins": "13",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "33.33"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Shah Faisal",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "28",
+          "wickets": "0",
+          "economy": "7.00",
+          "dots": "15",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Jay Odedra",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "14",
+          "wickets": "1",
+          "economy": "14.00",
+          "dots": "2",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Wasim Ali",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "38",
+          "wickets": "0",
+          "economy": "12.66",
+          "dots": "4",
+          "fours": "0",
+          "sixes": "2",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Sufyan Mehmood",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "60",
+          "wickets": "1",
+          "economy": "15.00",
+          "dots": "1",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Nadeem Khan",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "40",
+          "wickets": "0",
+          "economy": "10.00",
+          "dots": "4",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Jiten Ramanandi",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "41",
+          "wickets": "2",
+          "economy": "10.25",
+          "dots": "4",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Dushmantha Chameera",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "19",
+          "wickets": "2",
+          "economy": "9.50",
+          "dots": "6",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Maheesh Theekshana",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "11",
+          "wickets": "2",
+          "economy": "2.75",
+          "dots": "14",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Matheesha Pathirana",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "11",
+          "wickets": "0",
+          "economy": "3.66",
+          "dots": "10",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Dunith Wellalage",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "17",
+          "wickets": "1",
+          "economy": "4.25",
+          "dots": "11",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Dasun Shanaka",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "6",
+          "wickets": "0",
+          "economy": "6.00",
+          "dots": "3",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Dushan Hemantha",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "45",
+          "wickets": "1",
+          "economy": "11.25",
+          "dots": "7",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Kamindu Mendis",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "10",
+          "wickets": "1",
+          "economy": "5.00",
+          "dots": "5",
+          "fours": "1",
+          "sixes": "1",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "RamanandiShukla",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "Nadeem",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Mishara",
+          "catches": 1,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "BKG",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 1
+        },
+        {
+          "player": "Chameera",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "PHKD MendisBKG Mendis",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "Nissanka",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/italy-vs-nepal-17th-match-group-c-1512735/full-scorecard",
+      "batting": [
+        {
+          "player": "Kushal Bhurtel",
+          "runs": "5",
+          "balls": "10",
+          "mins": "8",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Aasif Sheikh",
+          "runs": "20",
+          "balls": "20",
+          "mins": "32",
+          "fours": "2",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Rohit Paudel (c)",
+          "runs": "23",
+          "balls": "14",
+          "mins": "21",
+          "fours": "0",
+          "sixes": "2",
+          "sr": "164.28"
+        },
+        {
+          "player": "Dipendra Singh Airee",
+          "runs": "17",
+          "balls": "18",
+          "mins": "27",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "94.44"
+        },
+        {
+          "player": "Aarif Sheikh",
+          "runs": "27",
+          "balls": "24",
+          "mins": "35",
+          "fours": "3",
+          "sixes": "0",
+          "sr": "112.50"
+        },
+        {
+          "player": "Lokesh Bam",
+          "runs": "3",
+          "balls": "5",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "60.00"
+        },
+        {
+          "player": "Gulsan Jha",
+          "runs": "3",
+          "balls": "4",
+          "mins": "8",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "75.00"
+        },
+        {
+          "player": "Karan KC",
+          "runs": "18",
+          "balls": "11",
+          "mins": "20",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "163.63"
+        },
+        {
+          "player": "Nandan Yadav",
+          "runs": "0",
+          "balls": "2",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Sandeep Lamichhane",
+          "runs": "5",
+          "balls": "7",
+          "mins": "11",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "71.42"
+        },
+        {
+          "player": "Lalit Rajbanshi",
+          "runs": "0",
+          "balls": "2",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Justin Mosca",
+          "runs": "60",
+          "balls": "44",
+          "mins": "55",
+          "fours": "5",
+          "sixes": "3",
+          "sr": "136.36"
+        },
+        {
+          "player": "Anthony Mosca",
+          "runs": "62",
+          "balls": "32",
+          "mins": "55",
+          "fours": "3",
+          "sixes": "6",
+          "sr": "193.75"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Ben Manenti",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "9",
+          "wickets": "2",
+          "economy": "2.25",
+          "dots": "18",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Ali Hasan",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "34",
+          "wickets": "1",
+          "economy": "11.33",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "JJ Smuts",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "22",
+          "wickets": "1",
+          "economy": "5.50",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Grant Stewart",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "32",
+          "wickets": "0",
+          "economy": "10.66",
+          "dots": "1",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Crishan Kalugamage",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "18",
+          "wickets": "3",
+          "economy": "4.50",
+          "dots": "11",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Jaspreet Singh",
+          "overs": "1.3",
+          "maidens": "0",
+          "runs": "8",
+          "wickets": "1",
+          "economy": "5.33",
+          "dots": "4",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Karan KC",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "21",
+          "wickets": "0",
+          "economy": "10.50",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Dipendra Singh Airee",
+          "overs": "3.4",
+          "maidens": "0",
+          "runs": "24",
+          "wickets": "0",
+          "economy": "6.54",
+          "dots": "7",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Lalit Rajbanshi",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "19",
+          "wickets": "0",
+          "economy": "19.00",
+          "dots": "1",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Sandeep Lamichhane",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "31",
+          "wickets": "0",
+          "economy": "10.33",
+          "dots": "8",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Nandan Yadav",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "12",
+          "wickets": "0",
+          "economy": "12.00",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Kushal Bhurtel",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "15",
+          "wickets": "0",
+          "economy": "7.50",
+          "dots": "2",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "J",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Meade",
+          "catches": 0,
+          "runouts": 0,
+          "stumpings": 1
+        },
+        {
+          "player": "Stewart",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Campopiano",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "AJ",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "HJ",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "J MoscaMeade",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "HJ Manenti",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        }
+      ]
+    },
+    {
+      "url": "https://www.espncricinfo.com/series/icc-men-s-t20-world-cup-2025-26-1502138/india-vs-namibia-18th-match-group-a-1512736/full-scorecard",
+      "batting": [
+        {
+          "player": "Ishan Kishan",
+          "runs": "61",
+          "balls": "24",
+          "mins": "39",
+          "fours": "6",
+          "sixes": "5",
+          "sr": "254.16"
+        },
+        {
+          "player": "Sanju Samson",
+          "runs": "22",
+          "balls": "8",
+          "mins": "10",
+          "fours": "1",
+          "sixes": "3",
+          "sr": "275.00"
+        },
+        {
+          "player": "Tilak Varma",
+          "runs": "25",
+          "balls": "21",
+          "mins": "46",
+          "fours": "3",
+          "sixes": "0",
+          "sr": "119.04"
+        },
+        {
+          "player": "Suryakumar Yadav (c)",
+          "runs": "12",
+          "balls": "13",
+          "mins": "11",
+          "fours": "0",
+          "sixes": "1",
+          "sr": "92.30"
+        },
+        {
+          "player": "Hardik Pandya",
+          "runs": "52",
+          "balls": "28",
+          "mins": "39",
+          "fours": "4",
+          "sixes": "4",
+          "sr": "185.71"
+        },
+        {
+          "player": "Shivam Dube",
+          "runs": "23",
+          "balls": "16",
+          "mins": "35",
+          "fours": "1",
+          "sixes": "1",
+          "sr": "143.75"
+        },
+        {
+          "player": "Rinku Singh",
+          "runs": "1",
+          "balls": "6",
+          "mins": "6",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "16.66"
+        },
+        {
+          "player": "Axar Patel",
+          "runs": "0",
+          "balls": "1",
+          "mins": "2",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Varun Chakravarthy",
+          "runs": "1",
+          "balls": "1",
+          "mins": "5",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Arshdeep Singh",
+          "runs": "2",
+          "balls": "2",
+          "mins": "2",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Louren Steenkamp",
+          "runs": "29",
+          "balls": "20",
+          "mins": "40",
+          "fours": "3",
+          "sixes": "1",
+          "sr": "145.00"
+        },
+        {
+          "player": "Jan Frylinck",
+          "runs": "22",
+          "balls": "15",
+          "mins": "18",
+          "fours": "3",
+          "sixes": "1",
+          "sr": "146.66"
+        },
+        {
+          "player": "Jan Nicol LoftieEaton",
+          "runs": "13",
+          "balls": "13",
+          "mins": "30",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Gerhard Erasmus (c)",
+          "runs": "18",
+          "balls": "11",
+          "mins": "13",
+          "fours": "0",
+          "sixes": "2",
+          "sr": "163.63"
+        },
+        {
+          "player": "JJ Smit",
+          "runs": "0",
+          "balls": "2",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Zane Green",
+          "runs": "11",
+          "balls": "19",
+          "mins": "44",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "57.89"
+        },
+        {
+          "player": "Malan Kruger",
+          "runs": "5",
+          "balls": "10",
+          "mins": "8",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "50.00"
+        },
+        {
+          "player": "Ruben Trumpelmann",
+          "runs": "6",
+          "balls": "16",
+          "mins": "23",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "37.50"
+        },
+        {
+          "player": "Bernard Scholtz",
+          "runs": "4",
+          "balls": "4",
+          "mins": "4",
+          "fours": "1",
+          "sixes": "0",
+          "sr": "100.00"
+        },
+        {
+          "player": "Ben Shikongo",
+          "runs": "0",
+          "balls": "1",
+          "mins": "1",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        },
+        {
+          "player": "Max Heingo",
+          "runs": "0",
+          "balls": "2",
+          "mins": "3",
+          "fours": "0",
+          "sixes": "0",
+          "sr": "0.00"
+        }
+      ],
+      "bowling": [
+        {
+          "bowler": "Ruben Trumpelmann",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "38",
+          "wickets": "0",
+          "economy": "9.50",
+          "dots": "7",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Ben Shikongo",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "41",
+          "wickets": "1",
+          "economy": "13.66",
+          "dots": "4",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "JJ Smit",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "50",
+          "wickets": "1",
+          "economy": "12.50",
+          "dots": "6",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Max Heingo",
+          "overs": "1",
+          "maidens": "0",
+          "runs": "18",
+          "wickets": "0",
+          "economy": "18.00",
+          "dots": "0",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Gerhard Erasmus",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "20",
+          "wickets": "4",
+          "economy": "5.00",
+          "dots": "15",
+          "fours": "1",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Bernard Scholtz",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "41",
+          "wickets": "1",
+          "economy": "10.25",
+          "dots": "7",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Hardik Pandya",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "21",
+          "wickets": "2",
+          "economy": "5.25",
+          "dots": "12",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Arshdeep Singh",
+          "overs": "3",
+          "maidens": "0",
+          "runs": "36",
+          "wickets": "1",
+          "economy": "12.00",
+          "dots": "4",
+          "fours": "2",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Shivam Dube",
+          "overs": "2.2",
+          "maidens": "0",
+          "runs": "11",
+          "wickets": "1",
+          "economy": "4.71",
+          "dots": "7",
+          "fours": "1",
+          "sixes": "2",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Jasprit Bumrah",
+          "overs": "4",
+          "maidens": "0",
+          "runs": "20",
+          "wickets": "1",
+          "economy": "5.00",
+          "dots": "13",
+          "fours": "1",
+          "sixes": "1",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Varun Chakravarthy",
+          "overs": "2",
+          "maidens": "0",
+          "runs": "7",
+          "wickets": "3",
+          "economy": "3.50",
+          "dots": "6",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        },
+        {
+          "bowler": "Axar Patel",
+          "overs": "3",
+          "maidens": "1",
+          "runs": "20",
+          "wickets": "2",
+          "economy": "6.66",
+          "dots": "11",
+          "fours": "0",
+          "sixes": "0",
+          "wides": "",
+          "noballs": ""
+        }
+      ],
+      "fielding": [
+        {
+          "player": "Shikongo",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Steenkamp",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Smit",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Green",
+          "catches": 0,
+          "runouts": 0,
+          "stumpings": 1
+        },
+        {
+          "player": "sub",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "ShikongoErasmus",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "Erasmus",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "KrugerGreen",
+          "catches": 0,
+          "runouts": 1,
+          "stumpings": 0
+        },
+        {
+          "player": "Dube",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Patel",
+          "catches": 2,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Tilak",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        },
+        {
+          "player": "Bumrah",
+          "catches": 1,
+          "runouts": 0,
+          "stumpings": 0
+        }
+      ]
+    }
+  ]
+}
