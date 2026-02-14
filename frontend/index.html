@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Fantasy - Live Matches</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: #ffffff;
+        }
+
+        .tab.active {
+            background: #6366f1;
+            color: #ffffff;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #94a3b8;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #6366f1;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        .match-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .match-card:hover {
+            transform: translateY(-5px);
+            border-color: #6366f1;
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+        }
+
+        .match-card.live {
+            border-color: #ef4444;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
+        }
+
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .match-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .live-badge {
+            background: #ef4444;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .match-info {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .teams {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .team-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .team-row:not(:last-child) {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .team-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .team-score {
+            font-size: 18px;
+            font-weight: 700;
+            color: #6366f1;
+        }
+
+        .match-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .winner {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #64748b;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .refresh-btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            background: #4f46e5;
+            transform: scale(1.05);
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            color: #fecaca;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .matches-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cricket Fantasy</h1>
+            <p>Live IPL Matches & Scores</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('live')">Live Matches</button>
+            <button class="tab" onclick="switchTab('upcoming')">Upcoming</button>
+            <button class="tab" onclick="switchTab('all')">All Matches</button>
+        </div>
+
+        <button class="refresh-btn" onclick="refreshMatches()">Refresh</button>
+
+        <div id="content">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading matches...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update this with your backend URL
+        const API_BASE_URL = 'http://localhost:3000/api';
+        let currentTab = 'live';
+
+        async function fetchMatches(endpoint) {
+            try {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`);
+                const data = await response.json();
+                return data.success ? data.data : [];
+            } catch (error) {
+                console.error('Error fetching matches:', error);
+                return null;
+            }
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function renderMatches(matches) {
+            const content = document.getElementById('content');
+
+            if (matches === null) {
+                content.innerHTML = `
+                    <div class="error">
+                        <h3>Connection Error</h3>
+                        <p>Could not connect to the server. Make sure the backend is running at ${API_BASE_URL}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            if (matches.length === 0) {
+                const emptyMessage = currentTab === 'live'
+                    ? 'No live matches right now'
+                    : currentTab === 'upcoming'
+                        ? 'No upcoming matches'
+                        : 'No matches found';
+
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <h3>${emptyMessage}</h3>
+                        <p>Check back later or try refreshing</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const matchesHTML = matches.map(match => {
+                const isLive = match.status === 'Live' || match.status === 'In Progress';
+
+                return `
+                    <div class="match-card ${isLive ? 'live' : ''}">
+                        <div class="match-header">
+                            <div class="match-title">${match.name}</div>
+                            ${isLive ? '<div class="live-badge">● LIVE</div>' : ''}
+                        </div>
+                        
+                        <div class="match-info">
+                            Venue: ${match.venue}<br>
+                            Time: ${formatDate(match.date)}
+                        </div>
+                        
+                        <div class="teams">
+                            <div class="team-row">
+                                <div class="team-name">${match.team_a}</div>
+                                <div class="team-score">${match.team_a_score || '-'}</div>
+                            </div>
+                            <div class="team-row">
+                                <div class="team-name">${match.team_b}</div>
+                                <div class="team-score">${match.team_b_score || '-'}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="match-footer">
+                            <div>${match.status}</div>
+                            ${match.winner ? `<div class="winner">Winner: ${match.winner}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            content.innerHTML = `<div class="matches-grid">${matchesHTML}</div>`;
+        }
+
+        async function loadMatches() {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading matches...</p>
+                </div>
+            `;
+
+            let endpoint;
+            if (currentTab === 'live') {
+                endpoint = '/matches/live';
+            } else if (currentTab === 'upcoming') {
+                endpoint = '/matches/upcoming';
+            } else {
+                endpoint = '/matches';
+            }
+
+            const matches = await fetchMatches(endpoint);
+            renderMatches(matches);
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+
+            // Update tab styling
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            loadMatches();
+        }
+
+        function refreshMatches() {
+            loadMatches();
+        }
+
+        // Auto-refresh every 30 seconds for live matches
+        setInterval(() => {
+            if (currentTab === 'live') {
+                loadMatches();
+            }
+        }, 30000);
+
+        // Load matches on page load
+        loadMatches();
+    </script>
+</body>
+
+</html>
