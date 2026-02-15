@@ -30,6 +30,7 @@
             <button class="tab-link active" data-tab="dashboard-view">Dashboard</button>
             <button class="tab-link" data-tab="trade-view">Trade Center</button>
             <button class="tab-link" data-tab="league-view">Leagues</button>
+            <button class="tab-link" data-tab="account-view">Account</button>
         </div>
     </div>
 
@@ -112,14 +113,14 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Give (Your Player)</label>
-                        <select id="trade-give-select"></select>
+                        <label>Give (Your Players)</label>
+                        <div id="trade-give-chips" class="trade-chips"></div>
+                        <div id="trade-give-list" class="trade-player-list"></div>
                     </div>
                     <div class="form-group">
-                        <label>Request (Their Player)</label>
-                        <select id="trade-request-select">
-                            <option value="">Select a user first</option>
-                        </select>
+                        <label>Request (Their Players)</label>
+                        <div id="trade-request-chips" class="trade-chips"></div>
+                        <div id="trade-request-list" class="trade-player-list"></div>
                     </div>
                     <button id="propose-trade-btn" class="btn btn-primary">Propose Trade</button>
                 </div>
@@ -173,7 +174,55 @@
                 </div>
             </div>
         </section>
+
+        <!-- Account View -->
+        <section id="account-view" class="view hidden tab-content">
+            <div class="account-layout">
+                <!-- Change Password Card -->
+                <div class="card account-card">
+                    <h3>Change Password</h3>
+                    <p class="dim">Update your account password</p>
+                    <form id="change-password-form">
+                        <div class="form-group">
+                            <label for="current-password-input">Current Password</label>
+                            <input type="password" id="current-password-input" required placeholder="••••••••">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-password-input">New Password</label>
+                            <input type="password" id="new-password-input" required placeholder="••••••••">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-new-password-input">Confirm New Password</label>
+                            <input type="password" id="confirm-new-password-input" required placeholder="••••••••">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Password</button>
+                    </form>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="card danger-zone-card">
+                    <h3>Danger Zone</h3>
+                    <p class="dim">Once you delete your account, there is no going back. All your data including your
+                        squad, trades, and league memberships will be permanently removed.</p>
+                    <button id="delete-account-btn" class="btn btn-danger-glow">Delete Account</button>
+                </div>
+            </div>
+        </section>
     </main>
+
+    <!-- Delete Account Confirmation Modal -->
+    <div id="delete-confirm-modal" class="modal-overlay hidden">
+        <div class="modal-dialog danger-modal">
+            <h3>⚠️ Delete Account</h3>
+            <p>This action is <strong>permanent</strong> and cannot be undone. All your data will be erased.</p>
+            <p class="confirm-prompt">Type <strong>DELETE</strong> to confirm:</p>
+            <input type="text" id="delete-confirm-input" placeholder="Type DELETE here" autocomplete="off">
+            <div class="modal-actions">
+                <button id="modal-cancel-btn" class="btn btn-outline">Cancel</button>
+                <button id="modal-confirm-btn" class="btn btn-danger-glow" disabled>Confirm Delete</button>
+            </div>
+        </div>
+    </div>
 
     <div id="notification-area"></div>
 

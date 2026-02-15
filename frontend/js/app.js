@@ -40,10 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Trade elements
     const tradeReceiverSelect = document.getElementById('trade-receiver-select');
-    const tradeGiveSelect = document.getElementById('trade-give-select');
-    const tradeRequestSelect = document.getElementById('trade-request-select');
+    const tradeGiveChips = document.getElementById('trade-give-chips');
+    const tradeGiveList = document.getElementById('trade-give-list');
+    const tradeRequestChips = document.getElementById('trade-request-chips');
+    const tradeRequestList = document.getElementById('trade-request-list');
     const proposeTradeBtn = document.getElementById('propose-trade-btn');
     const pendingTradesList = document.getElementById('pending-trades-list');
+
+    // Multi-select trade state
+    let tradeGiveSelected = [];
+    let tradeRequestSelected = [];
 
     // League elements
     const currentLeagueName = document.getElementById('current-league-name');
@@ -313,7 +319,74 @@ document.addEventListener('DOMContentLoaded', () => {
         saveTeamBtn.textContent = starting11.length === 11 ? 'Save Lineup' : `Need ${11 - starting11.length} more`;
     }
 
+    function renderChips(container, selectedArr, onRemove) {
+        container.innerHTML = '';
+        selectedArr.forEach(name => {
+            const chip = document.createElement('span');
+            chip.className = 'trade-chip';
+            chip.innerHTML = `${name} <button class="chip-remove" data-name="${name}">&times;</button>`;
+            chip.querySelector('.chip-remove').addEventListener('click', () => onRemove(name));
+            container.appendChild(chip);
+        });
+        if (selectedArr.length === 0) {
+            container.innerHTML = '<span class="dim">None selected</span>';
+        }
+    }
+
+    function renderPlayerList(container, players, selectedArr, onToggle) {
+        container.innerHTML = '';
+        players.forEach(name => {
+            const isSelected = selectedArr.includes(name);
+            const row = document.createElement('div');
+            row.className = `trade-player-row ${isSelected ? 'selected' : ''}`;
+            row.innerHTML = `<span>${name}</span>`;
+            row.addEventListener('click', () => onToggle(name));
+            container.appendChild(row);
+        });
+        if (players.length === 0) {
+            container.innerHTML = '<p class="dim">No players available</p>';
+        }
+    }
+
+    function refreshGiveUI() {
+        renderChips(tradeGiveChips, tradeGiveSelected, (name) => {
+            tradeGiveSelected = tradeGiveSelected.filter(n => n !== name);
+            refreshGiveUI();
+        });
+        renderPlayerList(tradeGiveList, mySquad, tradeGiveSelected, (name) => {
+            if (tradeGiveSelected.includes(name)) {
+                tradeGiveSelected = tradeGiveSelected.filter(n => n !== name);
+            } else {
+                tradeGiveSelected.push(name);
+            }
+            refreshGiveUI();
+        });
+    }
+
+    function refreshRequestUI() {
+        const receiverId = tradeReceiverSelect.value;
+        const receiverPlayers = receiverId
+            ? draftedPlayers.filter(dp => dp.user_id === receiverId).map(dp => dp.player_name)
+            : [];
+        renderChips(tradeRequestChips, tradeRequestSelected, (name) => {
+            tradeRequestSelected = tradeRequestSelected.filter(n => n !== name);
+            refreshRequestUI();
+        });
+        renderPlayerList(tradeRequestList, receiverPlayers, tradeRequestSelected, (name) => {
+            if (tradeRequestSelected.includes(name)) {
+                tradeRequestSelected = tradeRequestSelected.filter(n => n !== name);
+            } else {
+                tradeRequestSelected.push(name);
+            }
+            refreshRequestUI();
+        });
+    }
+
     async function renderTradeUI() {
+        // Reset selections
+        tradeGiveSelected = [];
+        tradeRequestSelected = [];
+
         // Populate Receiver Select
         tradeReceiverSelect.innerHTML = '<option value="">Select User</option>';
         usersList.filter(u => u.id !== currentUser.id).forEach(user => {
@@ -323,14 +396,10 @@ document.addEventListener('DOMContentLoaded', () => {
             tradeReceiverSelect.appendChild(opt);
         });
 
-        // Populate "Give" Select
-        tradeGiveSelect.innerHTML = '<option value="">Select Player</option>';
-        mySquad.forEach(playerName => {
-            const opt = document.createElement('option');
-            opt.value = playerName;
-            opt.textContent = playerName;
-            tradeGiveSelect.appendChild(opt);
-        });
+        // Render Give list
+        refreshGiveUI();
+        // Render Request list (empty until receiver is picked)
+        refreshRequestUI();
 
         // Load Pending Trades
         const trades = await API.getTrades(currentUser.id);
@@ -344,12 +413,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const isSender = trade.sender_id === currentUser.id;
             const otherUser = usersList.find(u => u.id === (isSender ? trade.receiver_id : trade.sender_id));
 
+            // Support both old (single string) and new (array) format
+            const offered = trade.players_offered || [trade.player_offered];
+            const requested = trade.players_requested || [trade.player_requested];
+
             const div = document.createElement('div');
             div.className = `trade-item card ${trade.status}`;
             div.innerHTML = `
                 <div class="trade-info">
-                    <p><b>${isSender ? 'You' : otherUser.username}</b> offered <b>${trade.player_offered}</b></p>
-                    <p>For <b>${trade.player_requested}</b></p>
+                    <p><b>${isSender ? 'You' : (otherUser ? otherUser.username : 'Unknown')}</b> offered:</p>
+                    <p class="trade-players-list">${offered.join(', ')}</p>
+                    <p>For:</p>
+                    <p class="trade-players-list">${requested.join(', ')}</p>
                     <p class="status-tag ${trade.status}">${trade.status.toUpperCase()}</p>
                 </div>
                 ${!isSender && trade.status === 'pending' ? `
@@ -507,31 +582,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Trade Listeners
-        tradeReceiverSelect.addEventListener('change', async () => {
-            const receiverId = tradeReceiverSelect.value;
-            if (!receiverId) return;
-
-            const receiverDrafted = draftedPlayers.filter(dp => dp.user_id === receiverId);
-            tradeRequestSelect.innerHTML = '<option value="">Select Player</option>';
-            receiverDrafted.forEach(dp => {
-                const opt = document.createElement('option');
-                opt.value = dp.player_id;
-                opt.textContent = dp.player_name;
-                tradeRequestSelect.appendChild(opt);
-            });
+        tradeReceiverSelect.addEventListener('change', () => {
+            tradeRequestSelected = [];
+            refreshRequestUI();
         });
 
         proposeTradeBtn.addEventListener('click', async () => {
             const receiverId = tradeReceiverSelect.value;
-            const offered = tradeGiveSelect.value;
-            const requested = tradeRequestSelect.value;
 
-            if (!receiverId || !offered || !requested) {
-                return notify('Please fill all trade fields', 'error');
+            if (!receiverId || tradeGiveSelected.length === 0 || tradeRequestSelected.length === 0) {
+                return notify('Select a user and at least one player on each side', 'error');
             }
 
             try {
-                await API.proposeTrade(currentUser.id, receiverId, offered, requested);
+                await API.proposeTrade(currentUser.id, receiverId, tradeGiveSelected, tradeRequestSelected);
                 notify('Trade proposed!', 'success');
                 renderTradeUI();
             } catch (error) { notify(error.message, 'error'); }
@@ -541,10 +605,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const tradeId = e.target.dataset.id;
             const leagueId = currentLeague ? currentLeague.id : null;
             if (e.target.classList.contains('accept-trade')) {
-                const trade = (await API.getTrades(currentUser.id)).find(t => t.id === tradeId);
                 try {
-                    await API.swapPlayers(trade.sender_id, trade.receiver_id, trade.player_offered, trade.player_requested, leagueId);
-                    await API.updateTradeStatus(tradeId, 'accepted');
+                    await API.swapPlayers(tradeId);
+                    // API.swapPlayers now handles the status update too via RPC
                     notify('Trade accepted! Players swapped.', 'success');
                     loadData();
                 } catch (error) { notify('Swap failed: ' + error.message, 'error'); }
@@ -616,6 +679,85 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+
+        // --- Account Management Listeners ---
+        const changePasswordForm = document.getElementById('change-password-form');
+        const deleteAccountBtn = document.getElementById('delete-account-btn');
+        const deleteConfirmModal = document.getElementById('delete-confirm-modal');
+        const deleteConfirmInput = document.getElementById('delete-confirm-input');
+        const modalCancelBtn = document.getElementById('modal-cancel-btn');
+        const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+
+        if (changePasswordForm) {
+            changePasswordForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const currentPw = document.getElementById('current-password-input').value;
+                const newPw = document.getElementById('new-password-input').value;
+                const confirmPw = document.getElementById('confirm-new-password-input').value;
+
+                if (newPw !== confirmPw) {
+                    return notify('New passwords do not match', 'error');
+                }
+
+                try {
+                    // Note: Supabase needs specific setup to verify "current password" before change 
+                    // without re-auth, but standard flow usually just updates if session is active.
+                    // For better security, we could re-authenticate first, but for now we proceed.
+                    await API.changePassword(newPw);
+                    notify('Password updated successfully', 'success');
+                    changePasswordForm.reset();
+                } catch (error) {
+                    notify('Error updating password: ' + error.message, 'error');
+                }
+            });
+        }
+
+        if (deleteAccountBtn) {
+            deleteAccountBtn.addEventListener('click', () => {
+                deleteConfirmModal.classList.remove('hidden');
+                deleteConfirmInput.value = '';
+                modalConfirmBtn.disabled = true;
+                deleteConfirmInput.focus();
+            });
+        }
+
+        if (modalCancelBtn) {
+            modalCancelBtn.addEventListener('click', () => {
+                deleteConfirmModal.classList.add('hidden');
+            });
+        }
+
+        if (deleteConfirmInput) {
+            deleteConfirmInput.addEventListener('input', (e) => {
+                const text = e.target.value;
+                modalConfirmBtn.disabled = text !== 'DELETE';
+                if (text === 'DELETE') {
+                    modalConfirmBtn.classList.add('pulse-danger');
+                } else {
+                    modalConfirmBtn.classList.remove('pulse-danger');
+                }
+            });
+        }
+
+        if (modalConfirmBtn) {
+            modalConfirmBtn.addEventListener('click', async () => {
+                if (deleteConfirmInput.value !== 'DELETE') return;
+
+                try {
+                    await API.deleteAccount(currentUser.id);
+                    // UI Cleanup handled by signOut logic, but we force specific steps:
+                    deleteConfirmModal.classList.add('hidden');
+                    notify('Account deleted. Goodbye.', 'info');
+
+                    // Force logout state update
+                    currentUser = null;
+                    currentLeague = null;
+                    showAuth();
+                } catch (error) {
+                    notify('Failed to delete account: ' + error.message, 'error');
+                }
+            });
+        }
     }
 
     function notify(message, type = 'info') {

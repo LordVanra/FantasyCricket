@@ -146,14 +146,14 @@ const API = {
         return data;
     },
 
-    async proposeTrade(senderId, receiverId, offeredId, requestedId) {
+    async proposeTrade(senderId, receiverId, offeredArr, requestedArr) {
         const { data, error } = await supabaseClient
             .from('trades')
             .insert([{
                 sender_id: senderId,
                 receiver_id: receiverId,
-                player_offered: offeredId,
-                player_requested: requestedId,
+                players_offered: offeredArr,
+                players_requested: requestedArr,
                 status: 'pending'
             }]);
         if (error) throw error;
@@ -169,16 +169,11 @@ const API = {
         return data;
     },
 
-    // Transactional Swap (Helper for accepted trades)
-    async swapPlayers(senderId, receiverId, playerA, playerB, leagueId) {
-        await Promise.all([
-            this.releasePlayer(playerA, senderId, leagueId),
-            this.releasePlayer(playerB, receiverId, leagueId)
-        ]);
-        await Promise.all([
-            this.draftPlayer(playerB, playerB, senderId, leagueId),
-            this.draftPlayer(playerA, playerA, receiverId, leagueId)
-        ]);
+    // Transactional Swap (RPC)
+    async swapPlayers(tradeId) {
+        // We use a Postgres function to handle the swap atomically and bypass RLS
+        const { error } = await supabaseClient.rpc('execute_trade', { trade_id: tradeId });
+        if (error) throw error;
     },
 
     // --- League API ---
@@ -240,15 +235,21 @@ const API = {
 
     async ensureUserProfile(userId, username, leagueId) {
         // 1. Ensure user entry exists in 'users' table with league_id
+        // We provide defaults for players/starting11 in case they are non-nullable
         const { error: userError } = await supabaseClient
             .from('users')
             .upsert({
                 id: userId,
                 league_id: leagueId,
-                updated_at: new Date()
+                updated_at: new Date(),
+                players: [],
+                starting11: []
             }, { onConflict: 'id' });
 
-        if (userError) throw userError;
+        if (userError) {
+            console.error('ensureUserProfile DB Error:', userError);
+            throw userError;
+        }
 
         // 2. Try to update profile username if possible (might fail on view but we try)
         // If user_profiles is a view, we skip this or hope a trigger handles it.
@@ -278,5 +279,25 @@ const API = {
             throw error;
         }
         return data;
+    },
+
+    // --- Account Management ---
+    async changePassword(newPassword) {
+        const { data, error } = await supabaseClient.auth.updateUser({ password: newPassword });
+        if (error) throw error;
+        return data;
+    },
+
+    async deleteAccount(userId) {
+        // Delete user's drafted players
+        await supabaseClient.from('drafted_players').delete().eq('user_id', userId);
+        // Delete user's trades (as sender or receiver)
+        await supabaseClient.from('trades').delete().or(`sender_id.eq.${userId},receiver_id.eq.${userId}`);
+        // Delete user's team data
+        await supabaseClient.from('users_teams').delete().eq('id', userId);
+        // Delete user row
+        await supabaseClient.from('users').delete().eq('id', userId);
+        // Sign out
+        await supabaseClient.auth.signOut();
     }
 };
