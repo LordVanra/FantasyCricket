@@ -248,9 +248,13 @@ class CricketDataProcessor {
         return acc;
       }, {});
 
+    const matches = this.data.matches || [];
+    const lastMatchUrl = matches.length > 0 ? matches[matches.length - 1].url : null;
+
     return {
       tournament: this.data.url,
-      totalMatches: this.data.matches.length,
+      totalMatches: matches.length,
+      lastMatchUrl: lastMatchUrl,
       players: sortedPlayers
     };
   }

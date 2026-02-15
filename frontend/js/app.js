@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // State Management
     let currentUser = null;
+    let currentLeague = null;
     let allPlayersData = {};
     let draftedPlayers = [];
     let mySquad = [];
@@ -16,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const authView = document.getElementById('auth-view');
     const dashboardView = document.getElementById('dashboard-view');
     const tradeView = document.getElementById('trade-view');
+    const leagueView = document.getElementById('league-view');
     const authForm = document.getElementById('auth-form');
     const usernameInput = document.getElementById('username');
     const passwordInput = document.getElementById('password');
@@ -27,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleText = document.getElementById('toggle-text');
     const logoutBtn = document.getElementById('logout-btn');
     const userEmailSpan = document.getElementById('user-email');
+    const leagueBadge = document.getElementById('league-badge');
 
     const allPlayersList = document.getElementById('all-players-list');
     const playerSearch = document.getElementById('player-search');
@@ -42,6 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const proposeTradeBtn = document.getElementById('propose-trade-btn');
     const pendingTradesList = document.getElementById('pending-trades-list');
 
+    // League elements
+    const currentLeagueName = document.getElementById('current-league-name');
+    const leaguesList = document.getElementById('leagues-list');
+    const createLeagueBtn = document.getElementById('create-league-btn');
+    const createLeagueNameInput = document.getElementById('create-league-name');
+    const joinLeagueCodeInput = document.getElementById('join-league-code');
+    const joinLeagueBtn = document.getElementById('join-league-btn');
+
     // Initialization
     async function init() {
         checkSession();
@@ -51,9 +62,32 @@ document.addEventListener('DOMContentLoaded', () => {
     async function checkSession() {
         currentUser = await API.getUser();
         if (currentUser) {
+            await loadUserLeague();
             showDashboard();
         } else {
             showAuth();
+        }
+    }
+
+    async function loadUserLeague() {
+        try {
+            const profile = await API.getUserProfile(currentUser.id);
+            if (profile && profile.league_id) {
+                const leagues = await API.getLeagues();
+                currentLeague = leagues.find(l => l.id === profile.league_id) || null;
+            }
+            if (!currentLeague) {
+                // Assign to default league
+                let defaultLeague = await API.getDefaultLeague();
+                if (!defaultLeague) {
+                    defaultLeague = await API.createDefaultLeague();
+                }
+                currentLeague = defaultLeague;
+                const displayUsername = currentUser.email.split('@')[0];
+                await API.ensureUserProfile(currentUser.id, displayUsername, defaultLeague.id);
+            }
+        } catch (error) {
+            console.error('Error loading league:', error);
         }
     }
 
@@ -61,9 +95,11 @@ document.addEventListener('DOMContentLoaded', () => {
         authView.classList.remove('hidden');
         dashboardView.classList.add('hidden');
         tradeView.classList.add('hidden');
+        leagueView.classList.add('hidden');
         navTabs.classList.add('hidden');
         logoutBtn.classList.add('hidden');
         userEmailSpan.textContent = '';
+        leagueBadge.textContent = '';
     }
 
     async function showDashboard() {
@@ -75,22 +111,24 @@ document.addEventListener('DOMContentLoaded', () => {
         // Extract username from dummy email for display
         const displayUsername = currentUser.email.split('@')[0];
         userEmailSpan.textContent = displayUsername;
+        leagueBadge.textContent = currentLeague ? currentLeague.name : 'No League';
 
         loadData();
     }
 
     async function loadData() {
         try {
+            const leagueId = currentLeague ? currentLeague.id : null;
             // Load stats and drafted status in parallel
             [allPlayersData, draftedPlayers, usersList] = await Promise.all([
                 API.getTournamentStats(),
-                API.getDraftedPlayers(),
-                API.getAllUsers()
+                API.getDraftedPlayers(leagueId),
+                API.getAllUsers(leagueId)
             ]);
 
             mySquad = draftedPlayers
                 .filter(dp => dp.user_id === currentUser.id)
-                .map(dp => dp.player_id); // we store player name as player_id in schema_v2
+                .map(dp => dp.player_id);
 
             // Load user's starting 11 config
             const teamData = await API.getUserTeam(currentUser.id);
@@ -129,13 +167,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 res = await API.signUp(dummyEmail, password);
                 if (res.error) throw res.error;
+
+                // Auto-assign to default league on sign up
+                const newUser = res.data.user;
+                if (newUser) {
+                    let defaultLeague = await API.getDefaultLeague();
+                    if (!defaultLeague) {
+                        defaultLeague = await API.createDefaultLeague();
+                    }
+                    await API.ensureUserProfile(newUser.id, username, defaultLeague.id);
+                }
+
                 notify('Account created! You can now Sign In.', 'success');
-                // Switch back to sign in automatically
                 toggleAuthState();
             } else {
                 res = await API.signIn(dummyEmail, password);
                 if (res.error) throw res.error;
                 currentUser = res.data.user;
+                await loadUserLeague();
                 showDashboard();
             }
         } catch (error) {
@@ -164,21 +213,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const player = allPlayersData.players[playerName];
         if (!player || player.matches.length === 0) return 0;
 
-        // Get stats from the last match
+        // Use the last match THIS player played in
         const lastMatchUrl = player.matches[player.matches.length - 1];
 
+        // Find stats for this specific match
         const batting = player.batting.find(m => m.matchUrl === lastMatchUrl) || {};
         const bowling = player.bowling.find(m => m.matchUrl === lastMatchUrl) || {};
         const fielding = player.fielding.find(m => m.matchUrl === lastMatchUrl) || {};
 
         let points = 0;
-        points += (parseInt(batting.runs) || 0) * 1;
-        points += (parseInt(bowling.wickets) || 0) * 20;
-        points += (parseInt(fielding.catches) || 0) * 8;
-        points += (parseInt(fielding.stumpings) || 0) * 12;
-        points += (parseInt(fielding.runouts) || 0) * 5;
 
-        return points;
+        // Batting
+        points += (parseInt(batting.runs) || 0) * 1;
+        points += (parseInt(batting.fours) || 0) * 2;
+        points += (parseInt(batting.sixes) || 0) * 3;
+
+        // Bowling
+        // Economy rate points only apply if they actually bowled (overs > 0)
+        const overs = parseFloat(bowling.overs) || 0;
+        if (overs > 0) {
+            const eco = parseFloat(bowling.economy) || 0;
+            points += 10 - eco;
+        }
+
+        points += (parseInt(bowling.wickets) || 0) * 20;
+
+        // Fielding
+        points += (parseInt(fielding.catches) || 0) * 8;
+        points += (parseInt(fielding.stumpings) || 0) * 5;
+        points += (parseInt(fielding.runouts) || 0) * 4;
+
+        return Math.round(points * 10) / 10;
     }
 
     // UI Rendering
@@ -301,6 +366,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    async function renderLeagueUI() {
+        if (!currentLeague) return;
+        currentLeagueName.textContent = currentLeague.name;
+
+        try {
+            const leagues = await API.getLeagues();
+            leaguesList.innerHTML = '';
+
+            leagues.forEach(league => {
+                const isCurrent = currentLeague && currentLeague.id === league.id;
+                const div = document.createElement('div');
+                div.className = `league-item ${isCurrent ? 'current' : ''}`;
+                div.innerHTML = `
+                    <div class="league-info">
+                        <h4>${league.name}</h4>
+                        <p class="dim">Code: <span class="league-code">${league.code}</span></p>
+                    </div>
+                    ${isCurrent
+                        ? '<span class="badge">Current</span>'
+                        : `<button class="btn btn-outline btn-xs switch-league-btn" data-id="${league.id}">Join</button>`
+                    }
+                `;
+                leaguesList.appendChild(div);
+            });
+        } catch (error) {
+            notify('Could not load leagues: ' + error.message, 'error');
+        }
+    }
+
     // Interaction Logic
     async function setupListeners() {
         authForm.addEventListener('submit', handleAuth);
@@ -313,6 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
         logoutBtn.addEventListener('click', async () => {
             await API.signOut();
             currentUser = null;
+            currentLeague = null;
             showAuth();
         });
 
@@ -324,6 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 link.classList.add('active');
                 document.getElementById(link.dataset.tab).classList.remove('hidden');
                 if (link.dataset.tab === 'trade-view') renderTradeUI();
+                if (link.dataset.tab === 'league-view') renderLeagueUI();
             });
         });
 
@@ -332,20 +428,40 @@ document.addEventListener('DOMContentLoaded', () => {
         allPlayersList.addEventListener('click', async (e) => {
             if (e.target.classList.contains('draft-btn')) {
                 const playerName = e.target.dataset.id;
+
+                if (!currentLeague) {
+                    notify('You must join a league before drafting!', 'error');
+                    // Try to reload league just in case
+                    await loadUserLeague();
+                    if (currentLeague) {
+                        notify('League loaded. Try again.', 'success');
+                        renderLeagueUI();
+                    }
+                    return;
+                }
+
+                const leagueId = currentLeague.id;
                 try {
-                    await API.draftPlayer(playerName, playerName, currentUser.id);
+                    // Pre-check: is player already drafted in this league?
+                    const alreadyTaken = await API.isPlayerDrafted(playerName, leagueId);
+                    if (alreadyTaken) {
+                        notify('Player already taken in your league!', 'error');
+                        return;
+                    }
+                    await API.draftPlayer(playerName, playerName, currentUser.id, leagueId);
                     notify(`Drafted ${playerName}!`, 'success');
-                    loadData(); // Reload to update "taken" status for others
+                    loadData();
                 } catch (error) {
-                    notify('Player already taken!', 'error');
+                    notify('Draft failed: ' + error.message, 'error');
                 }
             }
         });
 
         squadList.addEventListener('click', async (e) => {
             const playerName = e.target.dataset.id;
+            const leagueId = currentLeague ? currentLeague.id : null;
             if (e.target.classList.contains('release-btn')) {
-                await API.releasePlayer(playerName, currentUser.id);
+                await API.releasePlayer(playerName, currentUser.id, leagueId);
                 mySquad = mySquad.filter(p => p !== playerName);
                 starting11 = starting11.filter(p => p !== playerName);
                 loadData();
@@ -395,7 +511,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const receiverId = tradeReceiverSelect.value;
             if (!receiverId) return;
 
-            // Show their squad in the request select
             const receiverDrafted = draftedPlayers.filter(dp => dp.user_id === receiverId);
             tradeRequestSelect.innerHTML = '<option value="">Select Player</option>';
             receiverDrafted.forEach(dp => {
@@ -424,10 +539,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         pendingTradesList.addEventListener('click', async (e) => {
             const tradeId = e.target.dataset.id;
+            const leagueId = currentLeague ? currentLeague.id : null;
             if (e.target.classList.contains('accept-trade')) {
                 const trade = (await API.getTrades(currentUser.id)).find(t => t.id === tradeId);
                 try {
-                    await API.swapPlayers(trade.sender_id, trade.receiver_id, trade.player_offered, trade.player_requested);
+                    await API.swapPlayers(trade.sender_id, trade.receiver_id, trade.player_offered, trade.player_requested, leagueId);
                     await API.updateTradeStatus(tradeId, 'accepted');
                     notify('Trade accepted! Players swapped.', 'success');
                     loadData();
@@ -438,6 +554,66 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (e.target.classList.contains('cancel-trade')) {
                 await API.updateTradeStatus(tradeId, 'cancelled');
                 renderTradeUI();
+            }
+        });
+
+        // League Listeners
+        createLeagueBtn.addEventListener('click', async () => {
+            const name = createLeagueNameInput.value.trim();
+            if (!name) return notify('Enter a league name', 'error');
+
+            const code = name.toUpperCase().replace(/\s+/g, '-').substring(0, 20) + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+            try {
+                const league = await API.createLeague(name, code);
+                // Auto-join the league you created
+                await API.joinLeague(currentUser.id, league.id);
+                currentLeague = league;
+                leagueBadge.textContent = league.name;
+                createLeagueNameInput.value = '';
+                notify(`League "${name}" created! Code: ${code}`, 'success');
+                renderLeagueUI();
+                loadData(); // Reload data for new league scope
+            } catch (error) {
+                notify('Failed to create league: ' + error.message, 'error');
+            }
+        });
+
+        joinLeagueBtn.addEventListener('click', async () => {
+            const code = joinLeagueCodeInput.value.trim().toUpperCase();
+            if (!code) return notify('Enter a league code', 'error');
+
+            try {
+                const leagues = await API.getLeagues();
+                const league = leagues.find(l => l.code.toUpperCase() === code);
+                if (!league) {
+                    return notify('League not found with that code', 'error');
+                }
+                await API.joinLeague(currentUser.id, league.id);
+                currentLeague = league;
+                leagueBadge.textContent = league.name;
+                joinLeagueCodeInput.value = '';
+                notify(`Joined "${league.name}"!`, 'success');
+                renderLeagueUI();
+                loadData();
+            } catch (error) {
+                notify('Failed to join league: ' + error.message, 'error');
+            }
+        });
+
+        leaguesList.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('switch-league-btn')) {
+                const leagueId = e.target.dataset.id;
+                try {
+                    await API.joinLeague(currentUser.id, leagueId);
+                    const leagues = await API.getLeagues();
+                    currentLeague = leagues.find(l => l.id === leagueId);
+                    leagueBadge.textContent = currentLeague ? currentLeague.name : 'No League';
+                    notify(`Switched to "${currentLeague.name}"!`, 'success');
+                    renderLeagueUI();
+                    loadData();
+                } catch (error) {
+                    notify('Failed to switch league: ' + error.message, 'error');
+                }
             }
         });
     }
