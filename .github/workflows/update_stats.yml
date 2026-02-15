@@ -1,0 +1,42 @@
+name: Update Cricket Stats
+
+on:
+  schedule:
+    # Run daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
+    
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      TOURNAMENT_URL: ${{ secrets.TOURNAMENT_URL }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: |
+          cd backend
+          npm install
+
+      - name: Run Scraper
+        if: env.TOURNAMENT_URL != ''
+        run: |
+          cd backend
+          node datascrape.js "$TOURNAMENT_URL" "data.json"
+
+      - name: Process and Sync Data
+        if: env.TOURNAMENT_URL != ''
+        run: |
+          cd backend
+          node processPlayers.js "data.json" "stats.json"
