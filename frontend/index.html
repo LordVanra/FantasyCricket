@@ -10,6 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/ui.js" defer></script>
+    <script src="js/api.js" defer></script>
+    <script src="js/app.js" defer></script>
 </head>
 
 <body class="dark-theme">
@@ -23,19 +26,17 @@
             </div>
         </div>
     </nav>
-
-    <!-- Navigation Tabs -->
     <div id="nav-tabs" class="container hidden">
         <div class="tabs">
             <button class="tab-link active" data-tab="dashboard-view">Dashboard</button>
             <button class="tab-link" data-tab="trade-view">Trade Center</button>
             <button class="tab-link" data-tab="league-view">Leagues</button>
+            <button class="tab-link" data-tab="fixtures-view">Fixtures</button>
+            <button class="tab-link" data-tab="scoreboard-view">Scoreboard</button>
             <button class="tab-link" data-tab="account-view">Account</button>
         </div>
     </div>
-
     <main class="container">
-        <!-- Auth View -->
         <section id="auth-view" class="view">
             <div class="auth-card">
                 <h2 id="auth-title">Welcome Back</h2>
@@ -46,11 +47,11 @@
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" required placeholder="••••••••">
+                        <input type="password" id="password" required placeholder="********">
                     </div>
                     <div class="form-group hidden" id="confirm-password-group">
                         <label for="confirm-password">Confirm Password</label>
-                        <input type="password" id="confirm-password" placeholder="••••••••">
+                        <input type="password" id="confirm-password" placeholder="********">
                     </div>
                     <button type="submit" id="auth-submit" class="btn btn-primary">Sign In</button>
                 </form>
@@ -59,8 +60,6 @@
                 </p>
             </div>
         </section>
-
-        <!-- Dashboard View (After Login) -->
         <section id="dashboard-view" class="view hidden tab-content">
             <div class="dashboard-header">
                 <h2>Tournament Dashboard</h2>
@@ -71,9 +70,7 @@
                     </div>
                 </div>
             </div>
-
             <div class="main-layout">
-                <!-- Player Marketplace -->
                 <div class="card marketplace">
                     <div class="card-header">
                         <h3>Player Draft</h3>
@@ -83,14 +80,11 @@
                         <div class="loader">Loading stats...</div>
                     </div>
                 </div>
-
-                <!-- My Team Side Panel -->
                 <div class="side-panel">
                     <div class="card my-squad">
                         <h3>My Squad</h3>
                         <div id="squad-list" class="mini-list"></div>
                     </div>
-
                     <div class="card starting-11">
                         <h3>Starting 11</h3>
                         <p class="hint">Reorder for batting/bowling strategy</p>
@@ -100,8 +94,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- Trade View -->
         <section id="trade-view" class="view hidden tab-content">
             <div class="trade-layout">
                 <div class="card trade-proposal">
@@ -124,7 +116,6 @@
                     </div>
                     <button id="propose-trade-btn" class="btn btn-primary">Propose Trade</button>
                 </div>
-
                 <div class="card trade-active">
                     <h3>Pending Trades</h3>
                     <div id="pending-trades-list" class="mini-list">
@@ -133,19 +124,14 @@
                 </div>
             </div>
         </section>
-
-        <!-- League View -->
         <section id="league-view" class="view hidden tab-content">
             <div class="league-layout">
-                <!-- Current League Card -->
                 <div class="card league-current-card">
                     <div class="league-current-header">
                         <h3>Your League</h3>
-                        <span id="current-league-name" class="league-name-display">—</span>
+                        <span id="current-league-name" class="league-name-display">-</span>
                     </div>
                 </div>
-
-                <!-- Join / Create -->
                 <div class="league-actions-grid">
                     <div class="card">
                         <h3>Join a League</h3>
@@ -164,8 +150,6 @@
                         <button id="create-league-btn" class="btn btn-accent">Create League</button>
                     </div>
                 </div>
-
-                <!-- All Leagues List -->
                 <div class="card">
                     <h3>Available Leagues</h3>
                     <div id="leagues-list" class="mini-list">
@@ -174,32 +158,65 @@
                 </div>
             </div>
         </section>
-
-        <!-- Account View -->
+        <section id="fixtures-view" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Season Fixtures</h3>
+                    <div class="form-group" style="margin: 0; display: flex; gap: 8px; align-items: center;">
+                        <input type="number" id="rounds-input" class="btn-sm" placeholder="Rounds" min="1" max="10"
+                            value="1" style="width: 80px;">
+                        <button id="generate-fixtures-btn" class="btn btn-primary btn-sm">Generate Fixtures</button>
+                        <button id="update-scores-btn" class="btn btn-secondary btn-sm">Update Scores</button>
+                    </div>
+                </div>
+                <div class="fixtures-container" id="fixtures-list">
+                    <div class="text-center">Loading fixtures...</div>
+                </div>
+            </div>
+        </section>
+        <section id="scoreboard-view" class="tab-content hidden">
+            <div class="card">
+                <h3>League Table</h3>
+                <div class="table-container">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr>
+                                <th>Pos</th>
+                                <th>Team</th>
+                                <th>P</th>
+                                <th>W</th>
+                                <th>L</th>
+                                <th>D</th>
+                                <th>Pts</th>
+                                <th>Net Pts</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scoreboard-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
         <section id="account-view" class="view hidden tab-content">
             <div class="account-layout">
-                <!-- Change Password Card -->
                 <div class="card account-card">
                     <h3>Change Password</h3>
                     <p class="dim">Update your account password</p>
                     <form id="change-password-form">
                         <div class="form-group">
                             <label for="current-password-input">Current Password</label>
-                            <input type="password" id="current-password-input" required placeholder="••••••••">
+                            <input type="password" id="current-password-input" required placeholder="********">
                         </div>
                         <div class="form-group">
                             <label for="new-password-input">New Password</label>
-                            <input type="password" id="new-password-input" required placeholder="••••••••">
+                            <input type="password" id="new-password-input" required placeholder="********">
                         </div>
                         <div class="form-group">
                             <label for="confirm-new-password-input">Confirm New Password</label>
-                            <input type="password" id="confirm-new-password-input" required placeholder="••••••••">
+                            <input type="password" id="confirm-new-password-input" required placeholder="********">
                         </div>
                         <button type="submit" class="btn btn-primary">Update Password</button>
                     </form>
                 </div>
-
-                <!-- Danger Zone -->
                 <div class="card danger-zone-card">
                     <h3>Danger Zone</h3>
                     <p class="dim">Once you delete your account, there is no going back. All your data including your
@@ -209,11 +226,9 @@
             </div>
         </section>
     </main>
-
-    <!-- Delete Account Confirmation Modal -->
     <div id="delete-confirm-modal" class="modal-overlay hidden">
         <div class="modal-dialog danger-modal">
-            <h3>⚠️ Delete Account</h3>
+            <h3>Delete Account</h3>
             <p>This action is <strong>permanent</strong> and cannot be undone. All your data will be erased.</p>
             <p class="confirm-prompt">Type <strong>DELETE</strong> to confirm:</p>
             <input type="text" id="delete-confirm-input" placeholder="Type DELETE here" autocomplete="off">
@@ -223,11 +238,7 @@
             </div>
         </div>
     </div>
-
     <div id="notification-area"></div>
-
-    <script src="js/api.js"></script>
-    <script src="js/app.js"></script>
 </body>
 
 </html>

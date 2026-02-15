@@ -1,19 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // State Management
-    let currentUser = null;
-    let currentLeague = null;
-    let allPlayersData = {};
-    let draftedPlayers = [];
-    let mySquad = [];
-    let starting11 = [];
-    let usersList = [];
-    let isSignUp = false;
+    let currentUser = null, currentLeague = null, allPlayersData = {}, draftedPlayers = [], mySquad = [], starting11 = [], usersList = [], isSignUp = false;
+    let tradeGiveSelected = [], tradeRequestSelected = [];
 
-    // UI Elements
     const navTabs = document.getElementById('nav-tabs');
     const tabLinks = document.querySelectorAll('.tab-link');
     const tabContents = document.querySelectorAll('.tab-content');
-
     const authView = document.getElementById('auth-view');
     const dashboardView = document.getElementById('dashboard-view');
     const tradeView = document.getElementById('trade-view');
@@ -30,15 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoutBtn = document.getElementById('logout-btn');
     const userEmailSpan = document.getElementById('user-email');
     const leagueBadge = document.getElementById('league-badge');
-
     const allPlayersList = document.getElementById('all-players-list');
     const playerSearch = document.getElementById('player-search');
     const squadList = document.getElementById('squad-list');
     const startingList = document.getElementById('starting-list');
     const squadCount = document.getElementById('squad-count');
     const saveTeamBtn = document.getElementById('save-team-btn');
-
-    // Trade elements
     const tradeReceiverSelect = document.getElementById('trade-receiver-select');
     const tradeGiveChips = document.getElementById('trade-give-chips');
     const tradeGiveList = document.getElementById('trade-give-list');
@@ -46,12 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const tradeRequestList = document.getElementById('trade-request-list');
     const proposeTradeBtn = document.getElementById('propose-trade-btn');
     const pendingTradesList = document.getElementById('pending-trades-list');
-
-    // Multi-select trade state
-    let tradeGiveSelected = [];
-    let tradeRequestSelected = [];
-
-    // League elements
     const currentLeagueName = document.getElementById('current-league-name');
     const leaguesList = document.getElementById('leagues-list');
     const createLeagueBtn = document.getElementById('create-league-btn');
@@ -59,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const joinLeagueCodeInput = document.getElementById('join-league-code');
     const joinLeagueBtn = document.getElementById('join-league-btn');
 
-    // Initialization
     async function init() {
         checkSession();
         setupListeners();
@@ -83,18 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentLeague = leagues.find(l => l.id === profile.league_id) || null;
             }
             if (!currentLeague) {
-                // Assign to default league
                 let defaultLeague = await API.getDefaultLeague();
-                if (!defaultLeague) {
-                    defaultLeague = await API.createDefaultLeague();
-                }
+                if (!defaultLeague) defaultLeague = await API.createDefaultLeague();
                 currentLeague = defaultLeague;
                 const displayUsername = currentUser.email.split('@')[0];
                 await API.ensureUserProfile(currentUser.id, displayUsername, defaultLeague.id);
             }
-        } catch (error) {
-            console.error('Error loading league:', error);
-        }
+        } catch (error) { }
     }
 
     function showAuth() {
@@ -113,37 +89,26 @@ document.addEventListener('DOMContentLoaded', () => {
         dashboardView.classList.remove('hidden');
         navTabs.classList.remove('hidden');
         logoutBtn.classList.remove('hidden');
-
-        // Extract username from dummy email for display
         const displayUsername = currentUser.email.split('@')[0];
         userEmailSpan.textContent = displayUsername;
         leagueBadge.textContent = currentLeague ? currentLeague.name : 'No League';
-
         loadData();
     }
 
     async function loadData() {
         try {
             const leagueId = currentLeague ? currentLeague.id : null;
-            // Load stats and drafted status in parallel
             [allPlayersData, draftedPlayers, usersList] = await Promise.all([
                 API.getTournamentStats(),
                 API.getDraftedPlayers(leagueId),
                 API.getAllUsers(leagueId)
             ]);
-
-            mySquad = draftedPlayers
-                .filter(dp => dp.user_id === currentUser.id)
-                .map(dp => dp.player_id);
-
-            // Load user's starting 11 config
+            mySquad = draftedPlayers.filter(dp => dp.user_id === currentUser.id).map(dp => dp.player_id);
             const teamData = await API.getUserTeam(currentUser.id);
             if (teamData) {
                 starting11 = teamData.starting_11 || [];
-                // Clean up starting11 in case players were released
                 starting11 = starting11.filter(name => mySquad.includes(name));
             }
-
             renderAllPlayers();
             renderMyTeam();
             renderTradeUI();
@@ -152,38 +117,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Auth Logic helpers
     function getDummyEmail(username) {
         return `${username.toLowerCase().trim()}@fantasy-app.internal`;
     }
 
-    // Auth Logic
     async function handleAuth(e) {
         e.preventDefault();
         const username = usernameInput.value;
         const password = passwordInput.value;
         const confirmPassword = confirmPasswordInput.value;
         const dummyEmail = getDummyEmail(username);
-
         try {
             let res;
             if (isSignUp) {
-                if (password !== confirmPassword) {
-                    throw new Error('Passwords do not match!');
-                }
+                if (password !== confirmPassword) throw new Error('Passwords do not match!');
                 res = await API.signUp(dummyEmail, password);
                 if (res.error) throw res.error;
-
-                // Auto-assign to default league on sign up
                 const newUser = res.data.user;
                 if (newUser) {
                     let defaultLeague = await API.getDefaultLeague();
-                    if (!defaultLeague) {
-                        defaultLeague = await API.createDefaultLeague();
-                    }
+                    if (!defaultLeague) defaultLeague = await API.createDefaultLeague();
                     await API.ensureUserProfile(newUser.id, username, defaultLeague.id);
                 }
-
                 notify('Account created! You can now Sign In.', 'success');
                 toggleAuthState();
             } else {
@@ -204,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
         authSubmit.textContent = isSignUp ? 'Sign Up' : 'Sign In';
         toggleAuth.textContent = isSignUp ? 'Sign In' : 'Sign Up';
         toggleText.textContent = isSignUp ? 'Already have an account?' : "Don't have an account?";
-
         if (isSignUp) {
             confirmPasswordGroup.classList.remove('hidden');
             confirmPasswordInput.required = true;
@@ -214,60 +168,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Points Engine ---
     function calculatePlayerPoints(playerName) {
         const player = allPlayersData.players[playerName];
         if (!player || player.matches.length === 0) return 0;
-
-        // Use the last match THIS player played in
         const lastMatchUrl = player.matches[player.matches.length - 1];
-
-        // Find stats for this specific match
         const batting = player.batting.find(m => m.matchUrl === lastMatchUrl) || {};
         const bowling = player.bowling.find(m => m.matchUrl === lastMatchUrl) || {};
         const fielding = player.fielding.find(m => m.matchUrl === lastMatchUrl) || {};
-
         let points = 0;
-
-        // Batting
         points += (parseInt(batting.runs) || 0) * 1;
         points += (parseInt(batting.fours) || 0) * 2;
         points += (parseInt(batting.sixes) || 0) * 3;
-
-        // Bowling
-        // Economy rate points only apply if they actually bowled (overs > 0)
         const overs = parseFloat(bowling.overs) || 0;
         if (overs > 0) {
             const eco = parseFloat(bowling.economy) || 0;
             points += 10 - eco;
         }
-
         points += (parseInt(bowling.wickets) || 0) * 20;
-
-        // Fielding
         points += (parseInt(fielding.catches) || 0) * 8;
         points += (parseInt(fielding.stumpings) || 0) * 5;
         points += (parseInt(fielding.runouts) || 0) * 4;
-
         return Math.round(points * 10) / 10;
     }
 
-    // UI Rendering
     function renderAllPlayers() {
         const searchTerm = playerSearch.value.toLowerCase();
         allPlayersList.innerHTML = '';
-
         const players = Object.values(allPlayersData.players);
         const filtered = players.filter(p => p.name.toLowerCase().includes(searchTerm));
-
         filtered.forEach(player => {
             const isTaken = draftedPlayers.some(dp => dp.player_id === player.name && dp.user_id !== currentUser.id);
             const isInMySquad = mySquad.includes(player.name);
             const lastPoints = calculatePlayerPoints(player.name);
-
             const div = document.createElement('div');
             div.className = `player-item ${isTaken ? 'taken' : ''}`;
-
             div.innerHTML = `
                 <div class="player-info">
                     <h4>${player.name} <span class="points-badge">${lastPoints} pts</span></h4>
@@ -284,8 +218,6 @@ document.addEventListener('DOMContentLoaded', () => {
         squadList.innerHTML = '';
         startingList.innerHTML = '';
         squadCount.textContent = mySquad.length;
-
-        // Render Squad
         mySquad.forEach(playerName => {
             const div = document.createElement('div');
             div.className = 'squad-player';
@@ -298,8 +230,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             squadList.appendChild(div);
         });
-
-        // Render Starting 11
         starting11.forEach((playerName, index) => {
             const div = document.createElement('div');
             div.className = 'squad-player';
@@ -313,24 +243,8 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             startingList.appendChild(div);
         });
-
-        // Toggle Save Button
-        saveTeamBtn.disabled = starting11.length !== 11;
-        saveTeamBtn.textContent = starting11.length === 11 ? 'Save Lineup' : `Need ${11 - starting11.length} more`;
-    }
-
-    function renderChips(container, selectedArr, onRemove) {
-        container.innerHTML = '';
-        selectedArr.forEach(name => {
-            const chip = document.createElement('span');
-            chip.className = 'trade-chip';
-            chip.innerHTML = `${name} <button class="chip-remove" data-name="${name}">&times;</button>`;
-            chip.querySelector('.chip-remove').addEventListener('click', () => onRemove(name));
-            container.appendChild(chip);
-        });
-        if (selectedArr.length === 0) {
-            container.innerHTML = '<span class="dim">None selected</span>';
-        }
+        saveTeamBtn.disabled = starting11.length === 0 || starting11.length > 11;
+        saveTeamBtn.textContent = 'Save Lineup';
     }
 
     function renderPlayerList(container, players, selectedArr, onToggle) {
@@ -343,9 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             row.addEventListener('click', () => onToggle(name));
             container.appendChild(row);
         });
-        if (players.length === 0) {
-            container.innerHTML = '<p class="dim">No players available</p>';
-        }
+        if (players.length === 0) container.innerHTML = '<p class="dim">No players available</p>';
     }
 
     function refreshGiveUI() {
@@ -365,9 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function refreshRequestUI() {
         const receiverId = tradeReceiverSelect.value;
-        const receiverPlayers = receiverId
-            ? draftedPlayers.filter(dp => dp.user_id === receiverId).map(dp => dp.player_name)
-            : [];
+        const receiverPlayers = receiverId ? draftedPlayers.filter(dp => dp.user_id === receiverId).map(dp => dp.player_name) : [];
         renderChips(tradeRequestChips, tradeRequestSelected, (name) => {
             tradeRequestSelected = tradeRequestSelected.filter(n => n !== name);
             refreshRequestUI();
@@ -383,11 +293,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function renderTradeUI() {
-        // Reset selections
         tradeGiveSelected = [];
         tradeRequestSelected = [];
-
-        // Populate Receiver Select
         tradeReceiverSelect.innerHTML = '<option value="">Select User</option>';
         usersList.filter(u => u.id !== currentUser.id).forEach(user => {
             const opt = document.createElement('option');
@@ -395,28 +302,16 @@ document.addEventListener('DOMContentLoaded', () => {
             opt.textContent = user.username;
             tradeReceiverSelect.appendChild(opt);
         });
-
-        // Render Give list
         refreshGiveUI();
-        // Render Request list (empty until receiver is picked)
         refreshRequestUI();
-
-        // Load Pending Trades
         const trades = await API.getTrades(currentUser.id);
         pendingTradesList.innerHTML = '';
-
-        if (trades.length === 0) {
-            pendingTradesList.innerHTML = '<p class="dim">No active proposals</p>';
-        }
-
+        if (trades.length === 0) pendingTradesList.innerHTML = '<p class="dim">No active proposals</p>';
         trades.forEach(trade => {
             const isSender = trade.sender_id === currentUser.id;
             const otherUser = usersList.find(u => u.id === (isSender ? trade.receiver_id : trade.sender_id));
-
-            // Support both old (single string) and new (array) format
             const offered = trade.players_offered || [trade.player_offered];
             const requested = trade.players_requested || [trade.player_requested];
-
             const div = document.createElement('div');
             div.className = `trade-item card ${trade.status}`;
             div.innerHTML = `
@@ -444,11 +339,9 @@ document.addEventListener('DOMContentLoaded', () => {
     async function renderLeagueUI() {
         if (!currentLeague) return;
         currentLeagueName.textContent = currentLeague.name;
-
         try {
             const leagues = await API.getLeagues();
             leaguesList.innerHTML = '';
-
             leagues.forEach(league => {
                 const isCurrent = currentLeague && currentLeague.id === league.id;
                 const div = document.createElement('div');
@@ -458,10 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h4>${league.name}</h4>
                         <p class="dim">Code: <span class="league-code">${league.code}</span></p>
                     </div>
-                    ${isCurrent
-                        ? '<span class="badge">Current</span>'
-                        : `<button class="btn btn-outline btn-xs switch-league-btn" data-id="${league.id}">Join</button>`
-                    }
+                    ${isCurrent ? '<span class="badge">Current</span>' : `<button class="btn btn-outline btn-xs switch-league-btn" data-id="${league.id}">Join</button>`}
                 `;
                 leaguesList.appendChild(div);
             });
@@ -470,23 +360,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Interaction Logic
     async function setupListeners() {
         authForm.addEventListener('submit', handleAuth);
-
         toggleAuth.addEventListener('click', (e) => {
             e.preventDefault();
             toggleAuthState();
         });
-
         logoutBtn.addEventListener('click', async () => {
             await API.signOut();
             currentUser = null;
             currentLeague = null;
             showAuth();
         });
-
-        // Tab switching
         tabLinks.forEach(link => {
             link.addEventListener('click', () => {
                 tabLinks.forEach(l => l.classList.remove('active'));
@@ -495,18 +380,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById(link.dataset.tab).classList.remove('hidden');
                 if (link.dataset.tab === 'trade-view') renderTradeUI();
                 if (link.dataset.tab === 'league-view') renderLeagueUI();
+                if (link.dataset.tab === 'fixtures-view') renderFixtures();
+                if (link.dataset.tab === 'scoreboard-view') renderScoreboard();
             });
         });
-
         playerSearch.addEventListener('input', renderAllPlayers);
-
         allPlayersList.addEventListener('click', async (e) => {
             if (e.target.classList.contains('draft-btn')) {
                 const playerName = e.target.dataset.id;
-
                 if (!currentLeague) {
                     notify('You must join a league before drafting!', 'error');
-                    // Try to reload league just in case
                     await loadUserLeague();
                     if (currentLeague) {
                         notify('League loaded. Try again.', 'success');
@@ -514,10 +397,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     return;
                 }
-
                 const leagueId = currentLeague.id;
                 try {
-                    // Pre-check: is player already drafted in this league?
                     const alreadyTaken = await API.isPlayerDrafted(playerName, leagueId);
                     if (alreadyTaken) {
                         notify('Player already taken in your league!', 'error');
@@ -531,7 +412,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-
         squadList.addEventListener('click', async (e) => {
             const playerName = e.target.dataset.id;
             const leagueId = currentLeague ? currentLeague.id : null;
@@ -551,7 +431,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-
         startingList.addEventListener('click', (e) => {
             if (e.target.classList.contains('remove-11-btn')) {
                 const playerName = e.target.dataset.id;
@@ -571,8 +450,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-
         saveTeamBtn.addEventListener('click', async () => {
+            if (!currentLeague) return notify('You must join a league first!', 'error');
             try {
                 await API.saveUserTeam(currentUser.id, mySquad, starting11);
                 notify('Lineup saved successfully!', 'success');
@@ -580,193 +459,282 @@ document.addEventListener('DOMContentLoaded', () => {
                 notify(error.message, 'error');
             }
         });
-
-        // Trade Listeners
         tradeReceiverSelect.addEventListener('change', () => {
             tradeRequestSelected = [];
             refreshRequestUI();
         });
-
         proposeTradeBtn.addEventListener('click', async () => {
             const receiverId = tradeReceiverSelect.value;
-
             if (!receiverId || tradeGiveSelected.length === 0 || tradeRequestSelected.length === 0) {
                 return notify('Select a user and at least one player on each side', 'error');
             }
-
             try {
                 await API.proposeTrade(currentUser.id, receiverId, tradeGiveSelected, tradeRequestSelected);
                 notify('Trade proposed!', 'success');
                 renderTradeUI();
-            } catch (error) { notify(error.message, 'error'); }
-        });
-
-        pendingTradesList.addEventListener('click', async (e) => {
-            const tradeId = e.target.dataset.id;
-            const leagueId = currentLeague ? currentLeague.id : null;
-            if (e.target.classList.contains('accept-trade')) {
-                try {
-                    await API.swapPlayers(tradeId);
-                    // API.swapPlayers now handles the status update too via RPC
-                    notify('Trade accepted! Players swapped.', 'success');
-                    loadData();
-                } catch (error) { notify('Swap failed: ' + error.message, 'error'); }
-            } else if (e.target.classList.contains('decline-trade')) {
-                await API.updateTradeStatus(tradeId, 'declined');
-                renderTradeUI();
-            } else if (e.target.classList.contains('cancel-trade')) {
-                await API.updateTradeStatus(tradeId, 'cancelled');
-                renderTradeUI();
-            }
-        });
-
-        // League Listeners
-        createLeagueBtn.addEventListener('click', async () => {
-            const name = createLeagueNameInput.value.trim();
-            if (!name) return notify('Enter a league name', 'error');
-
-            const code = name.toUpperCase().replace(/\s+/g, '-').substring(0, 20) + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-            try {
-                const league = await API.createLeague(name, code);
-                // Auto-join the league you created
-                await API.joinLeague(currentUser.id, league.id);
-                currentLeague = league;
-                leagueBadge.textContent = league.name;
-                createLeagueNameInput.value = '';
-                notify(`League "${name}" created! Code: ${code}`, 'success');
-                renderLeagueUI();
-                loadData(); // Reload data for new league scope
             } catch (error) {
-                notify('Failed to create league: ' + error.message, 'error');
+                notify(error.message, 'error');
             }
         });
-
-        joinLeagueBtn.addEventListener('click', async () => {
-            const code = joinLeagueCodeInput.value.trim().toUpperCase();
-            if (!code) return notify('Enter a league code', 'error');
-
-            try {
-                const leagues = await API.getLeagues();
-                const league = leagues.find(l => l.code.toUpperCase() === code);
-                if (!league) {
-                    return notify('League not found with that code', 'error');
+        const genBtn = document.getElementById('generate-fixtures-btn');
+        const roundsInput = document.getElementById('rounds-input');
+        if (genBtn) {
+            genBtn.addEventListener('click', async () => {
+                const rounds = parseInt(roundsInput.value) || 1;
+                if (rounds < 1 || rounds > 10) {
+                    return notify('Please enter rounds between 1-10', 'error');
                 }
-                await API.joinLeague(currentUser.id, league.id);
-                currentLeague = league;
-                leagueBadge.textContent = league.name;
-                joinLeagueCodeInput.value = '';
-                notify(`Joined "${league.name}"!`, 'success');
-                renderLeagueUI();
-                loadData();
-            } catch (error) {
-                notify('Failed to join league: ' + error.message, 'error');
-            }
-        });
-
-        leaguesList.addEventListener('click', async (e) => {
-            if (e.target.classList.contains('switch-league-btn')) {
-                const leagueId = e.target.dataset.id;
+                if (confirm(`Generate ${rounds} round(s) of fixtures? This will clear any existing matches for this league.`)) {
+                    try {
+                        await API.generateFixtures(currentLeague.id, rounds);
+                        notify(`${rounds} round(s) of fixtures generated!`, 'success');
+                        renderFixtures();
+                        renderScoreboard();
+                    } catch (error) {
+                        notify('Generation failed: ' + error.message, 'error');
+                    }
+                }
+            });
+        }
+        const scoreBtn = document.getElementById('update-scores-btn');
+        if (scoreBtn) {
+            scoreBtn.addEventListener('click', async () => {
                 try {
-                    await API.joinLeague(currentUser.id, leagueId);
-                    const leagues = await API.getLeagues();
-                    currentLeague = leagues.find(l => l.id === leagueId);
-                    leagueBadge.textContent = currentLeague ? currentLeague.name : 'No League';
-                    notify(`Switched to "${currentLeague.name}"!`, 'success');
-                    renderLeagueUI();
-                    loadData();
+                    notify('Updating scores... please wait.', 'info');
+                    const count = await API.updateRoundScores(currentLeague.id);
+                    notify(`Updated scores! ${count} matches finalized.`, 'success');
+                    renderFixtures();
+                    renderScoreboard();
                 } catch (error) {
-                    notify('Failed to switch league: ' + error.message, 'error');
-                }
-            }
-        });
-
-        // --- Account Management Listeners ---
-        const changePasswordForm = document.getElementById('change-password-form');
-        const deleteAccountBtn = document.getElementById('delete-account-btn');
-        const deleteConfirmModal = document.getElementById('delete-confirm-modal');
-        const deleteConfirmInput = document.getElementById('delete-confirm-input');
-        const modalCancelBtn = document.getElementById('modal-cancel-btn');
-        const modalConfirmBtn = document.getElementById('modal-confirm-btn');
-
-        if (changePasswordForm) {
-            changePasswordForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const currentPw = document.getElementById('current-password-input').value;
-                const newPw = document.getElementById('new-password-input').value;
-                const confirmPw = document.getElementById('confirm-new-password-input').value;
-
-                if (newPw !== confirmPw) {
-                    return notify('New passwords do not match', 'error');
-                }
-
-                try {
-                    // Note: Supabase needs specific setup to verify "current password" before change 
-                    // without re-auth, but standard flow usually just updates if session is active.
-                    // For better security, we could re-authenticate first, but for now we proceed.
-                    await API.changePassword(newPw);
-                    notify('Password updated successfully', 'success');
-                    changePasswordForm.reset();
-                } catch (error) {
-                    notify('Error updating password: ' + error.message, 'error');
-                }
-            });
-        }
-
-        if (deleteAccountBtn) {
-            deleteAccountBtn.addEventListener('click', () => {
-                deleteConfirmModal.classList.remove('hidden');
-                deleteConfirmInput.value = '';
-                modalConfirmBtn.disabled = true;
-                deleteConfirmInput.focus();
-            });
-        }
-
-        if (modalCancelBtn) {
-            modalCancelBtn.addEventListener('click', () => {
-                deleteConfirmModal.classList.add('hidden');
-            });
-        }
-
-        if (deleteConfirmInput) {
-            deleteConfirmInput.addEventListener('input', (e) => {
-                const text = e.target.value;
-                modalConfirmBtn.disabled = text !== 'DELETE';
-                if (text === 'DELETE') {
-                    modalConfirmBtn.classList.add('pulse-danger');
-                } else {
-                    modalConfirmBtn.classList.remove('pulse-danger');
-                }
-            });
-        }
-
-        if (modalConfirmBtn) {
-            modalConfirmBtn.addEventListener('click', async () => {
-                if (deleteConfirmInput.value !== 'DELETE') return;
-
-                try {
-                    await API.deleteAccount(currentUser.id);
-                    // UI Cleanup handled by signOut logic, but we force specific steps:
-                    deleteConfirmModal.classList.add('hidden');
-                    notify('Account deleted. Goodbye.', 'info');
-
-                    // Force logout state update
-                    currentUser = null;
-                    currentLeague = null;
-                    showAuth();
-                } catch (error) {
-                    notify('Failed to delete account: ' + error.message, 'error');
+                    notify('Update failed: ' + error.message, 'error');
                 }
             });
         }
     }
 
-    function notify(message, type = 'info') {
-        const area = document.getElementById('notification-area');
-        const div = document.createElement('div');
-        div.className = `notification ${type}`;
-        div.textContent = message;
-        area.appendChild(div);
-        setTimeout(() => div.remove(), 4000);
+    async function renderFixtures() {
+        const container = document.getElementById('fixtures-list');
+        if (!container) return;
+        container.innerHTML = '<div class="text-center">Loading...</div>';
+        try {
+            if (!currentLeague) return;
+            const leagueId = currentLeague.id;
+            const fixtures = await API.getFixtures(leagueId);
+            if (fixtures.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center dim">
+                        <p>No fixtures generated yet.</p>
+                        ${usersList.length >= 2 ? '<p class="text-sm">Use the controls above to generate fixtures.</p>' : '<p>Need at least 2 teams.</p>'}
+                    </div>
+                `;
+                return;
+            }
+            container.innerHTML = '';
+            const rounds = {};
+            fixtures.forEach(match => {
+                if (!rounds[match.round_number]) rounds[match.round_number] = [];
+                rounds[match.round_number].push(match);
+            });
+            Object.keys(rounds).sort((a, b) => a - b).forEach(roundNum => {
+                const roundDiv = document.createElement('div');
+                roundDiv.className = 'fixture-round';
+                let matchesHtml = '';
+                rounds[roundNum].forEach(match => {
+                    const teamA = usersList.find(u => u.id === match.team_a_id);
+                    const teamB = usersList.find(u => u.id === match.team_b_id);
+                    const nameA = teamA ? teamA.username : 'Unknown';
+                    const nameB = teamB ? teamB.username : 'Unknown';
+                    const isCompleted = match.status === 'completed';
+                    const scoreA = isCompleted ? match.team_a_score : '-';
+                    const scoreB = isCompleted ? match.team_b_score : '-';
+                    const classA = isCompleted && match.winner_id === match.team_a_id ? 'winner' : '';
+                    const classB = isCompleted && match.winner_id === match.team_b_id ? 'winner' : '';
+                    matchesHtml += `
+                        <div class="match-card">
+                            <span class="match-team text-right ${classA}">${nameA}</span>
+                            <div class="match-score ${isCompleted ? 'completed' : ''}">
+                                ${scoreA} - ${scoreB}
+                                <div class="match-status">${match.status}</div>
+                            </div>
+                            <span class="match-team ${classB}">${nameB}</span>
+                        </div>
+                    `;
+                });
+                roundDiv.innerHTML = `
+                    <div class="round-header">Round ${roundNum}</div>
+                    ${matchesHtml}
+                `;
+                container.appendChild(roundDiv);
+            });
+        } catch (error) {
+            container.innerHTML = `<div class="text-error">Error: ${error.message}</div>`;
+        }
+    }
+
+    async function renderScoreboard() {
+        const tbody = document.getElementById('scoreboard-body');
+        if (!tbody) return;
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center">Loading...</td></tr>';
+        try {
+            if (!currentLeague) return;
+            const standings = await API.getLeagueStandings(currentLeague.id);
+            tbody.innerHTML = '';
+            standings.forEach((team, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td class="font-bold">${team.username}</td>
+                    <td>${team.played}</td>
+                    <td>${team.won}</td>
+                    <td>${team.lost}</td>
+                    <td>${team.drawn}</td>
+                    <td class="font-bold">${team.points}</td>
+                    <td class="text-sm dim">${team.net_points.toFixed(1)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (error) {
+            tbody.innerHTML = `<tr><td colspan="8" class="text-error">Error: ${error.message}</td></tr>`;
+        }
+    }
+
+    pendingTradesList.addEventListener('click', async (e) => {
+        const tradeId = e.target.dataset.id;
+        const leagueId = currentLeague ? currentLeague.id : null;
+        if (e.target.classList.contains('accept-trade')) {
+            try {
+                await API.swapPlayers(tradeId);
+                notify('Trade accepted! Players swapped.', 'success');
+                loadData();
+            } catch (error) { notify('Swap failed: ' + error.message, 'error'); }
+        } else if (e.target.classList.contains('decline-trade')) {
+            await API.updateTradeStatus(tradeId, 'declined');
+            renderTradeUI();
+        } else if (e.target.classList.contains('cancel-trade')) {
+            await API.updateTradeStatus(tradeId, 'cancelled');
+            renderTradeUI();
+        }
+    });
+
+    createLeagueBtn.addEventListener('click', async () => {
+        const name = createLeagueNameInput.value.trim();
+        if (!name) return notify('Enter a league name', 'error');
+        const code = name.toUpperCase().replace(/\s+/g, '-').substring(0, 20) + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+        try {
+            const league = await API.createLeague(name, code);
+            await API.joinLeague(currentUser.id, league.id);
+            currentLeague = league;
+            leagueBadge.textContent = league.name;
+            createLeagueNameInput.value = '';
+            notify(`League "${name}" created! Code: ${code}`, 'success');
+            renderLeagueUI();
+            loadData();
+        } catch (error) {
+            notify('Failed to create league: ' + error.message, 'error');
+        }
+    });
+
+    joinLeagueBtn.addEventListener('click', async () => {
+        const code = joinLeagueCodeInput.value.trim().toUpperCase();
+        if (!code) return notify('Enter a league code', 'error');
+        try {
+            const leagues = await API.getLeagues();
+            const league = leagues.find(l => l.code.toUpperCase() === code);
+            if (!league) return notify('League not found with that code', 'error');
+            await API.joinLeague(currentUser.id, league.id);
+            currentLeague = league;
+            leagueBadge.textContent = league.name;
+            joinLeagueCodeInput.value = '';
+            notify(`Joined "${league.name}"!`, 'success');
+            renderLeagueUI();
+            loadData();
+        } catch (error) {
+            notify('Failed to join league: ' + error.message, 'error');
+        }
+    });
+
+    leaguesList.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('switch-league-btn')) {
+            const leagueId = e.target.dataset.id;
+            try {
+                await API.joinLeague(currentUser.id, leagueId);
+                const leagues = await API.getLeagues();
+                currentLeague = leagues.find(l => l.id === leagueId);
+                leagueBadge.textContent = currentLeague ? currentLeague.name : 'No League';
+                notify(`Switched to "${currentLeague.name}"!`, 'success');
+                renderLeagueUI();
+                loadData();
+            } catch (error) {
+                notify('Failed to switch league: ' + error.message, 'error');
+            }
+        }
+    });
+
+    const changePasswordForm = document.getElementById('change-password-form');
+    const deleteAccountBtn = document.getElementById('delete-account-btn');
+    const deleteConfirmModal = document.getElementById('delete-confirm-modal');
+    const deleteConfirmInput = document.getElementById('delete-confirm-input');
+    const modalCancelBtn = document.getElementById('modal-cancel-btn');
+    const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+
+    if (changePasswordForm) {
+        changePasswordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const currentPw = document.getElementById('current-password-input').value;
+            const newPw = document.getElementById('new-password-input').value;
+            const confirmPw = document.getElementById('confirm-new-password-input').value;
+            if (newPw !== confirmPw) return notify('New passwords do not match', 'error');
+            try {
+                await API.changePassword(newPw);
+                notify('Password updated successfully', 'success');
+                changePasswordForm.reset();
+            } catch (error) {
+                notify('Error updating password: ' + error.message, 'error');
+            }
+        });
+    }
+
+    if (deleteAccountBtn) {
+        deleteAccountBtn.addEventListener('click', () => {
+            deleteConfirmModal.classList.remove('hidden');
+            deleteConfirmInput.value = '';
+            modalConfirmBtn.disabled = true;
+            deleteConfirmInput.focus();
+        });
+    }
+
+    if (modalCancelBtn) {
+        modalCancelBtn.addEventListener('click', () => {
+            deleteConfirmModal.classList.add('hidden');
+        });
+    }
+
+    if (deleteConfirmInput) {
+        deleteConfirmInput.addEventListener('input', (e) => {
+            const text = e.target.value;
+            modalConfirmBtn.disabled = text !== 'DELETE';
+            if (text === 'DELETE') {
+                modalConfirmBtn.classList.add('pulse-danger');
+            } else {
+                modalConfirmBtn.classList.remove('pulse-danger');
+            }
+        });
+    }
+
+    if (modalConfirmBtn) {
+        modalConfirmBtn.addEventListener('click', async () => {
+            if (deleteConfirmInput.value !== 'DELETE') return;
+            try {
+                await API.deleteAccount(currentUser.id);
+                deleteConfirmModal.classList.add('hidden');
+                notify('Account deleted. Goodbye.', 'info');
+                currentUser = null;
+                currentLeague = null;
+                showAuth();
+            } catch (error) {
+                notify('Failed to delete account: ' + error.message, 'error');
+            }
+        });
     }
 
     init();
