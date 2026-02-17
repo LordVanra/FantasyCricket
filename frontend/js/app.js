@@ -75,9 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showAuth() {
         authView.classList.remove('hidden');
-        dashboardView.classList.add('hidden');
-        tradeView.classList.add('hidden');
-        leagueView.classList.add('hidden');
+        tabContents.forEach(c => c.classList.add('hidden'));
         navTabs.classList.add('hidden');
         logoutBtn.classList.add('hidden');
         userEmailSpan.textContent = '';
@@ -130,17 +128,26 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             let res;
             if (isSignUp) {
-                if (password !== confirmPassword) throw new Error('Passwords do not match!');
+                if (password !== confirmPassword) {
+                    throw new Error('Passwords do not match!');
+                }
                 res = await API.signUp(dummyEmail, password);
                 if (res.error) throw res.error;
-                const newUser = res.data.user;
-                if (newUser) {
-                    let defaultLeague = await API.getDefaultLeague();
-                    if (!defaultLeague) defaultLeague = await API.createDefaultLeague();
-                    await API.ensureUserProfile(newUser.id, username, defaultLeague.id);
+
+                // Auto-assign to default league on sign up
+                try {
+                    const newUser = res.data.user;
+                    if (newUser) {
+                        let defaultLeague = await API.getDefaultLeague();
+                        if (!defaultLeague) {
+                            defaultLeague = await API.createDefaultLeague();
+                        }
+                        await API.ensureUserProfile(newUser.id, username, defaultLeague.id);
+                    }
+                } catch (_) {
+                    notify('Account created! You can now Sign In.', 'success');
+                    toggleAuthState();
                 }
-                notify('Account created! You can now Sign In.', 'success');
-                toggleAuthState();
             } else {
                 res = await API.signIn(dummyEmail, password);
                 if (res.error) throw res.error;
@@ -453,7 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveTeamBtn.addEventListener('click', async () => {
             if (!currentLeague) return notify('You must join a league first!', 'error');
             try {
-                await API.saveUserTeam(currentUser.id, mySquad, starting11);
+                await API.saveUserTeam(currentUser.id, currentLeague.id, mySquad, starting11);
                 notify('Lineup saved successfully!', 'success');
             } catch (error) {
                 notify(error.message, 'error');
@@ -639,7 +646,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!code) return notify('Enter a league code', 'error');
         try {
             const leagues = await API.getLeagues();
-            const league = leagues.find(l => l.code.toUpperCase() === code);
+            const league = leagues.find(l => l.code?.toUpperCase() === code);
             if (!league) return notify('League not found with that code', 'error');
             await API.joinLeague(currentUser.id, league.id);
             currentLeague = league;
@@ -712,8 +719,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (deleteConfirmInput) {
         deleteConfirmInput.addEventListener('input', (e) => {
             const text = e.target.value;
-            modalConfirmBtn.disabled = text !== 'DELETE';
-            if (text === 'DELETE') {
+            modalConfirmBtn.disabled = text.toUpperCase() !== 'DELETE';
+            if (text.toUpperCase() === 'DELETE') {
                 modalConfirmBtn.classList.add('pulse-danger');
             } else {
                 modalConfirmBtn.classList.remove('pulse-danger');
@@ -723,7 +730,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (modalConfirmBtn) {
         modalConfirmBtn.addEventListener('click', async () => {
-            if (deleteConfirmInput.value !== 'DELETE') return;
+            if (deleteConfirmInput.value.toUpperCase() !== 'DELETE') return;
             try {
                 await API.deleteAccount(currentUser.id);
                 deleteConfirmModal.classList.add('hidden');

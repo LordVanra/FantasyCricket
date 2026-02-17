@@ -54,9 +54,9 @@ const API = {
         if (error && error.code !== 'PGRST116') throw error;
         return data;
     },
-    async saveUserTeam(userId, squad, starting11) {
+    async saveUserTeam(userId, leagueId, squad, starting11) {
         const { data, error } = await supabaseClient.from('users_teams').upsert({
-            id: userId, squad: squad, starting_11: starting11, updated_at: new Date()
+            id: userId, league_id: leagueId, squad: squad, starting_11: starting11, updated_at: new Date()
         }, { onConflict: 'id' });
         if (error) throw error;
         return data;
