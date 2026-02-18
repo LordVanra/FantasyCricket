@@ -33,6 +33,8 @@
             <button class="tab-link" data-tab="trade-view">Trade Center</button>
             <button class="tab-link" data-tab="league-view">Leagues</button>
             <button class="tab-link" data-tab="fixtures-view">Fixtures</button>
+            <button class="tab-link hidden" id="commissioner-tab-link"
+                data-tab="commissioner-view">Commissioner</button>
             <button class="tab-link" data-tab="scoreboard-view">Scoreboard</button>
             <button class="tab-link" data-tab="account-view">Account</button>
         </div>
@@ -163,7 +165,8 @@
             <div class="card">
                 <div class="card-header">
                     <h3>Season Fixtures</h3>
-                    <div class="form-group" style="margin: 0; display: flex; gap: 8px; align-items: center;">
+                    <div id="commissioner-controls" class="form-group hidden"
+                        style="margin: 0; display: flex; gap: 8px; align-items: center;">
                         <input type="number" id="rounds-input" class="btn-sm" placeholder="Rounds" min="1" max="10"
                             value="1" style="width: 80px;">
                         <button id="generate-fixtures-btn" class="btn btn-primary btn-sm">Generate Fixtures</button>
@@ -172,6 +175,16 @@
                 </div>
                 <div class="fixtures-container" id="fixtures-list">
                     <div class="text-center">Loading fixtures...</div>
+                </div>
+            </div>
+        </section>
+        <section id="commissioner-view" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Commissioner Panel</h3>
+                </div>
+                <div id="commissioner-members-list" class="mini-list">
+                    <p class="dim">Loading members...</p>
                 </div>
             </div>
         </section>

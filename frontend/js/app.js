@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    let currentUser = null, currentLeague = null, allPlayersData = {}, draftedPlayers = [], mySquad = [], starting11 = [], usersList = [], isSignUp = false;
+    let currentUser = null, currentLeague = null, isCommissioner = false, allPlayersData = {}, draftedPlayers = [], mySquad = [], starting11 = [], usersList = [], isSignUp = false;
     let tradeGiveSelected = [], tradeRequestSelected = [];
 
     const navTabs = document.getElementById('nav-tabs');
@@ -7,8 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabContents = document.querySelectorAll('.tab-content');
     const authView = document.getElementById('auth-view');
     const dashboardView = document.getElementById('dashboard-view');
-    const tradeView = document.getElementById('trade-view');
-    const leagueView = document.getElementById('league-view');
     const authForm = document.getElementById('auth-form');
     const usernameInput = document.getElementById('username');
     const passwordInput = document.getElementById('password');
@@ -82,6 +80,45 @@ document.addEventListener('DOMContentLoaded', () => {
         leagueBadge.textContent = '';
     }
 
+    function updateCommissionerState() {
+        isCommissioner = !!(currentLeague && currentUser && currentLeague.commissioner_id === currentUser.id);
+        const commissionerTabLink = document.getElementById('commissioner-tab-link');
+        const commissionerControls = document.getElementById('commissioner-controls');
+        if (commissionerTabLink) commissionerTabLink.classList.toggle('hidden', !isCommissioner);
+        if (commissionerControls) commissionerControls.classList.toggle('hidden', !isCommissioner);
+    }
+
+    async function renderCommissionerPanel() {
+        const container = document.getElementById('commissioner-members-list');
+        if (!container || !currentLeague) return;
+        container.innerHTML = '<p class="dim">Loading...</p>';
+        try {
+            const members = await API.getAllUsers(currentLeague.id);
+            container.innerHTML = '';
+            if (!members.length) { container.innerHTML = '<p class="dim">No members found.</p>'; return; }
+            members.forEach(member => {
+                const isSelf = member.id === currentUser.id;
+                const isCurrentCommissioner = member.id === currentLeague.commissioner_id;
+                const div = document.createElement('div');
+                div.className = 'league-item';
+                div.innerHTML = `
+                    <div class="league-info">
+                        <h4>${member.username || member.email || member.id} ${isCurrentCommissioner ? '<span class="badge">Commissioner</span>' : ''}</h4>
+                    </div>
+                    ${!isSelf ? `
+                        <div style="display:flex;gap:6px;">
+                            <button class="btn btn-outline btn-xs transfer-btn" data-id="${member.id}">Make Commissioner</button>
+                            <button class="btn btn-error btn-xs kick-btn" data-id="${member.id}">Kick</button>
+                        </div>
+                    ` : '<span class="dim text-sm">You</span>'}
+                `;
+                container.appendChild(div);
+            });
+        } catch (error) {
+            container.innerHTML = `<p class="text-error">Error: ${error.message}</p>`;
+        }
+    }
+
     async function showDashboard() {
         authView.classList.add('hidden');
         dashboardView.classList.remove('hidden');
@@ -90,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const displayUsername = currentUser.email.split('@')[0];
         userEmailSpan.textContent = displayUsername;
         leagueBadge.textContent = currentLeague ? currentLeague.name : 'No League';
+        updateCommissionerState();
         loadData();
     }
 
@@ -389,6 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (link.dataset.tab === 'league-view') renderLeagueUI();
                 if (link.dataset.tab === 'fixtures-view') renderFixtures();
                 if (link.dataset.tab === 'scoreboard-view') renderScoreboard();
+                if (link.dataset.tab === 'commissioner-view') renderCommissionerPanel();
             });
         });
         playerSearch.addEventListener('input', renderAllPlayers);
@@ -628,10 +667,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!name) return notify('Enter a league name', 'error');
         const code = name.toUpperCase().replace(/\s+/g, '-').substring(0, 20) + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
         try {
-            const league = await API.createLeague(name, code);
+            const league = await API.createLeague(name, code, currentUser.id);
             await API.joinLeague(currentUser.id, league.id);
             currentLeague = league;
             leagueBadge.textContent = league.name;
+            updateCommissionerState();
             createLeagueNameInput.value = '';
             notify(`League "${name}" created! Code: ${code}`, 'success');
             renderLeagueUI();
@@ -653,6 +693,7 @@ document.addEventListener('DOMContentLoaded', () => {
             leagueBadge.textContent = league.name;
             joinLeagueCodeInput.value = '';
             notify(`Joined "${league.name}"!`, 'success');
+            updateCommissionerState();
             renderLeagueUI();
             loadData();
         } catch (error) {
@@ -669,6 +710,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentLeague = leagues.find(l => l.id === leagueId);
                 leagueBadge.textContent = currentLeague ? currentLeague.name : 'No League';
                 notify(`Switched to "${currentLeague.name}"!`, 'success');
+                updateCommissionerState();
                 renderLeagueUI();
                 loadData();
             } catch (error) {
@@ -676,6 +718,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    const commissionerPanel = document.getElementById('commissioner-members-list');
+    if (commissionerPanel) {
+        commissionerPanel.addEventListener('click', async (e) => {
+            const memberId = e.target.dataset.id;
+            if (!memberId || !isCommissioner) return;
+            if (e.target.classList.contains('kick-btn')) {
+                if (!confirm('Kick this member from the league?')) return;
+                try {
+                    await API.kickMember(memberId, currentLeague.id);
+                    notify('Member kicked.', 'success');
+                    renderCommissionerPanel();
+                } catch (error) {
+                    notify('Failed to kick: ' + error.message, 'error');
+                }
+            } else if (e.target.classList.contains('transfer-btn')) {
+                if (!confirm('Transfer commissioner role to this member? You will lose commissioner access.')) return;
+                try {
+                    await API.transferCommissioner(currentLeague.id, memberId);
+                    const leagues = await API.getLeagues();
+                    currentLeague = leagues.find(l => l.id === currentLeague.id);
+                    updateCommissionerState();
+                    notify('Commissioner role transferred.', 'success');
+                    renderCommissionerPanel();
+                } catch (error) {
+                    notify('Failed to transfer: ' + error.message, 'error');
+                }
+            }
+        });
+    }
 
     const changePasswordForm = document.getElementById('change-password-form');
     const deleteAccountBtn = document.getElementById('delete-account-btn');

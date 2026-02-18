@@ -102,10 +102,18 @@ const API = {
         if (error) throw error;
         return data;
     },
-    async createLeague(name, code) {
-        const { data, error } = await supabaseClient.from('leagues').insert([{ name, code }]).select().single();
+    async createLeague(name, code, creatorId) {
+        const { data, error } = await supabaseClient.from('leagues').insert([{ name, code, commissioner_id: creatorId }]).select().single();
         if (error) throw error;
         return data;
+    },
+    async kickMember(userId, leagueId) {
+        const { error } = await supabaseClient.from('users').update({ league_id: null }).match({ id: userId, league_id: leagueId });
+        if (error) throw error;
+    },
+    async transferCommissioner(leagueId, newCommissionerId) {
+        const { error } = await supabaseClient.from('leagues').update({ commissioner_id: newCommissionerId }).eq('id', leagueId);
+        if (error) throw error;
     },
     async joinLeague(userId, leagueId) {
         const { data, error } = await supabaseClient.from('users').upsert({ id: userId, league_id: leagueId }, { onConflict: 'id' }).select().single();
