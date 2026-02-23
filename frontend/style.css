@@ -892,3 +892,122 @@ td {
 tr:last-child td {
     border-bottom: none;
 }
+
+/* ===== Mobile Responsive ===== */
+@media (max-width: 600px) {
+
+    /* Navbar: stack logo + auth vertically */
+    .nav-container {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0 1rem;
+    }
+
+    .logo {
+        font-size: 1.2rem;
+    }
+
+    .auth-group {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .auth-group .btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+    }
+
+    /* Tabs: horizontal scroll instead of wrapping/overflowing */
+    .tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 0;
+        scrollbar-width: none;
+        /* Firefox */
+    }
+
+    .tabs::-webkit-scrollbar {
+        display: none;
+        /* Chrome/Safari */
+    }
+
+    .tab-link {
+        padding: 0.6rem 0.9rem;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* Container padding */
+    .container {
+        padding: 0 0.75rem;
+    }
+
+    /* Card header: wrap so buttons don't overflow */
+    .card-header {
+        flex-wrap: wrap;
+    }
+
+    /* Commissioner controls (Generate Fixtures / Update Scores) */
+    #commissioner-controls {
+        flex-direction: column !important;
+        width: 100%;
+        gap: 6px !important;
+    }
+
+    #commissioner-controls input[type="number"] {
+        width: 100% !important;
+    }
+
+    #commissioner-controls .btn {
+        width: 100%;
+        font-size: 0.8rem;
+        padding: 0.6rem;
+    }
+
+    /* Dashboard header */
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .stats-overview {
+        width: 100%;
+    }
+
+    .stat-card {
+        flex: 1;
+    }
+
+    /* Match cards inside fixtures */
+    .match-card {
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+
+    .match-score {
+        padding: 0 0.5rem;
+        min-width: auto;
+    }
+
+    /* Scoreboard table */
+    th,
+    td {
+        padding: 0.5rem 0.4rem;
+        font-size: 0.8rem;
+    }
+
+    /* Notifications */
+    #notification-area {
+        right: 0.75rem;
+        left: 0.75rem;
+        bottom: 1rem;
+    }
+
+    .notification {
+        padding: 0.75rem 1rem;
+    }
+}
