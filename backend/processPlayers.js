@@ -11,6 +11,29 @@ class CricketDataProcessor {
     this.surnameMap = {};
   }
 
+  extractTeamsFromUrl(matchUrl) {
+    // URL format: .../teamA-vs-teamB-Nth-match-group-X-ID/full-scorecard
+    // Extract the match slug (segment after series ID)
+    const parts = matchUrl.split('/');
+    // Find the segment that contains '-vs-'
+    const matchSlug = parts.find(p => p.includes('-vs-'));
+    if (!matchSlug) return [];
+
+    // Split on '-vs-' to get team parts
+    // e.g. "india-vs-pakistan-27th-match-group-a-1512745" -> ["india", "pakistan-27th-match-group-a-1512745"]
+    const vsSplit = matchSlug.split('-vs-');
+    if (vsSplit.length !== 2) return [];
+
+    const teamA = vsSplit[0]; // e.g. "india"
+    // teamB is everything before the match number suffix
+    // e.g. "pakistan-27th-match-group-a-1512745" -> "pakistan"
+    // The match number part starts with a digit followed by ordinal suffix (st, nd, rd, th)
+    const teamBMatch = vsSplit[1].match(/^(.+?)-\d+(?:st|nd|rd|th)-match/);
+    const teamB = teamBMatch ? teamBMatch[1] : vsSplit[1];
+
+    return [teamA, teamB];
+  }
+
   getPlayerId(url) {
     if (!url) return null;
     // Extract ID from URL like "/cricketers/scott-edwards-1150774"
@@ -156,6 +179,17 @@ class CricketDataProcessor {
 
     console.log(`Found ${this.fullNames.size} unique full names from batting/bowling`);
 
+    // Build teams map: teamName -> ordered list of match URLs
+    const teamsMap = {};
+    this.data.matches.forEach((match, matchIndex) => {
+      const teams = this.extractTeamsFromUrl(match.url);
+      teams.forEach(team => {
+        if (!teamsMap[team]) teamsMap[team] = [];
+        teamsMap[team].push(match.url);
+      });
+    });
+    console.log(`Found ${Object.keys(teamsMap).length} teams: ${Object.keys(teamsMap).join(', ')}`);
+
     this.data.matches.forEach((match, matchIndex) => {
       match.batting.forEach(bat => {
         const canonical = this.addPlayer(bat.player, bat.url);
@@ -241,6 +275,33 @@ class CricketDataProcessor {
       });
     });
 
+    // Assign team to each player by finding which team appears in all their match URLs
+    Object.keys(this.playerNameMap).forEach(name => {
+      const player = this.playerNameMap[name];
+      if (player.matches.length === 0) return;
+
+      // Collect all team names from the player's matches
+      const teamCounts = {};
+      player.matches.forEach(matchUrl => {
+        const teams = this.extractTeamsFromUrl(matchUrl);
+        teams.forEach(t => {
+          teamCounts[t] = (teamCounts[t] || 0) + 1;
+        });
+      });
+
+      // The player's team is the one that appears in ALL of their matches
+      const playerTeam = Object.keys(teamCounts).find(t => teamCounts[t] === player.matches.length);
+      if (playerTeam) {
+        player.team = playerTeam;
+      } else {
+        // Fallback: use the most frequent team
+        player.team = Object.keys(teamCounts).sort((a, b) => teamCounts[b] - teamCounts[a])[0] || null;
+        if (player.team) {
+          console.log(`WARNING: Could not uniquely determine team for ${name}, using most frequent: ${player.team}`);
+        }
+      }
+    });
+
     const sortedPlayers = Object.keys(this.playerNameMap)
       .sort()
       .reduce((acc, key) => {
@@ -255,6 +316,7 @@ class CricketDataProcessor {
       tournament: this.data.url,
       totalMatches: matches.length,
       lastMatchUrl: lastMatchUrl,
+      teams: teamsMap,
       players: sortedPlayers
     };
   }
@@ -274,15 +336,17 @@ class CricketDataProcessor {
   }
 }
 
-const inputFile = process.argv[2] || 'scraped-data.json';
-const outputFile = process.argv[3] || 'player-stats.json';
+if (require.main === module) {
+  const inputFile = process.argv[2] || 'scraped-data.json';
+  const outputFile = process.argv[3] || 'player-stats.json';
 
-const processor = new CricketDataProcessor(inputFile);
-processor.save(outputFile).then(() => {
-  // Exit gracefully to avoid libuv assertion on Windows
-}).catch(err => {
-  console.error('Processor failed:', err);
-  process.exitCode = 1;
-});
+  const processor = new CricketDataProcessor(inputFile);
+  processor.save(outputFile).then(() => {
+    // Exit gracefully to avoid libuv assertion on Windows
+  }).catch(err => {
+    console.error('Processor failed:', err);
+    process.exitCode = 1;
+  });
+}
 
 module.exports = CricketDataProcessor;

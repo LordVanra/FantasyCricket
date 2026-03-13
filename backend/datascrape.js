@@ -200,12 +200,17 @@ class CricketScraper {
       const matchUrls = [];
       $('a').each((i, elem) => {
         const href = $(elem).attr('href');
-        if (href && (href.includes('/scorecard') || href.includes('/full-scorecard'))) {
-          if (href.includes(this.seriesSlug) && href.includes(this.seriesId)) {
-            const fullUrl = href.startsWith('http') ? href : `https://www.espncricinfo.com${href}`;
-            if (!matchUrls.includes(fullUrl)) {
-              matchUrls.push(fullUrl);
-            }
+        if (!href) return;
+        // Match any link that belongs to this series and contains '-vs-' (an actual match link)
+        if (href.includes(this.seriesSlug) && href.includes(this.seriesId) && href.includes('-vs-')) {
+          let matchPath = href.startsWith('http') ? href : `https://www.espncricinfo.com${href}`;
+          // Normalize to full-scorecard URL by replacing the trailing path segment
+          matchPath = matchPath.replace(/\/(?:live-cricket-score|scorecard|ball-by-ball-commentary|points-table-standings|match-(?:photos|videos))$/, '/full-scorecard');
+          if (!matchPath.endsWith('/full-scorecard')) {
+            matchPath = matchPath + '/full-scorecard';
+          }
+          if (!matchUrls.includes(matchPath)) {
+            matchUrls.push(matchPath);
           }
         }
       });
@@ -224,12 +229,14 @@ class CricketScraper {
   }
 }
 
-const url = process.argv[2];
-const outputFile = process.argv[3] || 'data.json';
+if (require.main === module) {
+  const url = process.argv[2];
+  const outputFile = process.argv[3] || 'data.json';
 
-new CricketScraper(url).scrape().then(data => {
-  fs.writeFileSync(outputFile, JSON.stringify(data, null, 2), 'utf8');
-  console.log(`Saved to ${outputFile}`);
-});
+  new CricketScraper(url).scrape().then(data => {
+    fs.writeFileSync(outputFile, JSON.stringify(data, null, 2), 'utf8');
+    console.log(`Saved to ${outputFile}`);
+  });
+}
 
 module.exports = CricketScraper;
