@@ -184,8 +184,102 @@ class CricketScraper {
     }
   }
 
+  async scrapeSquads() {
+    const squads = {};
+    try {
+      // Try the main squads page first
+      const squadsUrl = `https://www.espncricinfo.com/series/${this.seriesSlug}-${this.seriesId}/squads`;
+      console.log(`Scraping squads from: ${squadsUrl}`);
+      const response = await axios.get(squadsUrl, { headers: this.headers });
+      const $ = cheerio.load(response.data);
+
+      // ESPNCricinfo squad pages list teams with their players
+      // Look for player links that contain /cricketers/ in the path
+      let currentTeam = null;
+
+      // Try to find team sections - usually headings or distinct containers
+      $('a').each((i, elem) => {
+        const href = $(elem).attr('href') || '';
+        const text = this.cleanText($(elem).text());
+
+        // Detect team links (they link to team pages within the series)
+        if (href.includes(`/series/${this.seriesSlug}`) && href.includes('/squad') && !href.endsWith('/squads')) {
+          // Extract team name from the link text or URL
+          const teamMatch = href.match(/\/series\/[^/]+\/([^/]+?)(?:-\d+)?\/squad/);
+          if (teamMatch) {
+            currentTeam = teamMatch[1];
+            if (!squads[currentTeam]) squads[currentTeam] = [];
+          }
+        }
+
+        // Detect player links
+        if (href.includes('/cricketers/') && currentTeam) {
+          const playerName = this.cleanPlayerName(text);
+          if (playerName && playerName.length > 1) {
+            const existing = squads[currentTeam].find(p => p.url === href);
+            if (!existing) {
+              squads[currentTeam].push({ name: playerName, url: href });
+            }
+          }
+        }
+      });
+
+      // If main page didn't yield results, try individual team squad pages
+      if (Object.keys(squads).length === 0) {
+        console.log('Main squads page did not yield results, trying individual team pages...');
+        // Find team links from the squads page
+        const teamLinks = [];
+        $('a').each((i, elem) => {
+          const href = $(elem).attr('href') || '';
+          if (href.includes(`${this.seriesSlug}`) && href.includes('/squad')) {
+            const fullUrl = href.startsWith('http') ? href : `https://www.espncricinfo.com${href}`;
+            if (!teamLinks.includes(fullUrl) && !fullUrl.endsWith('/squads')) {
+              teamLinks.push(fullUrl);
+            }
+          }
+        });
+
+        for (const teamUrl of teamLinks) {
+          try {
+            const teamMatch = teamUrl.match(/\/series\/[^/]+\/([^/]+?)(?:-\d+)?\/squad/);
+            const teamName = teamMatch ? teamMatch[1] : null;
+            if (!teamName) continue;
+
+            console.log(`  Scraping squad for: ${teamName}`);
+            const teamResp = await axios.get(teamUrl, { headers: this.headers });
+            const $team = cheerio.load(teamResp.data);
+
+            squads[teamName] = [];
+            $team('a').each((i, elem) => {
+              const href = $team(elem).attr('href') || '';
+              const text = this.cleanPlayerName(this.cleanText($team(elem).text()));
+              if (href.includes('/cricketers/') && text && text.length > 1) {
+                const existing = squads[teamName].find(p => p.url === href);
+                if (!existing) {
+                  squads[teamName].push({ name: text, url: href });
+                }
+              }
+            });
+
+            await new Promise(r => setTimeout(r, 1500));
+          } catch (err) {
+            console.log(`  Could not scrape squad for team URL: ${teamUrl} - ${err.message}`);
+          }
+        }
+      }
+
+      const totalPlayers = Object.values(squads).reduce((sum, arr) => sum + arr.length, 0);
+      console.log(`Scraped ${Object.keys(squads).length} team squads with ${totalPlayers} total players`);
+
+    } catch (error) {
+      console.log(`Could not scrape squads page: ${error.message}`);
+      console.log('Bench players may not be included in the draft pool.');
+    }
+    return squads;
+  }
+
   async scrape() {
-    const layers = { url: this.url, matches: [] };
+    const layers = { url: this.url, matches: [], squads: {} };
 
     if (!this.url) {
       return layers;
@@ -223,6 +317,13 @@ class CricketScraper {
 
     } catch (error) {
       console.error('Error:', error.message);
+    }
+
+    // Scrape full team rosters
+    try {
+      layers.squads = await this.scrapeSquads();
+    } catch (error) {
+      console.log('Squad scraping failed, continuing without roster data:', error.message);
     }
 
     return layers;

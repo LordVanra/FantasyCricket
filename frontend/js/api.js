@@ -176,5 +176,85 @@ const API = {
         const { error } = await supabaseClient.rpc('delete_user_account', { user_id: userId });
         if (error) throw error;
         await this.signOut();
+    },
+
+    // ======== Draft System ========
+    async getDraftState(leagueId) {
+        const { data, error } = await supabaseClient.from('draft_state').select('*').eq('league_id', leagueId).single();
+        if (error && error.code !== 'PGRST116') throw error;
+        return data;
+    },
+    async startDraft(leagueId, turnOrder) {
+        // Upsert draft state: reset picks, set active, randomize order
+        const { data, error } = await supabaseClient.from('draft_state').upsert({
+            league_id: leagueId,
+            is_active: true,
+            current_pick: 0,
+            turn_order: turnOrder,
+            picks: [],
+            turn_start_time: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        }, { onConflict: 'league_id' }).select().single();
+        if (error) throw error;
+        return data;
+    },
+    async makeDraftPick(leagueId, userId, playerId, currentPick) {
+        // First get current state to append pick
+        const state = await this.getDraftState(leagueId);
+        if (!state || !state.is_active) throw new Error('Draft is not active');
+        if (state.current_pick !== currentPick) throw new Error('Not your turn (pick mismatch)');
+
+        const newPicks = [...(state.picks || []), { user_id: userId, player_id: playerId, pick_number: currentPick }];
+        const nextPick = currentPick + 1;
+        const isComplete = nextPick >= 20;
+
+        const { data, error } = await supabaseClient.from('draft_state').update({
+            picks: newPicks,
+            current_pick: nextPick,
+            is_active: !isComplete,
+            turn_start_time: isComplete ? state.turn_start_time : new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        }).eq('league_id', leagueId).select().single();
+        if (error) throw error;
+        return data;
+    },
+    async skipDraftTurn(leagueId, currentPick) {
+        const state = await this.getDraftState(leagueId);
+        if (!state || !state.is_active) throw new Error('Draft is not active');
+        if (state.current_pick !== currentPick) return state; // Already advanced
+
+        const nextPick = currentPick + 1;
+        const isComplete = nextPick >= 20;
+
+        const { data, error } = await supabaseClient.from('draft_state').update({
+            current_pick: nextPick,
+            is_active: !isComplete,
+            turn_start_time: isComplete ? state.turn_start_time : new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        }).eq('league_id', leagueId).select().single();
+        if (error) throw error;
+        return data;
+    },
+    _draftSubscription: null,
+    subscribeToDraft(leagueId, callback) {
+        // Unsubscribe from any existing subscription
+        this.unsubscribeFromDraft();
+        this._draftSubscription = supabaseClient
+            .channel(`draft_${leagueId}`)
+            .on('postgres_changes', {
+                event: '*',
+                schema: 'public',
+                table: 'draft_state',
+                filter: `league_id=eq.${leagueId}`
+            }, (payload) => {
+                callback(payload.new);
+            })
+            .subscribe();
+    },
+    unsubscribeFromDraft() {
+        if (this._draftSubscription) {
+            supabaseClient.removeChannel(this._draftSubscription);
+            this._draftSubscription = null;
+        }
     }
 };

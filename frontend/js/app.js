@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     let currentUser = null, currentLeague = null, isCommissioner = false, allPlayersData = {}, draftedPlayers = [], mySquad = [], starting11 = [], usersList = [], isSignUp = false;
     let tradeGiveSelected = [], tradeRequestSelected = [];
+    let draftState = null, draftTimerInterval = null, draftCountdown = 30;
 
     const navTabs = document.getElementById('nav-tabs');
     const tabLinks = document.querySelectorAll('.tab-link');
@@ -42,6 +43,136 @@ document.addEventListener('DOMContentLoaded', () => {
     async function init() {
         checkSession();
         setupListeners();
+    }
+
+    // ======== Draft System ========
+    async function initDraft() {
+        if (!currentLeague) return;
+        try {
+            draftState = await API.getDraftState(currentLeague.id);
+            renderDraftPanel();
+            // Subscribe to realtime draft updates
+            API.subscribeToDraft(currentLeague.id, (newState) => {
+                draftState = newState;
+                renderDraftPanel();
+                renderAllPlayers();
+                if (draftState && !draftState.is_active && draftState.current_pick >= 20) {
+                    loadData(); // Reload to show final squads
+                }
+            });
+        } catch (err) {
+            // No draft state yet, that's fine
+        }
+    }
+
+    function renderDraftPanel() {
+        const panel = document.getElementById('draft-panel');
+        if (!panel) return;
+
+        if (!draftState || (!draftState.is_active && draftState.current_pick === 0)) {
+            panel.classList.add('hidden');
+            return;
+        }
+
+        panel.classList.remove('hidden');
+
+        const pickInfo = document.getElementById('draft-pick-info');
+        const turnText = document.getElementById('draft-turn-text');
+        const timerText = document.getElementById('draft-timer-text');
+        const timerFill = document.getElementById('draft-timer-fill');
+        const orderList = document.getElementById('draft-order-list');
+
+        // Pick info
+        pickInfo.textContent = `Pick ${Math.min(draftState.current_pick + 1, 20)} of 20`;
+
+        if (!draftState.is_active) {
+            // Draft is complete
+            clearInterval(draftTimerInterval);
+            turnText.textContent = 'Draft Complete!';
+            turnText.className = 'draft-turn-text';
+            timerText.textContent = '\u2714';
+            timerText.className = 'draft-timer-text';
+            timerFill.style.width = '100%';
+            timerFill.className = 'draft-timer-fill';
+            pickInfo.textContent = '20 of 20 picks made';
+            orderList.innerHTML = '<div class="draft-complete-banner">\ud83c\udfc6 Draft Complete! All 20 players selected.</div>';
+            return;
+        }
+
+        // Determine whose turn it is
+        const turnOrder = draftState.turn_order || [];
+        const currentPickIndex = draftState.current_pick % turnOrder.length;
+        const currentTurnUserId = turnOrder[currentPickIndex];
+        const currentTurnUser = usersList.find(u => u.id === currentTurnUserId);
+        const isMyTurn = currentUser && currentTurnUserId === currentUser.id;
+
+        // Turn text
+        if (isMyTurn) {
+            turnText.textContent = "\ud83c\udfaf It's YOUR turn! Pick a player!";
+            turnText.className = 'draft-turn-text your-turn';
+        } else {
+            turnText.textContent = `Waiting for ${currentTurnUser ? currentTurnUser.username : 'Unknown'}...`;
+            turnText.className = 'draft-turn-text';
+        }
+
+        // Timer
+        startDraftTimer();
+
+        // Draft order chips
+        orderList.innerHTML = '';
+        turnOrder.forEach((userId, idx) => {
+            const user = usersList.find(u => u.id === userId);
+            const chip = document.createElement('span');
+            chip.className = 'draft-order-chip';
+            if (idx === currentPickIndex) chip.classList.add('active');
+            if (currentUser && userId === currentUser.id) chip.classList.add('current-user');
+            // Check how many picks this user has made
+            const userPicks = (draftState.picks || []).filter(p => p.user_id === userId).length;
+            chip.textContent = `${user ? user.username : '?'} (${userPicks})`;
+            orderList.appendChild(chip);
+        });
+    }
+
+    function startDraftTimer() {
+        clearInterval(draftTimerInterval);
+        if (!draftState || !draftState.is_active) return;
+
+        const TURN_DURATION = 30; // seconds
+        const turnStartTime = new Date(draftState.turn_start_time).getTime();
+
+        function tick() {
+            const now = Date.now();
+            const elapsed = (now - turnStartTime) / 1000;
+            const remaining = Math.max(0, TURN_DURATION - elapsed);
+            draftCountdown = Math.ceil(remaining);
+
+            const timerText = document.getElementById('draft-timer-text');
+            const timerFill = document.getElementById('draft-timer-fill');
+
+            if (timerText) {
+                timerText.textContent = `${draftCountdown}s`;
+                timerText.className = 'draft-timer-text' + (draftCountdown <= 5 ? ' danger' : '');
+            }
+            if (timerFill) {
+                const pct = (remaining / TURN_DURATION) * 100;
+                timerFill.style.width = `${pct}%`;
+                timerFill.className = 'draft-timer-fill' + (draftCountdown <= 5 ? ' danger' : '');
+            }
+
+            if (remaining <= 0) {
+                clearInterval(draftTimerInterval);
+                // Auto-skip if it's my turn and time ran out
+                const turnOrder = draftState.turn_order || [];
+                const currentPickIndex = draftState.current_pick % turnOrder.length;
+                const currentTurnUserId = turnOrder[currentPickIndex];
+                if (currentUser && currentTurnUserId === currentUser.id) {
+                    API.skipDraftTurn(currentLeague.id, draftState.current_pick).catch(() => {});
+                }
+            }
+        }
+
+        tick();
+        draftTimerInterval = setInterval(tick, 500);
     }
 
     async function checkSession() {
@@ -129,6 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
         leagueBadge.textContent = currentLeague ? currentLeague.name : 'No League';
         updateCommissionerState();
         loadData();
+        initDraft();
     }
 
     async function loadData() {
@@ -241,18 +373,43 @@ document.addEventListener('DOMContentLoaded', () => {
         allPlayersList.innerHTML = '';
         const players = Object.values(allPlayersData.players);
         const filtered = players.filter(p => p.name.toLowerCase().includes(searchTerm));
+
+        // Draft mode: determine if user can draft
+        const isDraftActive = draftState && draftState.is_active;
+        let isMyTurn = false;
+        if (isDraftActive && currentUser) {
+            const turnOrder = draftState.turn_order || [];
+            const currentPickIndex = draftState.current_pick % turnOrder.length;
+            isMyTurn = turnOrder[currentPickIndex] === currentUser.id;
+        }
+
         filtered.forEach(player => {
             const isTaken = draftedPlayers.some(dp => dp.player_id === player.name && dp.user_id !== currentUser.id);
             const isInMySquad = mySquad.includes(player.name);
+            // Also check if already drafted in this draft session via draftState.picks
+            const isDraftPicked = isDraftActive && (draftState.picks || []).some(p => p.player_id === player.name);
             const lastPoints = calculatePlayerPoints(player.name);
             const div = document.createElement('div');
-            div.className = `player-item ${isTaken ? 'taken' : ''}`;
+            div.className = `player-item ${isTaken || isDraftPicked ? 'taken' : ''}`;
+
+            // Show draft button logic:
+            // - During active draft: only show if it's my turn and player isn't taken
+            // - No active draft: show normally (free draft)
+            let draftBtn = '';
+            if (!isTaken && !isInMySquad && !isDraftPicked) {
+                if (isDraftActive) {
+                    draftBtn = isMyTurn ? `<button class="btn btn-outline btn-xs draft-btn" data-id="${player.name}">Draft</button>` : '';
+                } else {
+                    draftBtn = `<button class="btn btn-outline btn-xs draft-btn" data-id="${player.name}">Draft</button>`;
+                }
+            }
+
             div.innerHTML = `
                 <div class="player-info">
                     <h4>${player.name} <span class="points-badge">${lastPoints} pts</span></h4>
-                    <p>${player.totalRuns} Runs | ${player.totalWickets} Wickets</p>
+                    <p>${player.totalRuns} Runs | ${player.totalWickets} Wickets${player.team ? ' | ' + player.team : ''}</p>
                 </div>
-                ${!isTaken && !isInMySquad ? `<button class="btn btn-outline btn-xs draft-btn" data-id="${player.name}">Draft</button>` : ''}
+                ${draftBtn}
                 ${isInMySquad ? `<span class="badge">In Squad</span>` : ''}
             `;
             allPlayersList.appendChild(div);
@@ -450,8 +607,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         notify('Player already taken in your league!', 'error');
                         return;
                     }
-                    await API.draftPlayer(playerName, playerName, currentUser.id, leagueId);
-                    notify(`Drafted ${playerName}!`, 'success');
+
+                    // If draft is active, use the draft pick system
+                    if (draftState && draftState.is_active) {
+                        await API.makeDraftPick(leagueId, currentUser.id, playerName, draftState.current_pick);
+                        await API.draftPlayer(playerName, playerName, currentUser.id, leagueId);
+                        notify(`Drafted ${playerName}! (Pick ${draftState.current_pick + 1})`, 'success');
+                    } else {
+                        await API.draftPlayer(playerName, playerName, currentUser.id, leagueId);
+                        notify(`Drafted ${playerName}!`, 'success');
+                    }
                     loadData();
                 } catch (error) {
                     notify('Draft failed: ' + error.message, 'error');
@@ -553,6 +718,33 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderScoreboard();
                 } catch (error) {
                     notify('Update failed: ' + error.message, 'error');
+                }
+            });
+        }
+
+        // Start Draft button (commissioner only)
+        const startDraftBtn = document.getElementById('start-draft-btn');
+        if (startDraftBtn) {
+            startDraftBtn.addEventListener('click', async () => {
+                if (!currentLeague || !isCommissioner) return;
+                if (!confirm('Start the draft? All league members will take turns picking players (30 seconds per pick, 20 total picks).')) return;
+                try {
+                    // Shuffle users into random draft order
+                    const shuffled = [...usersList].sort(() => Math.random() - 0.5).map(u => u.id);
+                    if (shuffled.length < 2) {
+                        return notify('Need at least 2 users in the league to start a draft', 'error');
+                    }
+                    draftState = await API.startDraft(currentLeague.id, shuffled);
+                    notify('Draft started! 🏏', 'success');
+                    renderDraftPanel();
+                    renderAllPlayers();
+                    // Switch to dashboard tab
+                    tabLinks.forEach(l => l.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.add('hidden'));
+                    document.querySelector('[data-tab="dashboard-view"]').classList.add('active');
+                    document.getElementById('dashboard-view').classList.remove('hidden');
+                } catch (error) {
+                    notify('Failed to start draft: ' + error.message, 'error');
                 }
             });
         }

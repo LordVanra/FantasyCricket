@@ -302,6 +302,46 @@ class CricketDataProcessor {
       }
     });
 
+    // Merge squad roster players (bench players who haven't played in any match)
+    if (this.data.squads && Object.keys(this.data.squads).length > 0) {
+      let rosterAdded = 0;
+      Object.keys(this.data.squads).forEach(teamName => {
+        const squad = this.data.squads[teamName];
+        if (!Array.isArray(squad)) return;
+
+        squad.forEach(rosterPlayer => {
+          const canonical = this.findCanonicalName(rosterPlayer.name, rosterPlayer.url);
+          if (!canonical) return;
+
+          // Skip if already in playerNameMap (already found from match data)
+          if (this.playerNameMap[canonical]) return;
+
+          // Add as a new player with 0 stats
+          this.playerNameMap[canonical] = {
+            name: canonical,
+            url: rosterPlayer.url,
+            batting: [],
+            bowling: [],
+            fielding: [],
+            totalRuns: 0,
+            totalBalls: 0,
+            totalFours: 0,
+            totalSixes: 0,
+            totalWickets: 0,
+            totalRunsConceded: 0,
+            totalOvers: 0,
+            totalCatches: 0,
+            totalRunouts: 0,
+            totalStumpings: 0,
+            matches: [],
+            team: teamName
+          };
+          rosterAdded++;
+        });
+      });
+      console.log(`Added ${rosterAdded} bench players from team rosters`);
+    }
+
     const sortedPlayers = Object.keys(this.playerNameMap)
       .sort()
       .reduce((acc, key) => {

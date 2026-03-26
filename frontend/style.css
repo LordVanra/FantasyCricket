@@ -799,6 +799,126 @@ body {
     min-width: 100px;
 }
 
+/* ===== Draft Panel ===== */
+.draft-panel {
+    margin-bottom: 1.5rem;
+    border: 1px solid #6366f1;
+    background: linear-gradient(135deg, #1e293b 0%, #1e1b4b 100%);
+}
+
+.draft-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.draft-header h3 {
+    font-size: 1.1rem;
+}
+
+.draft-pick-info {
+    font-size: 0.85rem;
+    color: #a5b4fc;
+    font-weight: 600;
+}
+
+.draft-timer-bar {
+    width: 100%;
+    height: 6px;
+    background: var(--bg-dark);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+}
+
+.draft-timer-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #6366f1);
+    border-radius: 99px;
+    transition: width 0.5s linear;
+    width: 100%;
+}
+
+.draft-timer-fill.danger {
+    background: linear-gradient(90deg, #ef4444, #f59e0b);
+}
+
+.draft-turn-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.draft-turn-text {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.draft-turn-text.your-turn {
+    color: #10b981;
+    animation: draftPulse 1.5s infinite;
+}
+
+.draft-timer-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #a5b4fc;
+    font-variant-numeric: tabular-nums;
+}
+
+.draft-timer-text.danger {
+    color: #ef4444;
+}
+
+@keyframes draftPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.draft-order-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.draft-order-chip {
+    padding: 0.25rem 0.6rem;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    transition: all 0.2s;
+}
+
+.draft-order-chip.active {
+    background: #6366f1;
+    border-color: #818cf8;
+    color: white;
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
+}
+
+.draft-order-chip.done {
+    opacity: 0.4;
+}
+
+.draft-order-chip.current-user {
+    border-color: #10b981;
+}
+
+.draft-complete-banner {
+    text-align: center;
+    padding: 0.75rem;
+    background: rgba(16, 185, 129, 0.15);
+    border-radius: 6px;
+    color: #10b981;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
 /* ===== Fixtures & Scoreboard ===== */
 .fixtures-container {
     display: flex;

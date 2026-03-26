@@ -73,6 +73,20 @@
                     </div>
                 </div>
             </div>
+            <div id="draft-panel" class="card draft-panel hidden">
+                <div class="draft-header">
+                    <h3>🏏 Live Draft</h3>
+                    <span id="draft-pick-info" class="draft-pick-info">Pick 0 of 20</span>
+                </div>
+                <div class="draft-timer-bar">
+                    <div id="draft-timer-fill" class="draft-timer-fill"></div>
+                </div>
+                <div class="draft-turn-info">
+                    <span id="draft-turn-text" class="draft-turn-text">Waiting...</span>
+                    <span id="draft-timer-text" class="draft-timer-text">30s</span>
+                </div>
+                <div id="draft-order-list" class="draft-order-list"></div>
+            </div>
             <div class="main-layout">
                 <div class="card marketplace">
                     <div class="card-header">
@@ -166,7 +180,8 @@
                 <div class="card-header">
                     <h3>Season Fixtures</h3>
                     <div id="commissioner-controls" class="form-group hidden"
-                        style="margin: 0; display: flex; gap: 8px; align-items: center;">
+                        style="margin: 0; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                        <button id="start-draft-btn" class="btn btn-accent btn-sm">Start Draft</button>
                         <input type="number" id="rounds-input" class="btn-sm" placeholder="Rounds" min="1" max="10"
                             value="1" style="width: 80px;">
                         <button id="generate-fixtures-btn" class="btn btn-primary btn-sm">Generate Fixtures</button>
