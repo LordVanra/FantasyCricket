@@ -1,0 +1,268 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import Navbar from './components/Navbar';
+import AuthView from './components/AuthView';
+import DraftPanel from './components/DraftPanel';
+import PlayerList from './components/PlayerList';
+import MyTeam from './components/MyTeam';
+import TradeCenter from './components/TradeCenter';
+import LeagueView from './components/LeagueView';
+import Fixtures from './components/Fixtures';
+import Scoreboard from './components/Scoreboard';
+import CommissionerPanel from './components/CommissionerPanel';
+import AccountView from './components/AccountView';
+
+import { useAuth } from './hooks/useAuth';
+import { useDraft } from './hooks/useDraft';
+import { useNotify } from './hooks/useNotify';
+import api from './api/api';
+
+const App = () => {
+    const auth = useAuth();
+    const { user, league, isCommissioner, loading, signOut } = auth;
+    const { notify } = useNotify();
+
+    const [activeTab, setActiveTab] = useState('dashboard');
+    
+    // Global data state
+    const [allPlayersData, setAllPlayersData] = useState({ players: {} });
+    const [draftedPlayers, setDraftedPlayers] = useState([]);
+    const [usersList, setUsersList] = useState([]);
+    const [mySquad, setMySquad] = useState([]);
+    const [starting11, setStarting11] = useState([]);
+    const [pendingTrades, setPendingTrades] = useState([]);
+    const [dataLoading, setDataLoading] = useState(false);
+    const [scoreboardTrigger, setScoreboardTrigger] = useState(0);
+
+    const draft = useDraft(league?.id, user?.id);
+
+    const loadData = useCallback(async () => {
+        if (!user) return;
+        setDataLoading(true);
+        try {
+            const leagueId = league ? league.id : null;
+            const [statsData, draftedData, uList] = await Promise.all([
+                api.getTournamentStats(),
+                api.getDraftedPlayers(leagueId),
+                api.getAllUsers(leagueId)
+            ]);
+            
+            setAllPlayersData(statsData || { players: {} });
+            setDraftedPlayers(draftedData || []);
+            setUsersList(uList || []);
+            
+            const mySquadPlayers = (draftedData || []).filter(dp => dp.user_id === user.id).map(dp => dp.player_id);
+            setMySquad(mySquadPlayers);
+
+            const teamData = await api.getUserTeam(user.id);
+            if (teamData && teamData.starting_11) {
+                setStarting11(teamData.starting_11.filter(name => mySquadPlayers.includes(name)));
+            } else {
+                setStarting11([]);
+            }
+
+            const tradesData = await api.getTrades(user.id);
+            setPendingTrades(tradesData || []);
+
+        } catch (error) {
+            notify(`Error loading data: ${error.message}`, 'error');
+        } finally {
+            setDataLoading(false);
+        }
+    }, [user, league, notify]);
+
+    // Load data when user/league changes
+    useEffect(() => {
+        loadData();
+    }, [user?.id, league?.id]);
+
+    if (loading) {
+        return <div className="loader" style={{ marginTop: '100px', textAlign: 'center' }}>Loading Fantasy Cricket...</div>;
+    }
+
+    if (!user) {
+        return (
+            <>
+                <Navbar authData={auth} />
+                <main className="container">
+                    <AuthView authData={auth} />
+                </main>
+            </>
+        );
+    }
+
+    const handleSaveLineup = async () => {
+        if (!league) return notify('You must join a league first!', 'error');
+        try {
+            await api.saveUserTeam(user.id, league.id, mySquad, starting11);
+            notify('Lineup saved successfully!', 'success');
+        } catch (error) {
+            notify(error.message, 'error');
+        }
+    };
+
+    const handleReleasePlayer = async (playerName) => {
+        const leagueId = league ? league.id : null;
+        try {
+            await api.releasePlayer(playerName, user.id, leagueId);
+            setMySquad(prev => prev.filter(p => p !== playerName));
+            setStarting11(prev => prev.filter(p => p !== playerName));
+            loadData(); // reload drafted players logic
+        } catch (error) {
+            notify('Error releasing player: ' + error.message, 'error');
+        }
+    };
+
+    const handleAccountDeleted = () => {
+        notify('Account deleted. Goodbye.', 'info');
+        signOut();
+    };
+
+    const renderTabContent = () => {
+        switch (activeTab) {
+            case 'dashboard':
+                return (
+                    <section id="dashboard-view" className="view tab-content">
+                        <div className="dashboard-header">
+                            <h2>Tournament Dashboard</h2>
+                            <div className="stats-overview">
+                                <div className="stat-card">
+                                    <span className="label">My Squad</span>
+                                    <span className="value">{mySquad.length}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <DraftPanel 
+                            draftState={draft.draftState} 
+                            countdown={draft.countdown} 
+                            isMyTurn={draft.isMyTurn} 
+                            currentUser={user} 
+                            usersList={usersList} 
+                        />
+
+                        <div className="main-layout">
+                            <PlayerList 
+                                players={Object.values(allPlayersData.players || {})} 
+                                draftedPlayers={draftedPlayers} 
+                                mySquad={mySquad} 
+                                currentUser={user} 
+                                draftState={draft.draftState} 
+                                isMyTurn={draft.isMyTurn} 
+                                onDraftPick={async (player) => {
+                                    if (!league) return notify('You must join a league before drafting!', 'error');
+                                    try {
+                                        const alreadyTaken = await api.isPlayerDrafted(player.name, league.id);
+                                        if (alreadyTaken) return notify('Player already taken in your league!', 'error');
+                                        
+                                        if (draft.draftState && draft.draftState.is_active) {
+                                            await draft.makePick(player.name, player.name);
+                                        } else {
+                                            await api.draftPlayer(player.name, player.name, user.id, league.id);
+                                            notify(`Drafted ${player.name}!`, 'success');
+                                        }
+                                        loadData();
+                                    } catch (err) { }
+                                }}
+                            />
+                            <MyTeam 
+                                mySquad={mySquad} 
+                                starting11={starting11} 
+                                setStarting11={setStarting11} 
+                                onReleasePlayer={handleReleasePlayer} 
+                                onSaveLineup={handleSaveLineup}
+                            />
+                        </div>
+                    </section>
+                );
+            case 'trade':
+                return (
+                    <TradeCenter 
+                        currentUser={user} 
+                        usersList={usersList} 
+                        mySquad={mySquad} 
+                        draftedPlayers={draftedPlayers} 
+                        pendingTrades={pendingTrades} 
+                        onTradeUpdate={loadData}
+                    />
+                );
+            case 'league':
+                return (
+                    <LeagueView 
+                        currentUser={user} 
+                        currentLeague={league} 
+                        onLeagueChange={() => auth.refreshLeague()} 
+                    />
+                );
+            case 'fixtures':
+                return (
+                    <Fixtures 
+                        currentLeague={league} 
+                        usersList={usersList} 
+                        isCommissioner={isCommissioner} 
+                        onStartDraft={(list) => {
+                            draft.startDraft(list);
+                            setActiveTab('dashboard');
+                        }} 
+                        onUpdateScoresTrigger={() => setScoreboardTrigger(prev => prev + 1)}
+                    />
+                );
+            case 'commissioner':
+                return (
+                    <CommissionerPanel 
+                        isCommissioner={isCommissioner} 
+                        currentLeague={league} 
+                        currentUser={user} 
+                        onLeagueChange={() => auth.refreshLeague()} 
+                    />
+                );
+            case 'scoreboard':
+                return (
+                    <Scoreboard 
+                        currentLeague={league} 
+                        refreshTrigger={scoreboardTrigger} 
+                    />
+                );
+            case 'account':
+                return (
+                    <AccountView 
+                        currentUser={user} 
+                        onAccountDeleted={handleAccountDeleted} 
+                    />
+                );
+            default:
+                return null;
+        }
+    };
+
+    return (
+        <>
+            <Navbar authData={auth} />
+            <div id="nav-tabs" className="container">
+                <div className="tabs">
+                    {[
+                        { id: 'dashboard', label: 'Dashboard' },
+                        { id: 'trade', label: 'Trade Center' },
+                        { id: 'league', label: 'Leagues' },
+                        { id: 'fixtures', label: 'Fixtures' },
+                        isCommissioner && { id: 'commissioner', label: 'Commissioner' },
+                        { id: 'scoreboard', label: 'Scoreboard' },
+                        { id: 'account', label: 'Account' },
+                    ].filter(Boolean).map(tab => (
+                        <button 
+                            key={tab.id}
+                            className={`tab-link ${activeTab === tab.id ? 'active' : ''}`} 
+                            onClick={() => setActiveTab(tab.id)}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
+                </div>
+            </div>
+            <main className="container">
+                {renderTabContent()}
+            </main>
+        </>
+    );
+};
+
+export default App;

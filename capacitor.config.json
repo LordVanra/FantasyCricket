@@ -1,7 +1,7 @@
 {
     "appId": "com.yourname.fantasycricket",
     "appName": "Fantasy Cricket",
-    "webDir": "frontend",
+    "webDir": "frontend/dist",
     "server": {
         "url": "https://fantasycricketgame.vercel.app/",
         "cleartext": false
