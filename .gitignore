@@ -2,3 +2,6 @@
 /android
 /node_modules
 /frontend/node_modules
+
+/backend/data.json
+/backend/stats.json
