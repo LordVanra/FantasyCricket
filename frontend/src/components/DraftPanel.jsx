@@ -5,9 +5,10 @@ const DraftPanel = ({ draftState, countdown, isMyTurn, currentUser, usersList })
         return null;
     }
 
-    const isComplete = !draftState.is_active && draftState.current_pick >= 20;
     const turnOrder = draftState.turn_order || [];
-    const currentPickIndex = draftState.current_pick % turnOrder.length;
+    const totalPicks = turnOrder.length * 18;
+    const isComplete = !draftState.is_active && draftState.current_pick >= totalPicks;
+    const currentPickIndex = draftState.current_pick % Math.max(1, turnOrder.length);
     const currentTurnUserId = turnOrder[currentPickIndex];
     const currentTurnUser = usersList.find((u) => u.id === currentTurnUserId);
 
@@ -23,13 +24,15 @@ const DraftPanel = ({ draftState, countdown, isMyTurn, currentUser, usersList })
 
     const timerPct = isComplete ? 100 : Math.max(0, (countdown / 30) * 100);
     const dangerClass = countdown <= 5 && !isComplete ? ' danger' : '';
+    
+    const recentPicks = (draftState.picks || []).slice(-5).reverse();
 
     return (
         <div id="draft-panel" className="card draft-panel">
             <div className="draft-header">
                 <h3>🏏 Live Draft</h3>
                 <span id="draft-pick-info" className="draft-pick-info">
-                    {isComplete ? '20 of 20 picks made' : `Pick ${Math.min(draftState.current_pick + 1, 20)} of 20`}
+                    {isComplete ? `${totalPicks} of ${totalPicks} picks made` : `Pick ${Math.min(draftState.current_pick + 1, totalPicks)} of ${totalPicks}`}
                 </span>
             </div>
             <div className="draft-timer-bar">
@@ -50,7 +53,7 @@ const DraftPanel = ({ draftState, countdown, isMyTurn, currentUser, usersList })
             <div id="draft-order-list" className="draft-order-list">
                 {isComplete ? (
                     <div className="draft-complete-banner">
-                        🏆 Draft Complete! All 20 players selected.
+                        🏆 Draft Complete! All {totalPicks} players selected.
                     </div>
                 ) : (
                     turnOrder.map((userId, idx) => {
@@ -67,6 +70,22 @@ const DraftPanel = ({ draftState, countdown, isMyTurn, currentUser, usersList })
                     })
                 )}
             </div>
+            {recentPicks.length > 0 && (
+                <div className="recent-picks-section">
+                    <h4 style={{ fontSize: '0.9rem', color: 'var(--text-dim)', marginBottom: '8px' }}>Recent Picks</h4>
+                    <div className="recent-picks-list" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        {recentPicks.map((pick, i) => {
+                            const picker = usersList.find(u => u.id === pick.user_id);
+                            return (
+                                <div key={i} className="recent-pick-item" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', padding: '6px 10px', background: 'rgba(255,255,255,0.05)', borderRadius: '6px' }}>
+                                    <span>#{pick.pick_number + 1} <strong>{pick.player_id}</strong></span>
+                                    <span style={{ color: 'var(--text-dim)' }}>{picker?.username || 'Unknown'}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

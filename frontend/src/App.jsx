@@ -33,8 +33,6 @@ const App = () => {
     const [dataLoading, setDataLoading] = useState(false);
     const [scoreboardTrigger, setScoreboardTrigger] = useState(0);
 
-    const draft = useDraft(league?.id, user?.id);
-
     const loadData = useCallback(async () => {
         if (!user) return;
         setDataLoading(true);
@@ -69,6 +67,32 @@ const App = () => {
             setDataLoading(false);
         }
     }, [user, league, notify]);
+
+    const handleDraftTimeout = useCallback(async (timeoutUserId, timeoutPick) => {
+        if (!league) return;
+        try {
+            // Find an available player randomly
+            const allPlayerNames = Object.keys(allPlayersData.players || {});
+            const draftedNames = draftedPlayers.map(dp => dp.player_id);
+            const availableNames = allPlayerNames.filter(name => !draftedNames.includes(name));
+            
+            if (availableNames.length > 0) {
+                const randomName = availableNames[Math.floor(Math.random() * availableNames.length)];
+                
+                await api.makeDraftPick(league.id, timeoutUserId, randomName, timeoutPick);
+                await api.draftPlayer(randomName, randomName, timeoutUserId, league.id);
+                
+                notify(`Auto-drafted ${randomName} for a timed out user!`, 'info');
+                loadData();
+            }
+        } catch (error) {
+            if (!error.message.includes('mismatch')) {
+                console.error("Auto-draft failed:", error.message);
+            }
+        }
+    }, [league, allPlayersData, draftedPlayers, loadData, notify]);
+
+    const draft = useDraft(league?.id, user?.id, handleDraftTimeout);
 
     // Load data when user/league changes
     useEffect(() => {

@@ -217,7 +217,8 @@ const api = {
         if (state.current_pick !== currentPick) throw new Error('Not your turn (pick mismatch)');
         const newPicks = [...(state.picks || []), { user_id: userId, player_id: playerId, pick_number: currentPick }];
         const nextPick = currentPick + 1;
-        const isComplete = nextPick >= 20;
+        const totalPicksNeeded = (state.turn_order || []).length * 18;
+        const isComplete = nextPick >= totalPicksNeeded;
         const { data, error } = await supabase.from('draft_state').update({
             picks: newPicks,
             current_pick: nextPick,

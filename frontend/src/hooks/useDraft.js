@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import api from '../api/api';
 import { useNotify } from './useNotify';
 
-export function useDraft(leagueId, userId) {
+export function useDraft(leagueId, userId, onTimeout) {
     const [draftState, setDraftState] = useState(null);
     const [countdown, setCountdown] = useState(30);
     const { notify } = useNotify();
@@ -35,6 +35,7 @@ export function useDraft(leagueId, userId) {
 
         const turnStartTime = new Date(draftState.turn_start_time).getTime();
         const TURN_DURATION = 30;
+        let timeoutFiredForPick = -1;
 
         const interval = setInterval(() => {
             const now = Date.now();
@@ -42,20 +43,20 @@ export function useDraft(leagueId, userId) {
             const remaining = Math.max(0, TURN_DURATION - elapsed);
             setCountdown(Math.ceil(remaining));
 
-            if (remaining <= 0) {
-                // Auto-skip logic
+            if (remaining <= 0 && timeoutFiredForPick !== draftState.current_pick) {
+                timeoutFiredForPick = draftState.current_pick;
                 const turnOrder = draftState.turn_order || [];
                 const currentPickIndex = draftState.current_pick % turnOrder.length;
                 const currentTurnUserId = turnOrder[currentPickIndex];
 
-                if (userId && currentTurnUserId === userId) {
-                    api.skipDraftTurn(leagueId, draftState.current_pick).catch(() => {});
+                if (onTimeout) {
+                    onTimeout(currentTurnUserId, draftState.current_pick);
                 }
             }
         }, 500);
 
         return () => clearInterval(interval);
-    }, [draftState, leagueId, userId]);
+    }, [draftState, leagueId, userId, onTimeout]);
 
     const startDraft = async (usersList) => {
         if (!leagueId) return;
