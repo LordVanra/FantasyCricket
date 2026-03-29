@@ -239,6 +239,40 @@ body {
     overflow-y: auto;
 }
 
+.draft-filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+    gap: 0.6rem;
+    margin-bottom: 0.8rem;
+}
+
+.draft-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.draft-filter-group label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.draft-filter-group select {
+    width: 100%;
+    padding: 0.45rem 0.5rem;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.85rem;
+}
+
+.draft-filter-group select:focus {
+    outline: 2px solid var(--accent);
+    border-color: transparent;
+}
+
 .player-item {
     display: flex;
     justify-content: space-between;
@@ -1374,6 +1408,10 @@ tr:last-child td {
     .match-card {
         flex-wrap: wrap;
         gap: 0.25rem;
+    }
+
+    .draft-filters {
+        grid-template-columns: 1fr;
     }
 
     .match-score {

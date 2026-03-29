@@ -10,6 +10,39 @@ class CricketDataProcessor {
     this.fullNames = new Set();
     this.surnameMap = {};
     this.defaultPlayerType = 'batsman';
+    this.teamNameMap = {};
+  }
+
+  toTeamSlug(teamName) {
+    if (!teamName) return '';
+    return String(teamName)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  formatTeamName(teamName) {
+    const cleaned = String(teamName || '').replace(/-/g, ' ').trim();
+    if (!cleaned) return null;
+    return cleaned
+      .split(' ')
+      .filter(Boolean)
+      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(' ');
+  }
+
+  normalizeTeamName(teamName) {
+    if (!teamName) return null;
+    const slug = this.toTeamSlug(teamName);
+    if (!slug) return null;
+
+    if (this.teamNameMap[slug]) {
+      return this.teamNameMap[slug];
+    }
+
+    const fallback = this.formatTeamName(teamName);
+    this.teamNameMap[slug] = fallback;
+    return fallback;
   }
 
   extractTeamsFromUrl(matchUrl) {
@@ -244,6 +277,13 @@ class CricketDataProcessor {
 
     this.buildNameMaps();
 
+    Object.keys(this.data.squads || {}).forEach(teamName => {
+      const slug = this.toTeamSlug(teamName);
+      if (slug) {
+        this.teamNameMap[slug] = this.formatTeamName(teamName);
+      }
+    });
+
     console.log(`Found ${this.fullNames.size} unique full names from batting/bowling`);
 
     // Build teams map: teamName -> ordered list of match URLs
@@ -251,8 +291,10 @@ class CricketDataProcessor {
     this.data.matches.forEach((match, matchIndex) => {
       const teams = this.extractTeamsFromUrl(match.url);
       teams.forEach(team => {
-        if (!teamsMap[team]) teamsMap[team] = [];
-        teamsMap[team].push(match.url);
+        const normalizedTeam = this.normalizeTeamName(team);
+        if (!normalizedTeam) return;
+        if (!teamsMap[normalizedTeam]) teamsMap[normalizedTeam] = [];
+        teamsMap[normalizedTeam].push(match.url);
       });
     });
     console.log(`Found ${Object.keys(teamsMap).length} teams: ${Object.keys(teamsMap).join(', ')}`);
@@ -352,7 +394,9 @@ class CricketDataProcessor {
       player.matches.forEach(matchUrl => {
         const teams = this.extractTeamsFromUrl(matchUrl);
         teams.forEach(t => {
-          teamCounts[t] = (teamCounts[t] || 0) + 1;
+          const normalizedTeam = this.normalizeTeamName(t);
+          if (!normalizedTeam) return;
+          teamCounts[normalizedTeam] = (teamCounts[normalizedTeam] || 0) + 1;
         });
       });
 
@@ -375,6 +419,7 @@ class CricketDataProcessor {
       Object.keys(this.data.squads).forEach(teamName => {
         const squad = this.data.squads[teamName];
         if (!Array.isArray(squad)) return;
+        const normalizedRosterTeam = this.normalizeTeamName(teamName);
 
         squad.forEach(rosterPlayer => {
           const canonical = this.findCanonicalName(rosterPlayer.name, rosterPlayer.url, { allowSurnameFallback: false });
@@ -387,8 +432,8 @@ class CricketDataProcessor {
             if (!this.playerNameMap[canonical].playerType && rosterType) {
               this.playerNameMap[canonical].playerType = rosterType;
             }
-            if (!this.playerNameMap[canonical].team) {
-              this.playerNameMap[canonical].team = teamName;
+            if (normalizedRosterTeam) {
+              this.playerNameMap[canonical].team = normalizedRosterTeam;
             }
             return;
           }
@@ -412,7 +457,7 @@ class CricketDataProcessor {
             totalRunouts: 0,
             totalStumpings: 0,
             matches: [],
-            team: teamName
+            team: normalizedRosterTeam
           };
           rosterAdded++;
         });
