@@ -34,6 +34,9 @@ const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState,
                 />
             </div>
             <p className="hint click-stats-hint">Click any player name to view full stats.</p>
+            {!isDraftActive && (
+                <p className="hint">Draft is locked until the commissioner starts it from Fixtures.</p>
+            )}
             <div className="player-list scrollable" id="all-players-list">
                 {players.length === 0 ? <div className="loader">Loading stats...</div> : null}
                 {filtered.map((player) => {
@@ -66,12 +69,8 @@ const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState,
                     points = Math.round(points * 10) / 10;
 
                     let showDraftBtn = false;
-                    if (!isTaken && !isInMySquad && !isDraftPicked) {
-                        if (isDraftActive) {
-                            showDraftBtn = isMyTurn;
-                        } else {
-                            showDraftBtn = true;
-                        }
+                    if (!isTaken && !isInMySquad && !isDraftPicked && isDraftActive) {
+                        showDraftBtn = isMyTurn;
                     }
 
                     return (

@@ -232,16 +232,14 @@ const App = () => {
                                 onPlayerClick={handleOpenPlayerStats}
                                 onDraftPick={async (player) => {
                                     if (!league) return notify('You must join a league before drafting!', 'error');
+                                    if (!(draft.draftState && draft.draftState.is_active)) {
+                                        return notify('Draft is not active. Ask the commissioner to start the draft first.', 'error');
+                                    }
                                     try {
                                         const alreadyTaken = await api.isPlayerDrafted(player.name, league.id);
                                         if (alreadyTaken) return notify('Player already taken in your league!', 'error');
-                                        
-                                        if (draft.draftState && draft.draftState.is_active) {
-                                            await draft.makePick(player.name, player.name);
-                                        } else {
-                                            await api.draftPlayer(player.name, player.name, user.id, league.id);
-                                            notify(`Drafted ${player.name}!`, 'success');
-                                        }
+
+                                        await draft.makePick(player.name, player.name);
                                         loadData();
                                     } catch (err) { }
                                 }}
