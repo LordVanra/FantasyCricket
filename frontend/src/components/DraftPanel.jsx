@@ -1,13 +1,18 @@
 import React from 'react';
 
-const DraftPanel = ({ draftState, countdown, isMyTurn, currentUser, usersList }) => {
-    if (!draftState || (!draftState.is_active && draftState.current_pick === 0)) {
+const DraftPanel = ({ draftState, countdown, isMyTurn, currentUser, usersList, onPlayerClick }) => {
+    if (!draftState) {
         return null;
     }
 
     const turnOrder = draftState.turn_order || [];
     const totalPicks = turnOrder.length * 18;
     const isComplete = !draftState.is_active && draftState.current_pick >= totalPicks;
+
+    if ((!draftState.is_active && draftState.current_pick === 0) || isComplete) {
+        return null;
+    }
+
     const currentPickIndex = draftState.current_pick % Math.max(1, turnOrder.length);
     const currentTurnUserId = turnOrder[currentPickIndex];
     const currentTurnUser = usersList.find((u) => u.id === currentTurnUserId);
@@ -78,7 +83,12 @@ const DraftPanel = ({ draftState, countdown, isMyTurn, currentUser, usersList })
                             const picker = usersList.find(u => u.id === pick.user_id);
                             return (
                                 <div key={i} className="recent-pick-item" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', padding: '6px 10px', background: 'rgba(255,255,255,0.05)', borderRadius: '6px' }}>
-                                    <span>#{pick.pick_number + 1} <strong>{pick.player_id}</strong></span>
+                                    <span>
+                                        #{pick.pick_number + 1}{' '}
+                                        <button type="button" className="player-link-btn" onClick={() => onPlayerClick?.(pick.player_id)}>
+                                            <strong>{pick.player_id}</strong>
+                                        </button>
+                                    </span>
                                     <span style={{ color: 'var(--text-dim)' }}>{picker?.username || 'Unknown'}</span>
                                 </div>
                             );

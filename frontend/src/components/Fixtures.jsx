@@ -55,6 +55,12 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onStartDraft, onUp
         }
     };
 
+    const handleStartDraft = async () => {
+        const confirmed = window.confirm('Are you sure? This will delete all current squads.');
+        if (!confirmed) return;
+        await onStartDraft(usersList);
+    };
+
     // Group by rounds
     const rounds = {};
     fixtures.forEach((match) => {
@@ -69,23 +75,34 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onStartDraft, onUp
                     <h3>Season Fixtures</h3>
                     {isCommissioner && (
                         <div id="commissioner-controls" className="form-group fixtures-controls" style={{ margin: 0 }}>
-                            <button className="btn btn-accent fixtures-action-btn" onClick={() => onStartDraft(usersList)}>
+                            <button className="btn btn-accent fixtures-action-btn" onClick={handleStartDraft}>
                                 Start Draft
                             </button>
-                            <input 
-                                type="number" 
-                                className="fixtures-rounds-input" 
-                                min="1" 
-                                max="10" 
-                                value={roundsInput}
-                                onChange={(e) => setRoundsInput(parseInt(e.target.value) || 1)}
-                            />
                             <button className="btn btn-primary fixtures-action-btn" onClick={handleGenerate}>
                                 Generate Fixtures
                             </button>
                             <button className="btn btn-secondary fixtures-action-btn" onClick={handleUpdateScores}>
                                 Update Scores
                             </button>
+                            <div className="fixtures-rounds-field">
+                                <label htmlFor="fixtures-rounds-input">Rounds</label>
+                                <input
+                                    id="fixtures-rounds-input"
+                                    type="number"
+                                    className="fixtures-rounds-input"
+                                    min="1"
+                                    max="10"
+                                    value={roundsInput}
+                                    onChange={(event) => {
+                                        const parsed = parseInt(event.target.value, 10);
+                                        if (Number.isNaN(parsed)) {
+                                            setRoundsInput(1);
+                                            return;
+                                        }
+                                        setRoundsInput(Math.min(10, Math.max(1, parsed)));
+                                    }}
+                                />
+                            </div>
                         </div>
                     )}
                 </div>

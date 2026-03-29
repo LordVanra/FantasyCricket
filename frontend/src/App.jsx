@@ -10,6 +10,7 @@ import Fixtures from './components/Fixtures';
 import Scoreboard from './components/Scoreboard';
 import CommissionerPanel from './components/CommissionerPanel';
 import AccountView from './components/AccountView';
+import PlayerStatsModal from './components/PlayerStatsModal';
 
 import { useAuth } from './hooks/useAuth';
 import { useDraft } from './hooks/useDraft';
@@ -32,6 +33,7 @@ const App = () => {
     const [pendingTrades, setPendingTrades] = useState([]);
     const [dataLoading, setDataLoading] = useState(false);
     const [scoreboardTrigger, setScoreboardTrigger] = useState(0);
+    const [selectedPlayerName, setSelectedPlayerName] = useState(null);
 
     const getLineupTypeCounts = useCallback((lineup) => {
         const counts = { batsman: 0, bowler: 0, allrounder: 0 };
@@ -131,6 +133,17 @@ const App = () => {
 
     const draft = useDraft(league?.id, user?.id, handleDraftTimeout);
 
+    const handleOpenPlayerStats = useCallback((playerName) => {
+        if (!playerName) return;
+        if (!allPlayersData.players?.[playerName]) {
+            notify('Stats are not available for this player yet.', 'error');
+            return;
+        }
+        setSelectedPlayerName(playerName);
+    }, [allPlayersData.players, notify]);
+
+    const selectedPlayer = selectedPlayerName ? allPlayersData.players?.[selectedPlayerName] : null;
+
     // Load data when user/league changes
     useEffect(() => {
         loadData();
@@ -205,6 +218,7 @@ const App = () => {
                             isMyTurn={draft.isMyTurn} 
                             currentUser={user} 
                             usersList={usersList} 
+                            onPlayerClick={handleOpenPlayerStats}
                         />
 
                         <div className="main-layout">
@@ -215,6 +229,7 @@ const App = () => {
                                 currentUser={user} 
                                 draftState={draft.draftState} 
                                 isMyTurn={draft.isMyTurn} 
+                                onPlayerClick={handleOpenPlayerStats}
                                 onDraftPick={async (player) => {
                                     if (!league) return notify('You must join a league before drafting!', 'error');
                                     try {
@@ -237,6 +252,7 @@ const App = () => {
                                 setStarting11={setStarting11} 
                                 playersData={allPlayersData.players || {}}
                                 lineupValidation={lineupValidation}
+                                onPlayerClick={handleOpenPlayerStats}
                                 onReleasePlayer={handleReleasePlayer} 
                                 onSaveLineup={handleSaveLineup}
                             />
@@ -251,6 +267,7 @@ const App = () => {
                         mySquad={mySquad} 
                         draftedPlayers={draftedPlayers} 
                         pendingTrades={pendingTrades} 
+                        onPlayerClick={handleOpenPlayerStats}
                         onTradeUpdate={loadData}
                     />
                 );
@@ -268,9 +285,12 @@ const App = () => {
                         currentLeague={league} 
                         usersList={usersList} 
                         isCommissioner={isCommissioner} 
-                        onStartDraft={(list) => {
-                            draft.startDraft(list);
-                            setActiveTab('dashboard');
+                        onStartDraft={async (list) => {
+                            const started = await draft.startDraft(list);
+                            if (started) {
+                                await loadData();
+                                setActiveTab('dashboard');
+                            }
                         }} 
                         onUpdateScoresTrigger={() => setScoreboardTrigger(prev => prev + 1)}
                     />
@@ -330,6 +350,11 @@ const App = () => {
             <main className="container">
                 {renderTabContent()}
             </main>
+            <PlayerStatsModal
+                playerName={selectedPlayerName}
+                player={selectedPlayer}
+                onClose={() => setSelectedPlayerName(null)}
+            />
         </>
     );
 };

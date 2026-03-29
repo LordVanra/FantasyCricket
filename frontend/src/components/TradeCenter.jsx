@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import api from '../api/api';
 import { useNotify } from '../hooks/useNotify';
 
-const TradeCenter = ({ currentUser, usersList, mySquad, draftedPlayers, pendingTrades, onTradeUpdate }) => {
+const TradeCenter = ({ currentUser, usersList, mySquad, draftedPlayers, pendingTrades, onPlayerClick, onTradeUpdate }) => {
     const [receiverId, setReceiverId] = useState('');
     const [giveSelected, setGiveSelected] = useState([]);
     const [requestSelected, setRequestSelected] = useState([]);
@@ -49,6 +49,7 @@ const TradeCenter = ({ currentUser, usersList, mySquad, draftedPlayers, pendingT
             <div className="trade-layout">
                 <div className="card trade-proposal">
                     <h3>Propose a Trade</h3>
+                    <p className="hint click-stats-hint">Click any player name to view full stats.</p>
                     
                     <div className="form-group">
                         <label>Select Other User</label>
@@ -72,7 +73,14 @@ const TradeCenter = ({ currentUser, usersList, mySquad, draftedPlayers, pendingT
                         <div className="trade-chips">
                             {giveSelected.map(name => (
                                 <span key={name} className="player-chip">
-                                    {name} <span className="remove-chip" onClick={() => setGiveSelected(giveSelected.filter(n => n !== name))}>×</span>
+                                    <button
+                                        type="button"
+                                        className="player-link-btn chip-player-link"
+                                        onClick={() => onPlayerClick?.(name)}
+                                    >
+                                        {name}
+                                    </button>
+                                    <span className="remove-chip" onClick={() => setGiveSelected(giveSelected.filter(n => n !== name))}>×</span>
                                 </span>
                             ))}
                         </div>
@@ -87,7 +95,16 @@ const TradeCenter = ({ currentUser, usersList, mySquad, draftedPlayers, pendingT
                                         else setGiveSelected([...giveSelected, name]);
                                     }}
                                 >
-                                    <span>{name}</span>
+                                    <button
+                                        type="button"
+                                        className="player-link-btn"
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            onPlayerClick?.(name);
+                                        }}
+                                    >
+                                        {name}
+                                    </button>
                                 </div>
                             ))}
                         </div>
@@ -98,7 +115,14 @@ const TradeCenter = ({ currentUser, usersList, mySquad, draftedPlayers, pendingT
                         <div className="trade-chips">
                             {requestSelected.map(name => (
                                 <span key={name} className="player-chip">
-                                    {name} <span className="remove-chip" onClick={() => setRequestSelected(requestSelected.filter(n => n !== name))}>×</span>
+                                    <button
+                                        type="button"
+                                        className="player-link-btn chip-player-link"
+                                        onClick={() => onPlayerClick?.(name)}
+                                    >
+                                        {name}
+                                    </button>
+                                    <span className="remove-chip" onClick={() => setRequestSelected(requestSelected.filter(n => n !== name))}>×</span>
                                 </span>
                             ))}
                         </div>
@@ -114,7 +138,16 @@ const TradeCenter = ({ currentUser, usersList, mySquad, draftedPlayers, pendingT
                                         else setRequestSelected([...requestSelected, name]);
                                     }}
                                 >
-                                    <span>{name}</span>
+                                    <button
+                                        type="button"
+                                        className="player-link-btn"
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            onPlayerClick?.(name);
+                                        }}
+                                    >
+                                        {name}
+                                    </button>
                                 </div>
                             ))}
                         </div>
@@ -139,9 +172,35 @@ const TradeCenter = ({ currentUser, usersList, mySquad, draftedPlayers, pendingT
                                 <div key={trade.id} className={`trade-item card ${trade.status}`}>
                                     <div className="trade-info">
                                         <p><b>{isSender ? 'You' : (otherUser ? otherUser.username : 'Unknown')}</b> offered:</p>
-                                        <p className="trade-players-list">{offered.join(', ')}</p>
+                                        <p className="trade-players-list">
+                                            {offered.map((name, index) => (
+                                                <React.Fragment key={`${trade.id}-offered-${name}-${index}`}>
+                                                    <button
+                                                        type="button"
+                                                        className="player-link-btn trade-player-link"
+                                                        onClick={() => onPlayerClick?.(name)}
+                                                    >
+                                                        {name}
+                                                    </button>
+                                                    {index < offered.length - 1 ? ', ' : ''}
+                                                </React.Fragment>
+                                            ))}
+                                        </p>
                                         <p>For:</p>
-                                        <p className="trade-players-list">{requested.join(', ')}</p>
+                                        <p className="trade-players-list">
+                                            {requested.map((name, index) => (
+                                                <React.Fragment key={`${trade.id}-requested-${name}-${index}`}>
+                                                    <button
+                                                        type="button"
+                                                        className="player-link-btn trade-player-link"
+                                                        onClick={() => onPlayerClick?.(name)}
+                                                    >
+                                                        {name}
+                                                    </button>
+                                                    {index < requested.length - 1 ? ', ' : ''}
+                                                </React.Fragment>
+                                            ))}
+                                        </p>
                                         <p className={`status-tag ${trade.status}`}>{trade.status.toUpperCase()}</p>
                                     </div>
                                     {!isSender && trade.status === 'pending' && (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNotify } from '../hooks/useNotify';
 
-const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState, isMyTurn, onDraftPick }) => {
+const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState, isMyTurn, onDraftPick, onPlayerClick }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const { notify } = useNotify();
 
@@ -33,6 +33,7 @@ const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState,
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
+            <p className="hint click-stats-hint">Click any player name to view full stats.</p>
             <div className="player-list scrollable" id="all-players-list">
                 {players.length === 0 ? <div className="loader">Loading stats...</div> : null}
                 {filtered.map((player) => {
@@ -77,7 +78,10 @@ const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState,
                         <div key={player.name} className={`player-item ${isTaken || isDraftPicked ? 'taken' : ''}`}>
                             <div className="player-info">
                                 <h4>
-                                    {player.name} <span className="points-badge">{points} pts</span>
+                                    <button type="button" className="player-link-btn" onClick={() => onPlayerClick?.(player.name)}>
+                                        {player.name}
+                                    </button>{' '}
+                                    <span className="points-badge">{points} pts</span>
                                 </h4>
                                 <p>
                                     {player.totalRuns} Runs | {player.totalWickets} Wickets

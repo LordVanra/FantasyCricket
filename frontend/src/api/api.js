@@ -211,6 +211,24 @@ const api = {
         if (error) throw error;
         return data;
     },
+    async clearLeagueSquads(leagueId) {
+        if (!leagueId) throw new Error('League id is required to clear squads');
+
+        const draftedDelete = supabase
+            .from('drafted_players')
+            .delete()
+            .eq('league_id', leagueId);
+
+        const teamsDelete = supabase
+            .from('users_teams')
+            .delete()
+            .eq('league_id', leagueId);
+
+        const [draftedResult, teamsResult] = await Promise.all([draftedDelete, teamsDelete]);
+
+        if (draftedResult.error) throw draftedResult.error;
+        if (teamsResult.error) throw teamsResult.error;
+    },
     async makeDraftPick(leagueId, userId, playerId, currentPick) {
         const state = await this.getDraftState(leagueId);
         if (!state || !state.is_active) throw new Error('Draft is not active');

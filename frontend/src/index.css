@@ -279,13 +279,40 @@ body {
 
 .taken {
     opacity: 0.5;
-    pointer-events: none;
 }
 
 .taken::after {
     content: " (Taken)";
     font-size: 0.7rem;
     color: var(--danger);
+}
+
+.player-link-btn {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+}
+
+.player-link-btn:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+.trade-player-link,
+.chip-player-link {
+    font-weight: 600;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.chip-player-link:hover {
+    color: #ffffff;
 }
 
 /* Tabs */
@@ -539,6 +566,11 @@ body {
     margin-bottom: 0.5rem;
 }
 
+.click-stats-hint {
+    margin-bottom: 0.75rem;
+    color: #a7f3d0;
+}
+
 .player-type-label {
     font-size: 0.72rem;
     color: var(--text-secondary);
@@ -691,6 +723,145 @@ body {
     font-weight: 500;
     padding-left: 0.5rem;
     font-size: 0.9rem;
+}
+
+.player-stats-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(6, 16, 31, 0.75);
+    backdrop-filter: blur(4px);
+    padding: 20px;
+}
+
+.player-stats-modal {
+    width: min(900px, 100%);
+    max-height: 88vh;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--bg-card);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
+}
+
+.player-stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-dark);
+}
+
+.player-stats-header h2 {
+    margin: 0;
+    font-size: 1.35rem;
+}
+
+.player-stats-subtitle {
+    margin-top: 0.2rem;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+}
+
+.player-stats-close {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.player-stats-close:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.player-stats-body {
+    overflow-y: auto;
+    max-height: calc(88vh - 72px);
+    padding: 1.1rem 1.25rem 1.25rem;
+}
+
+.player-stats-section {
+    margin-bottom: 1.1rem;
+}
+
+.player-stats-section h3 {
+    margin-bottom: 0.55rem;
+    color: var(--accent);
+    font-size: 1rem;
+}
+
+.player-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.55rem;
+}
+
+.player-stat-card {
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7rem;
+}
+
+.player-stat-card .label {
+    color: var(--text-secondary);
+    font-size: 0.74rem;
+    margin-bottom: 0.2rem;
+}
+
+.player-stat-card .value {
+    color: var(--text-primary);
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.player-perf-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.player-perf-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.52rem 0.65rem;
+}
+
+@media (max-width: 700px) {
+    .player-stats-overlay {
+        padding: 10px;
+    }
+
+    .player-stats-modal {
+        max-height: 94vh;
+    }
+
+    .player-stats-body {
+        max-height: calc(94vh - 72px);
+    }
+
+    .player-perf-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
 
 /* ===== Account View ===== */
@@ -972,29 +1143,52 @@ body {
 }
 
 .fixtures-controls {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(170px, 1fr));
+    gap: 10px;
+    align-items: stretch;
 }
 
 .fixtures-action-btn {
-    width: auto;
-    min-width: 136px;
-    padding: 0.55rem 0.9rem;
-    font-size: 0.82rem;
+    width: 100%;
+    min-width: 0;
+    min-height: 42px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.9rem;
+}
+
+.fixtures-rounds-field {
+    min-height: 42px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0.45rem 0.65rem;
+}
+
+.fixtures-rounds-field label {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
 .fixtures-rounds-input {
-    width: 78px;
-    min-width: 78px;
-    text-align: center;
-    background: var(--bg-dark);
+    width: 70px;
     border: 1px solid var(--border);
+    border-radius: 4px;
+    background: #0b1428;
     color: var(--text-primary);
-    padding: 0.5rem 0.6rem;
-    border-radius: 6px;
-    font-size: 0.82rem;
+    text-align: center;
+    padding: 0.25rem 0.4rem;
+    font: inherit;
+}
+
+.fixtures-rounds-input:focus {
+    outline: 2px solid var(--accent);
+    border-color: transparent;
 }
 
 .fixture-round {
@@ -1142,19 +1336,23 @@ tr:last-child td {
 
     /* Commissioner controls (Generate Fixtures / Update Scores) */
     #commissioner-controls {
-        flex-direction: column !important;
+        grid-template-columns: 1fr !important;
         width: 100%;
         gap: 6px !important;
-    }
-
-    #commissioner-controls input[type="number"] {
-        width: 100% !important;
     }
 
     #commissioner-controls .btn {
         width: 100%;
         font-size: 0.8rem;
         padding: 0.6rem;
+    }
+
+    #commissioner-controls .fixtures-rounds-field {
+        width: 100%;
+    }
+
+    #commissioner-controls .fixtures-rounds-input {
+        width: 84px;
     }
 
     /* Dashboard header */

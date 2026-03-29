@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MyTeam = ({ mySquad, starting11, setStarting11, playersData = {}, lineupValidation, onReleasePlayer, onSaveLineup }) => {
+const MyTeam = ({ mySquad, starting11, setStarting11, playersData = {}, lineupValidation, onPlayerClick, onReleasePlayer, onSaveLineup }) => {
 
     const getPlayerType = (playerName) => {
         const type = (playersData[playerName]?.playerType || '').toLowerCase();
@@ -51,11 +51,14 @@ const MyTeam = ({ mySquad, starting11, setStarting11, playersData = {}, lineupVa
         <div className="side-panel">
             <div className="card my-squad">
                 <h3>My Squad</h3>
+                <p className="hint click-stats-hint">Click any player name to view full stats.</p>
                 <div id="squad-list" className="mini-list">
                     {mySquad.map(playerName => (
                         <div key={playerName} className="squad-player">
                             <div>
-                                <span>{playerName}</span>
+                                <button type="button" className="player-link-btn" onClick={() => onPlayerClick?.(playerName)}>
+                                    {playerName}
+                                </button>
                                 <p className="player-type-label">{formatPlayerType(getPlayerType(playerName))}</p>
                             </div>
                             <div className="actions">
@@ -93,7 +96,9 @@ const MyTeam = ({ mySquad, starting11, setStarting11, playersData = {}, lineupVa
                                 <button className="btn-arrow move-down" onClick={() => handleMoveDown(index)}>▼</button>
                             </div>
                             <div>
-                                <span>{index + 1}. {playerName}</span>
+                                <button type="button" className="player-link-btn" onClick={() => onPlayerClick?.(playerName)}>
+                                    {index + 1}. {playerName}
+                                </button>
                                 <p className="player-type-label">{formatPlayerType(getPlayerType(playerName))}</p>
                             </div>
                             <button className="btn btn-outline btn-xs remove-11-btn" onClick={() => handleRemove11(playerName)}>

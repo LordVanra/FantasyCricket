@@ -59,17 +59,20 @@ export function useDraft(leagueId, userId, onTimeout) {
     }, [draftState, leagueId, userId, onTimeout]);
 
     const startDraft = async (usersList) => {
-        if (!leagueId) return;
+        if (!leagueId) return false;
         const shuffled = [...usersList].sort(() => Math.random() - 0.5).map(u => u.id);
         if (shuffled.length < 2) {
             notify('Need at least 2 users in the league to start a draft', 'error');
-            return;
+            return false;
         }
         try {
+            await api.clearLeagueSquads(leagueId);
             await api.startDraft(leagueId, shuffled);
-            notify('Draft started! 🏏', 'success');
+            notify('Draft started! Existing squads were cleared.', 'success');
+            return true;
         } catch (error) {
             notify('Failed to start draft: ' + error.message, 'error');
+            return false;
         }
     };
 
