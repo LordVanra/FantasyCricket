@@ -177,7 +177,8 @@ class CricketDataProcessor {
     }
   }
 
-  findCanonicalName(name, url) {
+  findCanonicalName(name, url, options = {}) {
+    const { allowSurnameFallback = true } = options;
     const id = this.getPlayerId(url);
     if (id && this.idToNameMap[id]) {
       return this.idToNameMap[id];
@@ -187,6 +188,10 @@ class CricketDataProcessor {
     if (!normalized) return null;
 
     if (this.fullNames.has(normalized)) {
+      return normalized;
+    }
+
+    if (!allowSurnameFallback) {
       return normalized;
     }
 
@@ -372,7 +377,7 @@ class CricketDataProcessor {
         if (!Array.isArray(squad)) return;
 
         squad.forEach(rosterPlayer => {
-          const canonical = this.findCanonicalName(rosterPlayer.name, rosterPlayer.url);
+          const canonical = this.findCanonicalName(rosterPlayer.name, rosterPlayer.url, { allowSurnameFallback: false });
           if (!canonical) return;
 
           const rosterType = this.normalizePlayerType(rosterPlayer.type);
