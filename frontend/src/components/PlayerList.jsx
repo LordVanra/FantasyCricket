@@ -5,6 +5,13 @@ const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState,
     const [searchTerm, setSearchTerm] = useState('');
     const { notify } = useNotify();
 
+    const formatPlayerType = (rawType) => {
+        const type = (rawType || 'batsman').toLowerCase();
+        if (type === 'allrounder') return 'Allrounder';
+        if (type === 'bowler') return 'Bowler';
+        return 'Batsman';
+    };
+
     const filtered = players.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const isDraftActive = draftState && draftState.is_active;
@@ -32,6 +39,7 @@ const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState,
                     const isTaken = draftedPlayers.some(dp => dp.player_id === player.name && dp.user_id !== currentUser?.id);
                     const isInMySquad = mySquad.includes(player.name);
                     const isDraftPicked = isDraftActive && (draftState.picks || []).some(p => p.player_id === player.name);
+                    const playerType = formatPlayerType(player.playerType);
                     
                     // Simple points calc replicated from vanilla JS
                     let points = 0;
@@ -74,6 +82,7 @@ const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState,
                                 <p>
                                     {player.totalRuns} Runs | {player.totalWickets} Wickets
                                     {player.team ? ` | ${player.team}` : ''}
+                                    {` | ${playerType}`}
                                 </p>
                             </div>
                             {showDraftBtn && (

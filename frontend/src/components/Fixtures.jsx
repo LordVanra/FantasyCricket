@@ -68,23 +68,22 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onStartDraft, onUp
                 <div className="card-header">
                     <h3>Season Fixtures</h3>
                     {isCommissioner && (
-                        <div id="commissioner-controls" className="form-group" style={{ margin: 0, display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-                            <button className="btn btn-accent btn-sm" onClick={() => onStartDraft(usersList)}>
+                        <div id="commissioner-controls" className="form-group fixtures-controls" style={{ margin: 0 }}>
+                            <button className="btn btn-accent fixtures-action-btn" onClick={() => onStartDraft(usersList)}>
                                 Start Draft
                             </button>
                             <input 
                                 type="number" 
-                                className="btn-sm" 
+                                className="fixtures-rounds-input" 
                                 min="1" 
                                 max="10" 
-                                style={{ width: '80px' }} 
                                 value={roundsInput}
                                 onChange={(e) => setRoundsInput(parseInt(e.target.value) || 1)}
                             />
-                            <button className="btn btn-primary btn-sm" onClick={handleGenerate}>
+                            <button className="btn btn-primary fixtures-action-btn" onClick={handleGenerate}>
                                 Generate Fixtures
                             </button>
-                            <button className="btn btn-secondary btn-sm" onClick={handleUpdateScores}>
+                            <button className="btn btn-secondary fixtures-action-btn" onClick={handleUpdateScores}>
                                 Update Scores
                             </button>
                         </div>

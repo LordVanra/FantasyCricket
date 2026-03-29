@@ -9,6 +9,7 @@ class CricketDataProcessor {
     this.idToNameMap = {};
     this.fullNames = new Set();
     this.surnameMap = {};
+    this.defaultPlayerType = 'batsman';
   }
 
   extractTeamsFromUrl(matchUrl) {
@@ -55,6 +56,66 @@ class CricketDataProcessor {
     if (parts.length === 1 && parts[0].length < 3) return null;
 
     return name;
+  }
+
+  normalizePlayerType(type) {
+    if (!type) return null;
+    const compact = String(type).replace(/\s+/g, ' ').trim();
+    const normalized = compact.toLowerCase();
+    const battingKeywords = ['batsman', 'batter', 'wicketkeeper', 'keeper', 'wk'];
+    const bowlingKeywords = ['bowler', 'pace', 'fast', 'medium', 'seam', 'spin', 'spinner', 'orthodox', 'offbreak', 'legbreak', 'chinaman', 'googly'];
+
+    const explicitRoleMatch = compact.match(/(all-?rounder|bowler|wicketkeeper(?:\s*batter)?|batter|batsman)\s*(?=age\b)/i)
+      || compact.match(/playing\s*role\s*:?\s*(all-?rounder|bowler|batter|batsman|wicketkeeper(?:\s*batter)?)/i);
+
+    if (explicitRoleMatch) {
+      const explicit = explicitRoleMatch[1].toLowerCase();
+      if (explicit.includes('all')) return 'allrounder';
+      if (explicit.includes('bowl')) return 'bowler';
+      return 'batsman';
+    }
+
+    if (normalized.includes('all-rounder') || normalized.includes('all rounder') || normalized.includes('allrounder')) {
+      return 'allrounder';
+    }
+
+    const hasBowlingSignal = bowlingKeywords.some(keyword => normalized.includes(keyword));
+    const hasBattingSignal = battingKeywords.some(keyword => normalized.includes(keyword));
+
+    if (hasBowlingSignal && hasBattingSignal) {
+      return null;
+    }
+
+    if (hasBowlingSignal) {
+      return 'bowler';
+    }
+    if (hasBattingSignal) {
+      return 'batsman';
+    }
+
+    return null;
+  }
+
+  inferPlayerType(player, preferredType = null) {
+    const preferred = this.normalizePlayerType(preferredType);
+    if (preferred) return preferred;
+
+    const hasBatting = (player.batting && player.batting.length > 0)
+      || player.totalRuns > 0
+      || player.totalBalls > 0
+      || player.totalFours > 0
+      || player.totalSixes > 0;
+
+    const hasBowling = (player.bowling && player.bowling.length > 0)
+      || player.totalWickets > 0
+      || player.totalOvers > 0
+      || player.totalRunsConceded > 0;
+
+    if (hasBatting && hasBowling) return 'allrounder';
+    if (hasBowling) return 'bowler';
+    if (hasBatting) return 'batsman';
+
+    return this.defaultPlayerType;
   }
 
   buildNameMaps() {
@@ -150,6 +211,7 @@ class CricketDataProcessor {
       this.playerNameMap[canonical] = {
         name: canonical,
         url: url,
+        playerType: null,
         batting: [],
         bowling: [],
         fielding: [],
@@ -313,13 +375,24 @@ class CricketDataProcessor {
           const canonical = this.findCanonicalName(rosterPlayer.name, rosterPlayer.url);
           if (!canonical) return;
 
+          const rosterType = this.normalizePlayerType(rosterPlayer.type);
+
           // Skip if already in playerNameMap (already found from match data)
-          if (this.playerNameMap[canonical]) return;
+          if (this.playerNameMap[canonical]) {
+            if (!this.playerNameMap[canonical].playerType && rosterType) {
+              this.playerNameMap[canonical].playerType = rosterType;
+            }
+            if (!this.playerNameMap[canonical].team) {
+              this.playerNameMap[canonical].team = teamName;
+            }
+            return;
+          }
 
           // Add as a new player with 0 stats
           this.playerNameMap[canonical] = {
             name: canonical,
             url: rosterPlayer.url,
+            playerType: rosterType,
             batting: [],
             bowling: [],
             fielding: [],
@@ -341,6 +414,11 @@ class CricketDataProcessor {
       });
       console.log(`Added ${rosterAdded} bench players from team rosters`);
     }
+
+    Object.keys(this.playerNameMap).forEach(name => {
+      const player = this.playerNameMap[name];
+      player.playerType = this.inferPlayerType(player, player.playerType);
+    });
 
     const sortedPlayers = Object.keys(this.playerNameMap)
       .sort()

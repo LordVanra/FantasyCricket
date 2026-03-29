@@ -33,6 +33,43 @@ const App = () => {
     const [dataLoading, setDataLoading] = useState(false);
     const [scoreboardTrigger, setScoreboardTrigger] = useState(0);
 
+    const getLineupTypeCounts = useCallback((lineup) => {
+        const counts = { batsman: 0, bowler: 0, allrounder: 0 };
+        lineup.forEach((playerName) => {
+            const type = (allPlayersData.players?.[playerName]?.playerType || '').toLowerCase();
+            if (type === 'batsman' || type === 'bowler' || type === 'allrounder') {
+                counts[type] += 1;
+            }
+        });
+        return counts;
+    }, [allPlayersData.players]);
+
+    const validateStarting11 = useCallback((lineup) => {
+        const counts = getLineupTypeCounts(lineup);
+        const errors = [];
+
+        if (lineup.length !== 11) {
+            errors.push('Starting 11 must include exactly 11 players.');
+        }
+        if (counts.batsman < 4) {
+            errors.push(`Starting 11 needs at least 4 batsmen (currently ${counts.batsman}).`);
+        }
+        if (counts.bowler < 4) {
+            errors.push(`Starting 11 needs at least 4 bowlers (currently ${counts.bowler}).`);
+        }
+        if (counts.allrounder < 2) {
+            errors.push(`Starting 11 needs at least 2 allrounders (currently ${counts.allrounder}).`);
+        }
+
+        return {
+            counts,
+            errors,
+            isValid: errors.length === 0,
+        };
+    }, [getLineupTypeCounts]);
+
+    const lineupValidation = validateStarting11(starting11);
+
     const loadData = useCallback(async () => {
         if (!user) return;
         setDataLoading(true);
@@ -116,6 +153,12 @@ const App = () => {
 
     const handleSaveLineup = async () => {
         if (!league) return notify('You must join a league first!', 'error');
+
+        const validation = validateStarting11(starting11);
+        if (!validation.isValid) {
+            return notify(validation.errors[0], 'error');
+        }
+
         try {
             await api.saveUserTeam(user.id, league.id, mySquad, starting11);
             notify('Lineup saved successfully!', 'success');
@@ -192,6 +235,8 @@ const App = () => {
                                 mySquad={mySquad} 
                                 starting11={starting11} 
                                 setStarting11={setStarting11} 
+                                playersData={allPlayersData.players || {}}
+                                lineupValidation={lineupValidation}
                                 onReleasePlayer={handleReleasePlayer} 
                                 onSaveLineup={handleSaveLineup}
                             />

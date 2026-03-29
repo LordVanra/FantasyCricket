@@ -23,6 +23,49 @@ class CricketScraper {
     return cleaned;
   }
 
+  normalizePlayerType(rawType) {
+    if (!rawType) return null;
+    const compact = rawType.replace(/\s+/g, ' ').trim();
+    const lower = compact.toLowerCase();
+    const battingKeywords = ['batter', 'batsman', 'wicketkeeper', 'keeper', 'wk'];
+    const bowlingKeywords = ['bowler', 'pace', 'fast', 'medium', 'seam', 'spin', 'spinner', 'orthodox', 'offbreak', 'legbreak', 'chinaman', 'googly'];
+
+    const explicitRoleMatch = compact.match(/(all-?rounder|bowler|wicketkeeper(?:\s*batter)?|batter|batsman)\s*(?=age\b)/i)
+      || compact.match(/playing\s*role\s*:?\s*(all-?rounder|bowler|batter|batsman|wicketkeeper(?:\s*batter)?)/i);
+
+    if (explicitRoleMatch) {
+      const explicit = explicitRoleMatch[1].toLowerCase();
+      if (explicit.includes('all')) return 'allrounder';
+      if (explicit.includes('bowl')) return 'bowler';
+      return 'batsman';
+    }
+
+    if (lower.includes('all-rounder') || lower.includes('all rounder') || lower.includes('allrounder')) {
+      return 'allrounder';
+    }
+
+    const hasBowlingSignal = bowlingKeywords.some(keyword => lower.includes(keyword));
+    const hasBattingSignal = battingKeywords.some(keyword => lower.includes(keyword));
+
+    if (hasBowlingSignal && hasBattingSignal) {
+      return null;
+    }
+
+    if (hasBowlingSignal) {
+      return 'bowler';
+    }
+    if (hasBattingSignal) {
+      return 'batsman';
+    }
+
+    return null;
+  }
+
+  extractPlayerType(contextText) {
+    if (!contextText) return null;
+    return this.normalizePlayerType(contextText);
+  }
+
   async scrapeMatch(matchUrl) {
     try {
       const response = await axios.get(matchUrl, { headers: this.headers });
@@ -226,9 +269,15 @@ class CricketScraper {
             const href = $team(elem).attr('href') || '';
             const text = this.cleanPlayerName(this.cleanText($team(elem).text()));
             if (href.includes('/cricketers/') && text && text.length > 1 && !text.toLowerCase().includes('cricketers')) {
+              const cardText = this.cleanText($team(elem).closest('div.ds-border-line, div.ds-relative.ds-flex.ds-flex-row').text());
+              const parentText = this.cleanText($team(elem).parent().text());
+              const rowText = this.cleanText($team(elem).closest('li, div, tr').text());
+              const inferredType = this.extractPlayerType(`${cardText} ${parentText} ${rowText}`.replace(text, '').trim());
               const existing = squads[teamName].find(p => p.url === href);
               if (!existing) {
-                squads[teamName].push({ name: text, url: href });
+                squads[teamName].push({ name: text, url: href, type: inferredType });
+              } else if (!existing.type && inferredType) {
+                existing.type = inferredType;
               }
             }
           });

@@ -165,6 +165,16 @@ body {
     background-color: var(--accent-hover);
 }
 
+.btn-secondary {
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    border-color: #64748b;
+}
+
 .btn-accent {
     background-color: #0ea5e9;
     color: white;
@@ -527,6 +537,40 @@ body {
     font-size: 0.8rem;
     color: var(--text-secondary);
     margin-bottom: 0.5rem;
+}
+
+.player-type-label {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    margin-top: 0.1rem;
+}
+
+.lineup-type-grid {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+}
+
+.lineup-chip {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.2rem 0.55rem;
+}
+
+.lineup-chip.met {
+    color: #34d399;
+    border-color: #065f46;
+    background: rgba(16, 185, 129, 0.12);
+}
+
+.lineup-error {
+    font-size: 0.8rem;
+    color: #fca5a5;
+    margin-bottom: 0.6rem;
 }
 
 .actions {
@@ -925,6 +969,32 @@ body {
     flex-direction: column;
     gap: 1.5rem;
     margin-top: 1rem;
+}
+
+.fixtures-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.fixtures-action-btn {
+    width: auto;
+    min-width: 136px;
+    padding: 0.55rem 0.9rem;
+    font-size: 0.82rem;
+}
+
+.fixtures-rounds-input {
+    width: 78px;
+    min-width: 78px;
+    text-align: center;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 0.5rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
 }
 
 .fixture-round {

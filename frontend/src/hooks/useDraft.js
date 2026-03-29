@@ -75,6 +75,10 @@ export function useDraft(leagueId, userId, onTimeout) {
 
     const makePick = async (playerId, playerName) => {
         if (!leagueId || !userId || !draftState?.is_active) return;
+        if (!isMyTurn) {
+            notify("It's not your turn!", 'error');
+            return;
+        }
         try {
             await api.makeDraftPick(leagueId, userId, playerId, draftState.current_pick);
             await api.draftPlayer(playerId, playerName, userId, leagueId);

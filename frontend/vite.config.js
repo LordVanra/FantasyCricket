@@ -6,5 +6,18 @@ export default defineConfig({
   root: '.',
   build: {
     outDir: 'dist',
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/js/app.js',
+        chunkFileNames: 'assets/js/[name].js',
+        assetFileNames: (assetInfo) => {
+          const fileName = assetInfo?.name || '';
+          if (fileName.endsWith('.css')) {
+            return 'assets/css/app.css';
+          }
+          return 'assets/[name][extname]';
+        },
+      },
+    },
   },
 });
