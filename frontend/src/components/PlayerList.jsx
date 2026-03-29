@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNotify } from '../hooks/useNotify';
 
-const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState, isMyTurn, onDraftPick, onPlayerClick }) => {
+const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState, isDraftActive, isMyTurn, onDraftPick, onPlayerClick }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [typeFilter, setTypeFilter] = useState('all');
     const [teamFilter, setTeamFilter] = useState('all');
@@ -51,7 +51,7 @@ const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState,
         return searchMatch && typeMatch && teamMatch;
     });
     
-    const isDraftActive = draftState && draftState.is_active;
+    const draftEnabled = Boolean(isDraftActive);
 
     const handleDraftClick = (player) => {
         if (!currentUser) return notify('You must be logged in to draft!', 'error');
@@ -60,8 +60,8 @@ const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState,
 
     return (
         <div className="card marketplace">
-            <div className="card-header">
-                <h3>Player Draft</h3>
+            <div className={`card-header ${!draftEnabled ? 'search-only' : ''}`.trim()}>
+                {draftEnabled && <h3>Player Draft</h3>}
                 <input 
                     type="text" 
                     id="player-search" 
@@ -71,43 +71,40 @@ const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState,
                 />
             </div>
             <p className="hint click-stats-hint">Click any player name to view full stats.</p>
-            {!isDraftActive && (
-                <p className="hint">Draft is locked until the commissioner starts it from Fixtures.</p>
+            {draftEnabled && (
+                <div className="draft-filters">
+                    <div className="draft-filter-group">
+                        <select
+                            id="draft-type-filter"
+                            value={typeFilter}
+                            onChange={(event) => setTypeFilter(event.target.value)}
+                        >
+                            <option value="all">All Roles</option>
+                            <option value="batsman">Batsman</option>
+                            <option value="bowler">Bowler</option>
+                            <option value="allrounder">Allrounder</option>
+                        </select>
+                    </div>
+                    <div className="draft-filter-group">
+                        <select
+                            id="draft-team-filter"
+                            value={teamFilter}
+                            onChange={(event) => setTeamFilter(event.target.value)}
+                        >
+                            <option value="all">All Teams</option>
+                            {teams.map((team) => (
+                                <option key={team.display} value={team.raw}>{team.display}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
             )}
-            <div className="draft-filters">
-                <div className="draft-filter-group">
-                    <label htmlFor="draft-type-filter">Role</label>
-                    <select
-                        id="draft-type-filter"
-                        value={typeFilter}
-                        onChange={(event) => setTypeFilter(event.target.value)}
-                    >
-                        <option value="all">All Roles</option>
-                        <option value="batsman">Batsman</option>
-                        <option value="bowler">Bowler</option>
-                        <option value="allrounder">Allrounder</option>
-                    </select>
-                </div>
-                <div className="draft-filter-group">
-                    <label htmlFor="draft-team-filter">Team</label>
-                    <select
-                        id="draft-team-filter"
-                        value={teamFilter}
-                        onChange={(event) => setTeamFilter(event.target.value)}
-                    >
-                        <option value="all">All Teams</option>
-                        {teams.map((team) => (
-                            <option key={team.display} value={team.raw}>{team.display}</option>
-                        ))}
-                    </select>
-                </div>
-            </div>
             <div className="player-list scrollable" id="all-players-list">
                 {players.length === 0 ? <div className="loader">Loading stats...</div> : null}
                 {filtered.map((player) => {
                     const isTaken = draftedPlayers.some(dp => dp.player_id === player.name && dp.user_id !== currentUser?.id);
                     const isInMySquad = mySquad.includes(player.name);
-                    const isDraftPicked = isDraftActive && (draftState.picks || []).some(p => p.player_id === player.name);
+                    const isDraftPicked = draftEnabled && (draftState.picks || []).some(p => p.player_id === player.name);
                     const playerType = formatPlayerType(player.playerType);
                     
                     // Simple points calc replicated from vanilla JS
@@ -126,7 +123,7 @@ const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState,
                             const eco = parseFloat(bowling.economy) || 0;
                             points += 10 - eco;
                         }
-                        points += (parseInt(bowling.wickets) || 0) * 20;
+                        points += (parseInt(bowling.wickets) || 0) * 25;
                         points += (parseInt(fielding.catches) || 0) * 8;
                         points += (parseInt(fielding.stumpings) || 0) * 5;
                         points += (parseInt(fielding.runouts) || 0) * 4;
@@ -134,7 +131,7 @@ const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState,
                     points = Math.round(points * 10) / 10;
 
                     let showDraftBtn = false;
-                    if (!isTaken && !isInMySquad && !isDraftPicked && isDraftActive) {
+                    if (!isTaken && !isInMySquad && !isDraftPicked && draftEnabled) {
                         showDraftBtn = isMyTurn;
                     }
 

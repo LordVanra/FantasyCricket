@@ -20,6 +20,7 @@ async function syncStats() {
         console.log('Successfully synced stats.json to Supabase!');
     } catch (error) {
         console.error('Error syncing stats:', error.message);
+        throw error;
     }
 }
 

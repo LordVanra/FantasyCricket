@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DraftPanel = ({ draftState, countdown, isMyTurn, currentUser, usersList, onPlayerClick }) => {
+const DraftPanel = ({ draftState, countdown, isMyTurn, currentUser, usersList, autoDraftEnabled, onToggleAutoDraft, onPlayerClick }) => {
     if (!draftState) {
         return null;
     }
@@ -36,9 +36,18 @@ const DraftPanel = ({ draftState, countdown, isMyTurn, currentUser, usersList, o
         <div id="draft-panel" className="card draft-panel">
             <div className="draft-header">
                 <h3>🏏 Live Draft</h3>
-                <span id="draft-pick-info" className="draft-pick-info">
-                    {isComplete ? `${totalPicks} of ${totalPicks} picks made` : `Pick ${Math.min(draftState.current_pick + 1, totalPicks)} of ${totalPicks}`}
-                </span>
+                <div className="draft-header-controls">
+                    <span id="draft-pick-info" className="draft-pick-info">
+                        {isComplete ? `${totalPicks} of ${totalPicks} picks made` : `Pick ${Math.min(draftState.current_pick + 1, totalPicks)} of ${totalPicks}`}
+                    </span>
+                    <button
+                        type="button"
+                        className={`draft-auto-toggle ${autoDraftEnabled ? 'enabled' : ''}`}
+                        onClick={onToggleAutoDraft}
+                    >
+                        Auto Draft: {autoDraftEnabled ? 'Enabled' : 'Disabled'}
+                    </button>
+                </div>
             </div>
             <div className="draft-timer-bar">
                 <div 

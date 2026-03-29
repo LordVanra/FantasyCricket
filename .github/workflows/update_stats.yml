@@ -1,42 +1,102 @@
-# name: Update Cricket Stats
+name: Update Cricket Stats
 
-# on:
-#   schedule:
-#     # Run daily at 00:00 UTC
-#     - cron: '0 0 * * *'
-#   workflow_dispatch: # Allow manual trigger
+on:
+  schedule:
+    # Run daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
-# jobs:
-#   update-stats:
-#     runs-on: ubuntu-latest
-    
-#     env:
-#       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-#       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-#       TOURNAMENT_URL: ${{ secrets.TOURNAMENT_URL }}
+concurrency:
+  group: update-cricket-stats
+  cancel-in-progress: true
 
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v3
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
 
-#       - name: Setup Node.js
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: '18'
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      TOURNAMENT_URL: ${{ secrets.TOURNAMENT_URL }}
+      MIN_MATCHES: '1'
+      MIN_PLAYERS: '120'
 
-#       - name: Install Dependencies
-#         run: |
-#           cd backend
-#           npm install
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-#       - name: Run Scraper
-#         if: env.TOURNAMENT_URL != ''
-#         run: |
-#           cd backend
-#           node datascrape.js "$TOURNAMENT_URL" "data.json"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
 
-#       - name: Process and Sync Data
-#         if: env.TOURNAMENT_URL != ''
-#         run: |
-#           cd backend
-#           node processPlayers.js "data.json" "stats.json"
+      - name: Validate required secrets
+        run: |
+          test -n "$TOURNAMENT_URL" || (echo "TOURNAMENT_URL secret is missing" && exit 1)
+          test -n "$SUPABASE_URL" || (echo "SUPABASE_URL secret is missing" && exit 1)
+          test -n "$SUPABASE_ANON_KEY" || (echo "SUPABASE_ANON_KEY secret is missing" && exit 1)
+
+      - name: Install dependencies
+        working-directory: backend
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Run scraper
+        working-directory: backend
+        run: node datascrape.js "$TOURNAMENT_URL" "data.json"
+
+      - name: Validate scraped output
+        working-directory: backend
+        run: |
+          node -e "
+          const fs=require('fs');
+          const d=JSON.parse(fs.readFileSync('data.json','utf8'));
+          const matches=(d.matches||[]).length;
+          const squads=Object.values(d.squads||{}).reduce((n,arr)=>n+(Array.isArray(arr)?arr.length:0),0);
+          const teams=Object.keys(d.squads||{}).length;
+          if(matches < Number(process.env.MIN_MATCHES || 1)) {
+            console.error('Scrape validation failed: too few matches ->', matches);
+            process.exit(1);
+          }
+          if(teams < 2 || squads < 20) {
+            console.error('Scrape validation failed: squads look incomplete -> teams:', teams, 'players:', squads);
+            process.exit(1);
+          }
+          console.log('Scrape validation passed:', {matches, teams, squads});
+          "
+
+      - name: Process data (no DB sync yet)
+        working-directory: backend
+        env:
+          SKIP_DB_SYNC: 'true'
+        run: node processPlayers.js "data.json" "stats.json"
+
+      - name: Validate processed output
+        working-directory: backend
+        run: |
+          node -e "
+          const fs=require('fs');
+          const s=JSON.parse(fs.readFileSync('stats.json','utf8'));
+          const players=Object.keys(s.players||{}).length;
+          const teams=Object.keys(s.teams||{}).length;
+          if(players < Number(process.env.MIN_PLAYERS || 120)) {
+            console.error('Processed validation failed: too few players ->', players);
+            process.exit(1);
+          }
+          if(teams < 2) {
+            console.error('Processed validation failed: too few teams ->', teams);
+            process.exit(1);
+          }
+          console.log('Processed validation passed:', {players, teams});
+          "
+
+      - name: Sync to Supabase
+        working-directory: backend
+        run: |
+          node -e "const { syncStats } = require('./dbSync'); syncStats().catch((e) => { console.error(e); process.exit(1); });"

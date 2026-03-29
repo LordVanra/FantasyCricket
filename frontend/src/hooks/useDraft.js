@@ -1,10 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import api from '../api/api';
 import { useNotify } from './useNotify';
 
-export function useDraft(leagueId, userId, onTimeout) {
+export function useDraft(leagueId, userId, onTimeout, options = {}) {
+    const { instantAutoDraft = true } = options;
     const [draftState, setDraftState] = useState(null);
     const [countdown, setCountdown] = useState(30);
+    const instantAutoDraftedPickRef = useRef(-1);
+    const timedAutoDraftedPickRef = useRef(-1);
     const { notify } = useNotify();
 
     const fetchDraftState = useCallback(async () => {
@@ -31,11 +34,38 @@ export function useDraft(leagueId, userId, onTimeout) {
     }, [leagueId, fetchDraftState]);
 
     useEffect(() => {
-        if (!draftState || !draftState.is_active) return;
+        if (!draftState || !draftState.is_active) {
+            instantAutoDraftedPickRef.current = -1;
+            timedAutoDraftedPickRef.current = -1;
+            setCountdown(30);
+            return;
+        }
+
+        const turnOrder = draftState.turn_order || [];
+        if (turnOrder.length === 0) return;
+
+        const currentPick = draftState.current_pick;
+        const currentPickIndex = currentPick % turnOrder.length;
+        const currentTurnUserId = turnOrder[currentPickIndex];
+
+        if (instantAutoDraft) {
+            timedAutoDraftedPickRef.current = -1;
+            setCountdown(0);
+
+            if (instantAutoDraftedPickRef.current === currentPick) return;
+
+            instantAutoDraftedPickRef.current = currentPick;
+
+            if (onTimeout) {
+                onTimeout(currentTurnUserId, currentPick, draftState, { mode: 'instant' });
+            }
+            return;
+        }
+
+        instantAutoDraftedPickRef.current = -1;
 
         const turnStartTime = new Date(draftState.turn_start_time).getTime();
         const TURN_DURATION = 30;
-        let timeoutFiredForPick = -1;
 
         const interval = setInterval(() => {
             const now = Date.now();
@@ -43,20 +73,16 @@ export function useDraft(leagueId, userId, onTimeout) {
             const remaining = Math.max(0, TURN_DURATION - elapsed);
             setCountdown(Math.ceil(remaining));
 
-            if (remaining <= 0 && timeoutFiredForPick !== draftState.current_pick) {
-                timeoutFiredForPick = draftState.current_pick;
-                const turnOrder = draftState.turn_order || [];
-                const currentPickIndex = draftState.current_pick % turnOrder.length;
-                const currentTurnUserId = turnOrder[currentPickIndex];
-
+            if (remaining <= 0 && timedAutoDraftedPickRef.current !== currentPick) {
+                timedAutoDraftedPickRef.current = currentPick;
                 if (onTimeout) {
-                    onTimeout(currentTurnUserId, draftState.current_pick);
+                    onTimeout(currentTurnUserId, currentPick, draftState, { mode: 'timer' });
                 }
             }
         }, 500);
 
         return () => clearInterval(interval);
-    }, [draftState, leagueId, userId, onTimeout]);
+    }, [draftState, onTimeout, instantAutoDraft]);
 
     const startDraft = async (usersList) => {
         if (!leagueId) return false;

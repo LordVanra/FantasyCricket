@@ -34,6 +34,7 @@ const App = () => {
     const [dataLoading, setDataLoading] = useState(false);
     const [scoreboardTrigger, setScoreboardTrigger] = useState(0);
     const [selectedPlayerName, setSelectedPlayerName] = useState(null);
+    const [instantAutoDraft, setInstantAutoDraft] = useState(false);
 
     const getLineupTypeCounts = useCallback((lineup) => {
         const counts = { batsman: 0, bowler: 0, allrounder: 0 };
@@ -107,31 +108,66 @@ const App = () => {
         }
     }, [user, league, notify]);
 
-    const handleDraftTimeout = useCallback(async (timeoutUserId, timeoutPick) => {
+    const handleDraftTimeout = useCallback(async (timeoutUserId, timeoutPick, draftStateSnapshot) => {
         if (!league) return;
         try {
-            // Find an available player randomly
+            const normalizeRole = (playerName) => {
+                const raw = (allPlayersData.players?.[playerName]?.playerType || '').toLowerCase();
+                if (raw === 'bowler' || raw === 'allrounder' || raw === 'batsman') return raw;
+                return 'batsman';
+            };
+
             const allPlayerNames = Object.keys(allPlayersData.players || {});
-            const draftedNames = draftedPlayers.map(dp => dp.player_id);
-            const availableNames = allPlayerNames.filter(name => !draftedNames.includes(name));
+            const alreadyDrafted = new Set([
+                ...draftedPlayers.map((dp) => dp.player_id),
+                ...((draftStateSnapshot?.picks || []).map((pick) => pick.player_id))
+            ]);
+            const availableNames = allPlayerNames.filter((name) => !alreadyDrafted.has(name));
             
             if (availableNames.length > 0) {
-                const randomName = availableNames[Math.floor(Math.random() * availableNames.length)];
+                const roleCounts = { batsman: 0, bowler: 0, allrounder: 0 };
+                const userPicks = (draftStateSnapshot?.picks || []).filter((pick) => pick.user_id === timeoutUserId);
+
+                userPicks.forEach((pick) => {
+                    const role = normalizeRole(pick.player_id);
+                    roleCounts[role] += 1;
+                });
+
+                const minRoleCount = Math.min(roleCounts.batsman, roleCounts.bowler, roleCounts.allrounder);
+                const targetRoles = Object.keys(roleCounts).filter((role) => roleCounts[role] === minRoleCount);
+
+                let candidates = availableNames.filter((name) => targetRoles.includes(normalizeRole(name)));
+                if (candidates.length === 0) {
+                    candidates = availableNames;
+                }
+
+                const randomName = candidates[Math.floor(Math.random() * candidates.length)];
                 
                 await api.makeDraftPick(league.id, timeoutUserId, randomName, timeoutPick);
                 await api.draftPlayer(randomName, randomName, timeoutUserId, league.id);
-                
-                notify(`Auto-drafted ${randomName} for a timed out user!`, 'info');
-                loadData();
+
+                setDraftedPlayers((prev) => {
+                    if (prev.some((pick) => pick.player_id === randomName)) return prev;
+                    return [...prev, { player_id: randomName, user_id: timeoutUserId }];
+                });
             }
         } catch (error) {
             if (!error.message.includes('mismatch')) {
                 console.error("Auto-draft failed:", error.message);
             }
         }
-    }, [league, allPlayersData, draftedPlayers, loadData, notify]);
+    }, [league, allPlayersData, draftedPlayers]);
 
-    const draft = useDraft(league?.id, user?.id, handleDraftTimeout);
+    const draft = useDraft(league?.id, user?.id, handleDraftTimeout, {
+        instantAutoDraft,
+    });
+    const turnOrder = draft.draftState?.turn_order || [];
+    const totalPicks = turnOrder.length * 18;
+    const hasActiveDraftSession = Boolean(
+        draft.draftState?.is_active
+        && turnOrder.length >= 2
+        && draft.draftState.current_pick < totalPicks
+    );
 
     const handleOpenPlayerStats = useCallback((playerName) => {
         if (!playerName) return;
@@ -148,6 +184,13 @@ const App = () => {
     useEffect(() => {
         loadData();
     }, [user?.id, league?.id]);
+
+    useEffect(() => {
+        if (!draft.draftState) return;
+        if (!draft.draftState.is_active && draft.draftState.current_pick > 0) {
+            loadData();
+        }
+    }, [draft.draftState?.is_active, draft.draftState?.current_pick, loadData]);
 
     if (loading) {
         return <div className="loader" style={{ marginTop: '100px', textAlign: 'center' }}>Loading Fantasy Cricket...</div>;
@@ -212,44 +255,52 @@ const App = () => {
                             </div>
                         </div>
 
-                        <DraftPanel 
-                            draftState={draft.draftState} 
-                            countdown={draft.countdown} 
-                            isMyTurn={draft.isMyTurn} 
-                            currentUser={user} 
-                            usersList={usersList} 
-                            onPlayerClick={handleOpenPlayerStats}
-                        />
-
-                        <div className="main-layout">
-                            <PlayerList 
-                                players={Object.values(allPlayersData.players || {})} 
-                                draftedPlayers={draftedPlayers} 
-                                mySquad={mySquad} 
-                                currentUser={user} 
+                        {hasActiveDraftSession && (
+                            <DraftPanel 
                                 draftState={draft.draftState} 
+                                countdown={draft.countdown} 
                                 isMyTurn={draft.isMyTurn} 
+                                currentUser={user} 
+                                usersList={usersList} 
+                                autoDraftEnabled={instantAutoDraft}
+                                onToggleAutoDraft={() => setInstantAutoDraft((prev) => !prev)}
                                 onPlayerClick={handleOpenPlayerStats}
-                                onDraftPick={async (player) => {
-                                    if (!league) return notify('You must join a league before drafting!', 'error');
-                                    if (!(draft.draftState && draft.draftState.is_active)) {
-                                        return notify('Draft is not active. Ask the commissioner to start the draft first.', 'error');
-                                    }
-                                    try {
-                                        const alreadyTaken = await api.isPlayerDrafted(player.name, league.id);
-                                        if (alreadyTaken) return notify('Player already taken in your league!', 'error');
-
-                                        await draft.makePick(player.name, player.name);
-                                        loadData();
-                                    } catch (err) { }
-                                }}
                             />
+                        )}
+
+                        <div className={`main-layout ${!hasActiveDraftSession ? 'no-draft' : ''}`.trim()}>
+                            {hasActiveDraftSession && (
+                                <PlayerList 
+                                    players={Object.values(allPlayersData.players || {})} 
+                                    draftedPlayers={draftedPlayers} 
+                                    mySquad={mySquad} 
+                                    currentUser={user} 
+                                    draftState={draft.draftState} 
+                                    isDraftActive={hasActiveDraftSession}
+                                    isMyTurn={draft.isMyTurn} 
+                                    onPlayerClick={handleOpenPlayerStats}
+                                    onDraftPick={async (player) => {
+                                        if (!league) return notify('You must join a league before drafting!', 'error');
+                                        if (!hasActiveDraftSession) {
+                                            return notify('Draft is not active. Ask the commissioner to start the draft first.', 'error');
+                                        }
+                                        try {
+                                            const alreadyTaken = await api.isPlayerDrafted(player.name, league.id);
+                                            if (alreadyTaken) return notify('Player already taken in your league!', 'error');
+
+                                            await draft.makePick(player.name, player.name);
+                                            loadData();
+                                        } catch (err) { }
+                                    }}
+                                />
+                            )}
                             <MyTeam 
                                 mySquad={mySquad} 
                                 starting11={starting11} 
                                 setStarting11={setStarting11} 
                                 playersData={allPlayersData.players || {}}
                                 lineupValidation={lineupValidation}
+                                isDraftActive={hasActiveDraftSession}
                                 onPlayerClick={handleOpenPlayerStats}
                                 onReleasePlayer={handleReleasePlayer} 
                                 onSaveLineup={handleSaveLineup}

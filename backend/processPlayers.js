@@ -489,17 +489,16 @@ class CricketDataProcessor {
     };
   }
 
-  async save(outputFile) {
+  async save(outputFile, options = {}) {
+    const { sync = true } = options;
     const processed = this.processData();
     fs.writeFileSync(outputFile, JSON.stringify(processed, null, 2));
     console.log(`Processed data saved to ${outputFile}`);
     console.log(`Total players: ${Object.keys(processed.players).length}`);
 
     // Automated database sync
-    try {
+    if (sync) {
       await syncStats();
-    } catch (err) {
-      console.error('Failed to sync to database:', err.message);
     }
   }
 }
@@ -507,9 +506,10 @@ class CricketDataProcessor {
 if (require.main === module) {
   const inputFile = process.argv[2] || 'scraped-data.json';
   const outputFile = process.argv[3] || 'player-stats.json';
+  const shouldSync = process.env.SKIP_DB_SYNC !== 'true';
 
   const processor = new CricketDataProcessor(inputFile);
-  processor.save(outputFile).then(() => {
+  processor.save(outputFile, { sync: shouldSync }).then(() => {
     // Exit gracefully to avoid libuv assertion on Windows
   }).catch(err => {
     console.error('Processor failed:', err);

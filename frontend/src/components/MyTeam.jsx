@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MyTeam = ({ mySquad, starting11, setStarting11, playersData = {}, lineupValidation, onPlayerClick, onReleasePlayer, onSaveLineup }) => {
+const MyTeam = ({ mySquad, starting11, setStarting11, playersData = {}, lineupValidation, isDraftActive, onPlayerClick, onReleasePlayer, onSaveLineup }) => {
 
     const getPlayerType = (playerName) => {
         const type = (playersData[playerName]?.playerType || '').toLowerCase();
@@ -47,9 +47,8 @@ const MyTeam = ({ mySquad, starting11, setStarting11, playersData = {}, lineupVa
     const counts = lineupValidation?.counts || { batsman: 0, bowler: 0, allrounder: 0 };
     const canSave = Boolean(lineupValidation?.isValid);
 
-    return (
-        <div className="side-panel">
-            <div className="card my-squad">
+    const squadCard = (
+        <div className="card my-squad">
                 <h3>My Squad</h3>
                 <p className="hint click-stats-hint">Click any player name to view full stats.</p>
                 <div id="squad-list" className="mini-list">
@@ -79,8 +78,10 @@ const MyTeam = ({ mySquad, starting11, setStarting11, playersData = {}, lineupVa
                     ))}
                 </div>
             </div>
-            
-            <div className="card starting-11">
+    );
+
+    const startingCard = (
+        <div className="card starting-11">
                 <h3>Starting 11</h3>
                 <p className="hint">Need 4 batsmen, 4 bowlers, 2 allrounders + 1 flex player</p>
                 <div className="lineup-type-grid">
@@ -119,6 +120,12 @@ const MyTeam = ({ mySquad, starting11, setStarting11, playersData = {}, lineupVa
                     Save Lineup
                 </button>
             </div>
+    );
+
+    return (
+        <div className={`side-panel ${!isDraftActive ? 'no-draft' : ''}`.trim()}>
+            {squadCard}
+            {startingCard}
         </div>
     );
 };
