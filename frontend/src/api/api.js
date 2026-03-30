@@ -175,10 +175,34 @@ const api = {
         const { error } = await supabase.rpc('generate_fixtures', { league_id: leagueId, num_rounds: rounds });
         if (error) throw error;
     },
-    async updateRoundScores(leagueId) {
-        const { data, error } = await supabase.rpc('update_round_scores', { league_id: leagueId });
-        if (error) throw error;
-        return data;
+    async updateRoundScores(leagueId, ignoredRounds = 0) {
+        const normalizedIgnoreRounds = Math.max(0, Number.isFinite(Number(ignoredRounds)) ? Math.floor(Number(ignoredRounds)) : 0);
+        const rpcPayload = {
+            league_id: leagueId,
+            ignored_rounds: normalizedIgnoreRounds
+        };
+
+        const { data, error } = await supabase.rpc('update_round_scores', rpcPayload);
+        if (!error) return data;
+
+        const message = (error?.message || '').toLowerCase();
+        const isSignatureMismatch =
+            message.includes('could not find the function') ||
+            message.includes('does not exist') ||
+            message.includes('no function matches') ||
+            message.includes('schema cache');
+
+        if (isSignatureMismatch && normalizedIgnoreRounds === 0) {
+            const legacyResult = await supabase.rpc('update_round_scores', { league_id: leagueId });
+            if (legacyResult.error) throw legacyResult.error;
+            return legacyResult.data;
+        }
+
+        if (isSignatureMismatch && normalizedIgnoreRounds > 0) {
+            throw new Error('Database function update_round_scores must support ignored_rounds before this value can be used.');
+        }
+
+        throw error;
     },
 
     // ======== Account ========

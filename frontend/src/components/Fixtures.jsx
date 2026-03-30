@@ -5,8 +5,11 @@ import { useNotify } from '../hooks/useNotify';
 const Fixtures = ({ currentLeague, usersList, isCommissioner, onStartDraft, onUpdateScoresTrigger }) => {
     const [fixtures, setFixtures] = useState([]);
     const [roundsInput, setRoundsInput] = useState(1);
+    const [ignoreRoundsInput, setIgnoreRoundsInput] = useState(0);
     const [loading, setLoading] = useState(false);
     const { notify } = useNotify();
+
+    const getIgnoreRoundsStorageKey = (leagueId) => `ignore-rounds-${leagueId}`;
 
     const loadFixtures = async () => {
         if (!currentLeague) return;
@@ -23,6 +26,19 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onStartDraft, onUp
 
     useEffect(() => {
         loadFixtures();
+    }, [currentLeague]);
+
+    useEffect(() => {
+        if (!currentLeague) return;
+
+        const storedValue = window.localStorage.getItem(getIgnoreRoundsStorageKey(currentLeague.id));
+        if (storedValue === null) {
+            setIgnoreRoundsInput(0);
+            return;
+        }
+
+        const parsed = parseInt(storedValue, 10);
+        setIgnoreRoundsInput(Number.isNaN(parsed) ? 0 : Math.max(0, Math.min(20, parsed)));
     }, [currentLeague]);
 
     const handleGenerate = async () => {
@@ -45,9 +61,11 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onStartDraft, onUp
     const handleUpdateScores = async () => {
         if (!currentLeague) return;
         try {
+            const ignoredRounds = Math.max(0, Math.min(20, Number(ignoreRoundsInput) || 0));
+
             notify('Updating scores... please wait.', 'info');
-            const count = await api.updateRoundScores(currentLeague.id);
-            notify(`Updated scores! ${count || 0} matches finalized.`, 'success');
+            const count = await api.updateRoundScores(currentLeague.id, ignoredRounds);
+            notify(`Updated scores! ${count || 0} matches finalized (ignoring first ${ignoredRounds} round(s)).`, 'success');
             loadFixtures();
             onUpdateScoresTrigger(); // trigger scoreboard refresh
         } catch (error) {
@@ -100,6 +118,29 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onStartDraft, onUp
                                             return;
                                         }
                                         setRoundsInput(Math.min(10, Math.max(1, parsed)));
+                                    }}
+                                />
+                            </div>
+                            <div className="fixtures-rounds-field">
+                                <label htmlFor="fixtures-ignore-rounds-input">Ignore Rounds</label>
+                                <input
+                                    id="fixtures-ignore-rounds-input"
+                                    type="number"
+                                    className="fixtures-rounds-input"
+                                    min="0"
+                                    max="20"
+                                    value={ignoreRoundsInput}
+                                    onChange={(event) => {
+                                        const parsed = parseInt(event.target.value, 10);
+                                        if (Number.isNaN(parsed)) {
+                                            setIgnoreRoundsInput(0);
+                                            window.localStorage.setItem(getIgnoreRoundsStorageKey(currentLeague.id), '0');
+                                            return;
+                                        }
+
+                                        const clamped = Math.max(0, Math.min(20, parsed));
+                                        setIgnoreRoundsInput(clamped);
+                                        window.localStorage.setItem(getIgnoreRoundsStorageKey(currentLeague.id), String(clamped));
                                     }}
                                 />
                             </div>
