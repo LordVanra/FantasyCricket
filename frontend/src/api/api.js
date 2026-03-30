@@ -1,5 +1,7 @@
 import { supabase } from '../lib/supabase';
 
+const DRAFT_SQUAD_SIZE = 22;
+
 const api = {
     // ======== Auth ========
     async signUp(email, password) {
@@ -162,9 +164,34 @@ const api = {
 
     // ======== Fixtures & Scoreboard ========
     async getLeagueStandings(leagueId) {
-        const { data, error } = await supabase.from('league_standings').select('*').eq('league_id', leagueId).order('points', { ascending: false }).order('net_points', { ascending: false });
+        const rpcResult = await supabase.rpc('get_league_standings_v2', {
+            p_league_id: leagueId,
+        });
+
+        if (!rpcResult.error) {
+            return rpcResult.data;
+        }
+
+        // Fallback for environments where the RPC has not been applied yet.
+        const { data, error } = await supabase.from('league_standings').select('*').eq('league_id', leagueId);
         if (error) throw error;
-        return data;
+
+        const normalized = (data || []).map((team) => {
+            const won = Number(team?.won) || 0;
+            const drawn = Number(team?.drawn) || 0;
+            return {
+                ...team,
+                points: (won * 2) + drawn,
+            };
+        });
+
+        normalized.sort((a, b) => {
+            const pointsDiff = (Number(b?.points) || 0) - (Number(a?.points) || 0);
+            if (pointsDiff !== 0) return pointsDiff;
+            return (Number(b?.net_points) || 0) - (Number(a?.net_points) || 0);
+        });
+
+        return normalized;
     },
     async getFixtures(leagueId) {
         const { data, error } = await supabase.from('league_matches').select('*').eq('league_id', leagueId).order('round_number', { ascending: true });
@@ -204,6 +231,15 @@ const api = {
 
         throw error;
     },
+    async getMatchTeamBreakdown(matchId, userId) {
+        const { data, error } = await supabase.rpc('get_match_team_breakdown', {
+            p_match_id: matchId,
+            p_user_id: userId,
+        });
+        if (error) throw error;
+        if (data?.error) throw new Error(data.error);
+        return data;
+    },
 
     // ======== Account ========
     async changePassword(newPassword) {
@@ -223,17 +259,40 @@ const api = {
         return data;
     },
     async startDraft(leagueId, turnOrder) {
-        const { data, error } = await supabase.from('draft_state').upsert({
+        const payload = {
             league_id: leagueId,
             is_active: true,
             current_pick: 0,
             turn_order: turnOrder,
             picks: [],
             turn_start_time: new Date().toISOString(),
+            auto_draft_user_ids: [],
             updated_at: new Date().toISOString()
-        }, { onConflict: 'league_id' }).select().single();
-        if (error) throw error;
-        return data;
+        };
+
+        let result = await supabase.from('draft_state').upsert(payload, { onConflict: 'league_id' }).select().single();
+
+        if (result.error) {
+            const message = (result.error?.message || '').toLowerCase();
+            const isMissingAutoModeColumn = message.includes('auto_draft_user_ids') || message.includes('column');
+
+            if (!isMissingAutoModeColumn) throw result.error;
+
+            const fallbackPayload = {
+                league_id: leagueId,
+                is_active: true,
+                current_pick: 0,
+                turn_order: turnOrder,
+                picks: [],
+                turn_start_time: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            };
+
+            result = await supabase.from('draft_state').upsert(fallbackPayload, { onConflict: 'league_id' }).select().single();
+        }
+
+        if (result.error) throw result.error;
+        return result.data;
     },
     async clearLeagueSquads(leagueId) {
         if (!leagueId) throw new Error('League id is required to clear squads');
@@ -259,7 +318,7 @@ const api = {
         if (state.current_pick !== currentPick) throw new Error('Not your turn (pick mismatch)');
         const newPicks = [...(state.picks || []), { user_id: userId, player_id: playerId, pick_number: currentPick }];
         const nextPick = currentPick + 1;
-        const totalPicksNeeded = (state.turn_order || []).length * 18;
+        const totalPicksNeeded = (state.turn_order || []).length * DRAFT_SQUAD_SIZE;
         const isComplete = nextPick >= totalPicksNeeded;
         const { data, error } = await supabase.from('draft_state').update({
             picks: newPicks,
@@ -276,7 +335,8 @@ const api = {
         if (!state || !state.is_active) throw new Error('Draft is not active');
         if (state.current_pick !== currentPick) return state;
         const nextPick = currentPick + 1;
-        const isComplete = nextPick >= 20;
+        const totalPicksNeeded = (state.turn_order || []).length * DRAFT_SQUAD_SIZE;
+        const isComplete = nextPick >= totalPicksNeeded;
         const { data, error } = await supabase.from('draft_state').update({
             current_pick: nextPick,
             is_active: !isComplete,
@@ -284,6 +344,42 @@ const api = {
             updated_at: new Date().toISOString()
         }).eq('league_id', leagueId).select().single();
         if (error) throw error;
+        return data;
+    },
+    async setUserAutoDraftMode(leagueId, userId, enabled) {
+        if (!userId) throw new Error('User id is required to update auto draft mode');
+
+        const state = await this.getDraftState(leagueId);
+        if (!state) throw new Error('Draft state not found');
+
+        const currentIds = Array.isArray(state.auto_draft_user_ids) ? state.auto_draft_user_ids : [];
+        let nextIds;
+
+        if (enabled) {
+            nextIds = currentIds.includes(userId) ? currentIds : [...currentIds, userId];
+        } else {
+            nextIds = currentIds.filter((id) => id !== userId);
+        }
+
+        const { data, error } = await supabase
+            .from('draft_state')
+            .update({
+                auto_draft_user_ids: nextIds,
+                updated_at: new Date().toISOString(),
+            })
+            .eq('league_id', leagueId)
+            .select()
+            .single();
+
+        if (error) {
+            const message = (error?.message || '').toLowerCase();
+            const isMissingAutoModeColumn = message.includes('auto_draft_user_ids') || message.includes('column');
+            if (isMissingAutoModeColumn) {
+                throw new Error('Database is missing draft_state.auto_draft_user_ids. Apply migration backend/sql/2026-03-30_draft_auto_mode_and_22_size.sql');
+            }
+            throw error;
+        }
+
         return data;
     },
 

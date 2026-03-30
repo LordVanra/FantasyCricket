@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/api';
 import { useNotify } from '../hooks/useNotify';
+import MatchBreakdownModal from './MatchBreakdownModal';
 
-const Fixtures = ({ currentLeague, usersList, isCommissioner, onStartDraft, onUpdateScoresTrigger }) => {
+const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrigger }) => {
     const [fixtures, setFixtures] = useState([]);
     const [roundsInput, setRoundsInput] = useState(1);
     const [ignoreRoundsInput, setIgnoreRoundsInput] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [breakdownOpen, setBreakdownOpen] = useState(false);
+    const [breakdownLoading, setBreakdownLoading] = useState(false);
+    const [breakdownError, setBreakdownError] = useState('');
+    const [selectedMatch, setSelectedMatch] = useState(null);
+    const [selectedTeamName, setSelectedTeamName] = useState('');
+    const [selectedBreakdown, setSelectedBreakdown] = useState(null);
     const { notify } = useNotify();
 
+    const getRoundsStorageKey = (leagueId) => `fixtures-rounds-${leagueId}`;
     const getIgnoreRoundsStorageKey = (leagueId) => `ignore-rounds-${leagueId}`;
 
     const loadFixtures = async () => {
@@ -17,6 +25,18 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onStartDraft, onUp
         try {
             const data = await api.getFixtures(currentLeague.id);
             setFixtures(data);
+
+            // Prefer the currently-generated rounds count so the input reflects league state.
+            const currentMaxRound = (data || []).reduce((maxRound, match) => {
+                const value = Number(match?.round_number) || 0;
+                return value > maxRound ? value : maxRound;
+            }, 0);
+
+            if (currentMaxRound > 0) {
+                const clampedRound = Math.min(10, Math.max(1, currentMaxRound));
+                setRoundsInput(clampedRound);
+                window.localStorage.setItem(getRoundsStorageKey(currentLeague.id), String(clampedRound));
+            }
         } catch (error) {
             notify('Error loading fixtures: ' + error.message, 'error');
         } finally {
@@ -30,6 +50,14 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onStartDraft, onUp
 
     useEffect(() => {
         if (!currentLeague) return;
+
+        const storedRoundsValue = window.localStorage.getItem(getRoundsStorageKey(currentLeague.id));
+        if (storedRoundsValue === null) {
+            setRoundsInput(1);
+        } else {
+            const parsedRounds = parseInt(storedRoundsValue, 10);
+            setRoundsInput(Number.isNaN(parsedRounds) ? 1 : Math.max(1, Math.min(10, parsedRounds)));
+        }
 
         const storedValue = window.localStorage.getItem(getIgnoreRoundsStorageKey(currentLeague.id));
         if (storedValue === null) {
@@ -73,10 +101,34 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onStartDraft, onUp
         }
     };
 
-    const handleStartDraft = async () => {
-        const confirmed = window.confirm('Are you sure? This will delete all current squads.');
-        if (!confirmed) return;
-        await onStartDraft(usersList);
+    const closeBreakdownModal = () => {
+        setBreakdownOpen(false);
+        setBreakdownLoading(false);
+        setBreakdownError('');
+        setSelectedMatch(null);
+        setSelectedTeamName('');
+        setSelectedBreakdown(null);
+    };
+
+    const openTeamBreakdown = async (match, teamId, teamName) => {
+        if (!match || match.status !== 'completed') return;
+
+        setSelectedMatch(match);
+        setSelectedTeamName(teamName);
+        setSelectedBreakdown(null);
+        setBreakdownError('');
+        setBreakdownLoading(true);
+        setBreakdownOpen(true);
+
+        try {
+            const data = await api.getMatchTeamBreakdown(match.id, teamId);
+            setSelectedBreakdown(data);
+        } catch (error) {
+            setBreakdownError(error.message || 'Failed to load match breakdown.');
+            notify('Could not load team breakdown: ' + error.message, 'error');
+        } finally {
+            setBreakdownLoading(false);
+        }
     };
 
     // Group by rounds
@@ -93,9 +145,6 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onStartDraft, onUp
                     <h3>Season Fixtures</h3>
                     {isCommissioner && (
                         <div id="commissioner-controls" className="form-group fixtures-controls" style={{ margin: 0 }}>
-                            <button className="btn btn-accent fixtures-action-btn" onClick={handleStartDraft}>
-                                Start Draft
-                            </button>
                             <button className="btn btn-primary fixtures-action-btn" onClick={handleGenerate}>
                                 Generate Fixtures
                             </button>
@@ -115,9 +164,12 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onStartDraft, onUp
                                         const parsed = parseInt(event.target.value, 10);
                                         if (Number.isNaN(parsed)) {
                                             setRoundsInput(1);
+                                            window.localStorage.setItem(getRoundsStorageKey(currentLeague.id), '1');
                                             return;
                                         }
-                                        setRoundsInput(Math.min(10, Math.max(1, parsed)));
+                                        const clamped = Math.min(10, Math.max(1, parsed));
+                                        setRoundsInput(clamped);
+                                        window.localStorage.setItem(getRoundsStorageKey(currentLeague.id), String(clamped));
                                     }}
                                 />
                             </div>
@@ -177,12 +229,34 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onStartDraft, onUp
                                     
                                     return (
                                         <div key={match.id} className="match-card">
-                                            <span className={`match-team text-right ${classA}`}>{nameA}</span>
+                                            {isCompleted ? (
+                                                <button
+                                                    type="button"
+                                                    className={`match-team-btn match-team text-right ${classA}`.trim()}
+                                                    onClick={() => openTeamBreakdown(match, match.team_a_id, nameA)}
+                                                    title={`View ${nameA} breakdown`}
+                                                >
+                                                    {nameA}
+                                                </button>
+                                            ) : (
+                                                <span className={`match-team text-right ${classA}`}>{nameA}</span>
+                                            )}
                                             <div className={`match-score ${isCompleted ? 'completed' : ''}`}>
                                                 {scoreA} - {scoreB}
                                                 <div className="match-status">{match.status}</div>
                                             </div>
-                                            <span className={`match-team ${classB}`}>{nameB}</span>
+                                            {isCompleted ? (
+                                                <button
+                                                    type="button"
+                                                    className={`match-team-btn match-team ${classB}`.trim()}
+                                                    onClick={() => openTeamBreakdown(match, match.team_b_id, nameB)}
+                                                    title={`View ${nameB} breakdown`}
+                                                >
+                                                    {nameB}
+                                                </button>
+                                            ) : (
+                                                <span className={`match-team ${classB}`}>{nameB}</span>
+                                            )}
                                         </div>
                                     );
                                 })}
@@ -191,6 +265,15 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onStartDraft, onUp
                     )}
                 </div>
             </div>
+            <MatchBreakdownModal
+                isOpen={breakdownOpen}
+                loading={breakdownLoading}
+                error={breakdownError}
+                match={selectedMatch}
+                teamName={selectedTeamName}
+                breakdown={selectedBreakdown}
+                onClose={closeBreakdownModal}
+            />
         </section>
     );
 };

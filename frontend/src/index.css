@@ -1232,7 +1232,7 @@ body {
 
 .fixtures-controls {
     display: grid;
-    grid-template-columns: repeat(2, minmax(170px, 1fr));
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
     gap: 10px;
     align-items: stretch;
 }
@@ -1312,6 +1312,31 @@ body {
     font-weight: 500;
 }
 
+.match-team.text-right {
+    text-align: right;
+}
+
+.match-team-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+    width: 100%;
+}
+
+.match-team-btn.text-right {
+    text-align: right;
+}
+
+.match-team-btn:hover {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
 .match-team.winner {
     color: var(--primary);
 }
@@ -1333,6 +1358,100 @@ body {
     color: var(--text-secondary);
     margin-top: 0.2rem;
     text-align: center;
+}
+
+.match-breakdown-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2200;
+    background: rgba(6, 16, 31, 0.8);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+}
+
+.match-breakdown-modal {
+    width: min(860px, 100%);
+    max-height: 88vh;
+    overflow: hidden;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
+}
+
+.match-breakdown-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-dark);
+}
+
+.match-breakdown-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.match-breakdown-subtitle {
+    margin-top: 0.2rem;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+}
+
+.match-breakdown-body {
+    max-height: calc(88vh - 72px);
+    overflow-y: auto;
+    padding: 1rem 1.2rem 1.2rem;
+}
+
+.match-breakdown-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.match-breakdown-row {
+    border: 1px solid var(--border);
+    background: rgba(15, 23, 42, 0.75);
+    border-radius: 10px;
+    padding: 0.7rem;
+}
+
+.match-breakdown-row-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.45rem;
+}
+
+.match-breakdown-points-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(90px, 1fr));
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    margin-bottom: 0.45rem;
+}
+
+.match-breakdown-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.match-breakdown-details span {
+    font-size: 0.73rem;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.12rem 0.45rem;
+    background: var(--bg-dark);
 }
 
 /* Scoreboard Table */

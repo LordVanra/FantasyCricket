@@ -3,12 +3,16 @@ import api from '../api/api';
 import { useNotify } from './useNotify';
 
 export function useDraft(leagueId, userId, onTimeout, options = {}) {
-    const { instantAutoDraft = true } = options;
+    const { instantAutoDraftFallback = false } = options;
     const [draftState, setDraftState] = useState(null);
     const [countdown, setCountdown] = useState(30);
+    const [localAutoDraft, setLocalAutoDraft] = useState(instantAutoDraftFallback);
     const instantAutoDraftedPickRef = useRef(-1);
     const timedAutoDraftedPickRef = useRef(-1);
     const { notify } = useNotify();
+    const hasServerAutoDraftMode = Boolean(draftState && Object.prototype.hasOwnProperty.call(draftState, 'auto_draft_user_ids'));
+    const autoDraftUserIds = Array.isArray(draftState?.auto_draft_user_ids) ? draftState.auto_draft_user_ids : [];
+    const instantAutoDraft = hasServerAutoDraftMode ? autoDraftUserIds.includes(userId) : localAutoDraft;
 
     const fetchDraftState = useCallback(async () => {
         if (!leagueId) return;
@@ -47,8 +51,11 @@ export function useDraft(leagueId, userId, onTimeout, options = {}) {
         const currentPick = draftState.current_pick;
         const currentPickIndex = currentPick % turnOrder.length;
         const currentTurnUserId = turnOrder[currentPickIndex];
+        const isTurnOnAutoDraft = hasServerAutoDraftMode
+            ? autoDraftUserIds.includes(currentTurnUserId)
+            : (localAutoDraft && currentTurnUserId === userId);
 
-        if (instantAutoDraft) {
+        if (isTurnOnAutoDraft) {
             timedAutoDraftedPickRef.current = -1;
             setCountdown(0);
 
@@ -73,6 +80,12 @@ export function useDraft(leagueId, userId, onTimeout, options = {}) {
             const remaining = Math.max(0, TURN_DURATION - elapsed);
             setCountdown(Math.ceil(remaining));
 
+            // In server-backed per-user mode, only opted-in users auto-pick.
+            // Users not in auto_draft_user_ids keep manual control.
+            if (hasServerAutoDraftMode) {
+                return;
+            }
+
             if (remaining <= 0 && timedAutoDraftedPickRef.current !== currentPick) {
                 timedAutoDraftedPickRef.current = currentPick;
                 if (onTimeout) {
@@ -82,7 +95,7 @@ export function useDraft(leagueId, userId, onTimeout, options = {}) {
         }, 500);
 
         return () => clearInterval(interval);
-    }, [draftState, onTimeout, instantAutoDraft]);
+        }, [draftState, onTimeout, hasServerAutoDraftMode, autoDraftUserIds, localAutoDraft, userId]);
 
     const startDraft = async (usersList) => {
         if (!leagueId) return false;
@@ -100,6 +113,24 @@ export function useDraft(leagueId, userId, onTimeout, options = {}) {
             notify('Failed to start draft: ' + error.message, 'error');
             return false;
         }
+    };
+
+    const toggleAutoDraft = async () => {
+        if (!leagueId || !draftState) return;
+        const nextEnabled = !instantAutoDraft;
+
+        if (hasServerAutoDraftMode) {
+            try {
+                await api.setUserAutoDraftMode(leagueId, userId, nextEnabled);
+                notify(`Your auto draft ${nextEnabled ? 'enabled' : 'disabled'}.`, 'success');
+            } catch (error) {
+                notify('Failed to update your auto draft mode: ' + error.message, 'error');
+            }
+            return;
+        }
+
+        setLocalAutoDraft(nextEnabled);
+        notify('Auto draft ' + (nextEnabled ? 'enabled' : 'disabled') + '.', 'success');
     };
 
     const makePick = async (playerId, playerName) => {
@@ -125,6 +156,9 @@ export function useDraft(leagueId, userId, onTimeout, options = {}) {
         draftState,
         countdown,
         isMyTurn,
+        autoDraftEnabled: instantAutoDraft,
+        toggleAutoDraft,
+        draftSquadSize: 22,
         startDraft,
         makePick
     };

@@ -1,12 +1,12 @@
 import React from 'react';
 
-const DraftPanel = ({ draftState, countdown, isMyTurn, currentUser, usersList, autoDraftEnabled, onToggleAutoDraft, onPlayerClick }) => {
+const DraftPanel = ({ draftState, countdown, isMyTurn, currentUser, usersList, autoDraftEnabled, onToggleAutoDraft, onPlayerClick, draftSquadSize = 22 }) => {
     if (!draftState) {
         return null;
     }
 
     const turnOrder = draftState.turn_order || [];
-    const totalPicks = turnOrder.length * 18;
+    const totalPicks = turnOrder.length * draftSquadSize;
     const isComplete = !draftState.is_active && draftState.current_pick >= totalPicks;
 
     if ((!draftState.is_active && draftState.current_pick === 0) || isComplete) {

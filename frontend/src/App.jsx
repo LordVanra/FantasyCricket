@@ -34,7 +34,6 @@ const App = () => {
     const [dataLoading, setDataLoading] = useState(false);
     const [scoreboardTrigger, setScoreboardTrigger] = useState(0);
     const [selectedPlayerName, setSelectedPlayerName] = useState(null);
-    const [instantAutoDraft, setInstantAutoDraft] = useState(false);
 
     const getLineupTypeCounts = useCallback((lineup) => {
         const counts = { batsman: 0, bowler: 0, allrounder: 0 };
@@ -158,11 +157,9 @@ const App = () => {
         }
     }, [league, allPlayersData, draftedPlayers]);
 
-    const draft = useDraft(league?.id, user?.id, handleDraftTimeout, {
-        instantAutoDraft,
-    });
+    const draft = useDraft(league?.id, user?.id, handleDraftTimeout);
     const turnOrder = draft.draftState?.turn_order || [];
-    const totalPicks = turnOrder.length * 18;
+    const totalPicks = turnOrder.length * (draft.draftSquadSize || 22);
     const hasActiveDraftSession = Boolean(
         draft.draftState?.is_active
         && turnOrder.length >= 2
@@ -262,8 +259,9 @@ const App = () => {
                                 isMyTurn={draft.isMyTurn} 
                                 currentUser={user} 
                                 usersList={usersList} 
-                                autoDraftEnabled={instantAutoDraft}
-                                onToggleAutoDraft={() => setInstantAutoDraft((prev) => !prev)}
+                                autoDraftEnabled={draft.autoDraftEnabled}
+                                onToggleAutoDraft={draft.toggleAutoDraft}
+                                draftSquadSize={draft.draftSquadSize}
                                 onPlayerClick={handleOpenPlayerStats}
                             />
                         )}
@@ -334,13 +332,6 @@ const App = () => {
                         currentLeague={league} 
                         usersList={usersList} 
                         isCommissioner={isCommissioner} 
-                        onStartDraft={async (list) => {
-                            const started = await draft.startDraft(list);
-                            if (started) {
-                                await loadData();
-                                setActiveTab('dashboard');
-                            }
-                        }} 
                         onUpdateScoresTrigger={() => setScoreboardTrigger(prev => prev + 1)}
                     />
                 );
@@ -351,6 +342,13 @@ const App = () => {
                         currentLeague={league} 
                         currentUser={user} 
                         onLeagueChange={() => auth.refreshLeague()} 
+                        onStartDraft={async (list) => {
+                            const started = await draft.startDraft(list);
+                            if (started) {
+                                await loadData();
+                                setActiveTab('dashboard');
+                            }
+                        }}
                     />
                 );
             case 'scoreboard':

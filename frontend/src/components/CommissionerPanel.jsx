@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../api/api';
 import { useNotify } from '../hooks/useNotify';
 
-const CommissionerPanel = ({ isCommissioner, currentLeague, currentUser, onLeagueChange }) => {
+const CommissionerPanel = ({ isCommissioner, currentLeague, currentUser, onLeagueChange, onStartDraft }) => {
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(false);
     const { notify } = useNotify();
@@ -46,6 +46,20 @@ const CommissionerPanel = ({ isCommissioner, currentLeague, currentUser, onLeagu
         }
     };
 
+    const handleStartDraft = async () => {
+        if (!currentLeague) return;
+
+        if ((members || []).length < 2) {
+            notify('Need at least 2 league members to start draft.', 'error');
+            return;
+        }
+
+        const confirmed = window.confirm('Are you sure? This will delete all current squads.');
+        if (!confirmed) return;
+
+        await onStartDraft(members);
+    };
+
     if (!isCommissioner) return null;
 
     return (
@@ -53,6 +67,9 @@ const CommissionerPanel = ({ isCommissioner, currentLeague, currentUser, onLeagu
             <div className="card">
                 <div className="card-header">
                     <h3>Commissioner Panel</h3>
+                    <button className="btn btn-accent" style={{ width: 'auto' }} onClick={handleStartDraft}>
+                        Start Draft
+                    </button>
                 </div>
                 <div id="commissioner-members-list" className="mini-list">
                     {loading && <p className="dim">Loading members...</p>}
