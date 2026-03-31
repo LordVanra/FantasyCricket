@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import api from '../api/api';
 import { useNotify } from '../hooks/useNotify';
 import MatchBreakdownModal from './MatchBreakdownModal';
@@ -101,6 +101,24 @@ const formatMatchDay = (rawValue) => {
     return parsed.toLocaleDateString();
 };
 
+const toLocalIsoDay = (value) => {
+    if (!value) return null;
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return null;
+    const year = parsed.getFullYear();
+    const month = String(parsed.getMonth() + 1).padStart(2, '0');
+    const day = String(parsed.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
+const getTodayLocalIsoDay = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrigger }) => {
     const [fixtures, setFixtures] = useState([]);
     const [roundMatchDays, setRoundMatchDays] = useState({});
@@ -113,10 +131,12 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrig
     const [selectedMatch, setSelectedMatch] = useState(null);
     const [selectedTeamName, setSelectedTeamName] = useState('');
     const [selectedBreakdown, setSelectedBreakdown] = useState(null);
+    const autoUpdateInFlightRef = useRef(false);
     const { notify } = useNotify();
 
     const getRoundsStorageKey = (leagueId) => `fixtures-rounds-${leagueId}`;
     const getIgnoreRoundsStorageKey = (leagueId) => `ignore-rounds-${leagueId}`;
+    const getAutoUpdateStorageKey = (leagueId) => `auto-score-last-run-${leagueId}`;
 
     const loadFixtures = async () => {
         if (!currentLeague) return;
@@ -189,20 +209,51 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrig
         }
     };
 
-    const handleUpdateScores = async () => {
-        if (!currentLeague) return;
+    const autoUpdateScoresIfDue = async () => {
+        if (!currentLeague || autoUpdateInFlightRef.current) return;
+
+        const today = getTodayLocalIsoDay();
+        const lastRun = window.localStorage.getItem(getAutoUpdateStorageKey(currentLeague.id));
+        if (lastRun === today) return;
+
+        const hasDueMatch = (fixtures || []).some((match) => {
+            if (!match || match.status === 'completed') return false;
+
+            const roundDay = roundMatchDays[Number(match.round_number)] || null;
+            const fallbackDay = toLocalIsoDay(match.score_due_at);
+            const dueDay = roundDay || fallbackDay;
+
+            if (!dueDay) return false;
+            return dueDay <= today;
+        });
+
+        if (!hasDueMatch) return;
+
+        autoUpdateInFlightRef.current = true;
         try {
             const ignoredRounds = Math.max(0, Math.min(20, Number(ignoreRoundsInput) || 0));
-
-            notify('Updating scores... please wait.', 'info');
             const count = await api.updateRoundScores(currentLeague.id, ignoredRounds);
-            notify(`Updated scores! ${count || 0} matches finalized (ignoring first ${ignoredRounds} round(s)).`, 'success');
-            loadFixtures();
-            onUpdateScoresTrigger(); // trigger scoreboard refresh
+            window.localStorage.setItem(getAutoUpdateStorageKey(currentLeague.id), today);
+
+            if ((count || 0) > 0) {
+                notify(`Auto-updated ${count} match(es).`, 'success');
+                await loadFixtures();
+                onUpdateScoresTrigger();
+            }
         } catch (error) {
-            notify('Update failed: ' + error.message, 'error');
+            notify('Auto update failed: ' + error.message, 'error');
+        } finally {
+            autoUpdateInFlightRef.current = false;
         }
     };
+
+    useEffect(() => {
+        if (!currentLeague) return;
+
+        autoUpdateScoresIfDue();
+        const timer = window.setInterval(autoUpdateScoresIfDue, 60 * 1000);
+        return () => window.clearInterval(timer);
+    }, [currentLeague, fixtures, roundMatchDays, ignoreRoundsInput]);
 
     const closeBreakdownModal = () => {
         setBreakdownOpen(false);
@@ -250,9 +301,6 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrig
                         <div id="commissioner-controls" className="form-group fixtures-controls" style={{ margin: 0 }}>
                             <button className="btn btn-primary fixtures-action-btn" onClick={handleGenerate}>
                                 Generate Fixtures
-                            </button>
-                            <button className="btn btn-secondary fixtures-action-btn" onClick={handleUpdateScores}>
-                                Update Scores
                             </button>
                             <div className="fixtures-rounds-field">
                                 <label htmlFor="fixtures-rounds-input">Rounds</label>

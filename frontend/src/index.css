@@ -1240,7 +1240,7 @@ body {
 
 .fixtures-controls {
     display: grid;
-    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    grid-template-columns: repeat(3, minmax(150px, 1fr));
     gap: 10px;
     align-items: stretch;
 }
