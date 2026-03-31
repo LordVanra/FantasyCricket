@@ -66,10 +66,49 @@ class CricketScraper {
     return this.normalizePlayerType(contextText);
   }
 
+  extractMatchDate(responseBody, $) {
+    if (!responseBody) return null;
+
+    const startDatePatterns = [
+      /"startDate"\s*:\s*"([^"]+)"/i,
+      /"date"\s*:\s*"(\d{4}-\d{2}-\d{2})"/i,
+      /"datePublished"\s*:\s*"([^"]+)"/i
+    ];
+
+    for (const pattern of startDatePatterns) {
+      const match = responseBody.match(pattern);
+      if (!match || !match[1]) continue;
+
+      const parsed = new Date(match[1]);
+      if (!Number.isNaN(parsed.getTime())) {
+        return parsed.toISOString().slice(0, 10);
+      }
+    }
+
+    // Fallback: some pages expose a date in visible content.
+    const dateText = $('span, div, p')
+      .map((_, el) => this.cleanText($(el).text()))
+      .get()
+      .find((txt) => /\b\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4}\b/.test(txt));
+
+    if (dateText) {
+      const match = dateText.match(/\b(\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4})\b/);
+      if (match && match[1]) {
+        const parsed = new Date(match[1]);
+        if (!Number.isNaN(parsed.getTime())) {
+          return parsed.toISOString().slice(0, 10);
+        }
+      }
+    }
+
+    return null;
+  }
+
   async scrapeMatch(matchUrl) {
     try {
       const response = await axios.get(matchUrl, { headers: this.headers });
       const $ = cheerio.load(response.data);
+      const matchDate = this.extractMatchDate(response.data, $);
 
       const battingData = [];
       const bowlingData = [];
@@ -221,9 +260,9 @@ class CricketScraper {
         stumpings: fieldingData[name].stumpings
       }));
 
-      return { batting: battingData, bowling: bowlingData, fielding: fielding };
+      return { batting: battingData, bowling: bowlingData, fielding: fielding, matchDate };
     } catch (error) {
-      return { batting: [], bowling: [], fielding: [] };
+      return { batting: [], bowling: [], fielding: [], matchDate: null };
     }
   }
 

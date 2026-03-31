@@ -284,11 +284,29 @@ class CricketDataProcessor {
       }
     });
 
+    const rawMatches = Array.isArray(this.data.matches) ? this.data.matches : [];
+    const sortedMatches = [...rawMatches].sort((a, b) => {
+      const dateA = a && a.matchDate ? Date.parse(a.matchDate) : Number.NaN;
+      const dateB = b && b.matchDate ? Date.parse(b.matchDate) : Number.NaN;
+      const hasA = Number.isFinite(dateA);
+      const hasB = Number.isFinite(dateB);
+
+      if (hasA && hasB && dateA !== dateB) {
+        return dateA - dateB;
+      }
+      if (hasA && !hasB) return -1;
+      if (!hasA && hasB) return 1;
+
+      const urlA = (a && a.url) || '';
+      const urlB = (b && b.url) || '';
+      return urlA.localeCompare(urlB);
+    });
+
     console.log(`Found ${this.fullNames.size} unique full names from batting/bowling`);
 
     // Build teams map: teamName -> ordered list of match URLs
     const teamsMap = {};
-    this.data.matches.forEach((match, matchIndex) => {
+    sortedMatches.forEach((match) => {
       const teams = this.extractTeamsFromUrl(match.url);
       teams.forEach(team => {
         const normalizedTeam = this.normalizeTeamName(team);
@@ -299,7 +317,7 @@ class CricketDataProcessor {
     });
     console.log(`Found ${Object.keys(teamsMap).length} teams: ${Object.keys(teamsMap).join(', ')}`);
 
-    this.data.matches.forEach((match, matchIndex) => {
+    sortedMatches.forEach((match, matchIndex) => {
       match.batting.forEach(bat => {
         const canonical = this.addPlayer(bat.player, bat.url);
         if (!canonical) return;
@@ -312,6 +330,7 @@ class CricketDataProcessor {
         this.playerNameMap[canonical].batting.push({
           matchUrl: match.url,
           matchNumber: matchIndex + 1,
+          matchDate: match.matchDate || null,
           runs: bat.runs,
           balls: bat.balls,
           fours: bat.fours,
@@ -340,6 +359,7 @@ class CricketDataProcessor {
         this.playerNameMap[canonical].bowling.push({
           matchUrl: match.url,
           matchNumber: matchIndex + 1,
+          matchDate: match.matchDate || null,
           overs: bowl.overs,
           maidens: bowl.maidens,
           runs: bowl.runs,
@@ -369,6 +389,7 @@ class CricketDataProcessor {
         this.playerNameMap[canonical].fielding.push({
           matchUrl: match.url,
           matchNumber: matchIndex + 1,
+          matchDate: match.matchDate || null,
           catches: field.catches || 0,
           runouts: field.runouts || 0,
           stumpings: field.stumpings || 0
@@ -477,13 +498,17 @@ class CricketDataProcessor {
         return acc;
       }, {});
 
-    const matches = this.data.matches || [];
+    const matches = sortedMatches;
     const lastMatchUrl = matches.length > 0 ? matches[matches.length - 1].url : null;
 
     return {
       tournament: this.data.url,
       totalMatches: matches.length,
       lastMatchUrl: lastMatchUrl,
+      matches: matches.map(match => ({
+        url: match.url,
+        matchDate: match.matchDate || null
+      })),
       teams: teamsMap,
       players: sortedPlayers
     };

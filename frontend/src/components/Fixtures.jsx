@@ -3,8 +3,107 @@ import api from '../api/api';
 import { useNotify } from '../hooks/useNotify';
 import MatchBreakdownModal from './MatchBreakdownModal';
 
+const toIsoDay = (value) => {
+    if (!value) return null;
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return null;
+    return parsed.toISOString().slice(0, 10);
+};
+
+const addOneDayIso = (isoDay) => {
+    if (!isoDay) return null;
+    const parsed = new Date(`${isoDay}T00:00:00Z`);
+    if (Number.isNaN(parsed.getTime())) return null;
+    parsed.setUTCDate(parsed.getUTCDate() + 1);
+    return parsed.toISOString().slice(0, 10);
+};
+
+const extractTeamsFromMatchUrl = (matchUrl) => {
+    if (!matchUrl || typeof matchUrl !== 'string') return [];
+    const parts = matchUrl.split('/');
+    const slug = parts.find((segment) => segment.includes('-vs-'));
+    if (!slug) return [];
+
+    const [teamA, teamBRest] = slug.split('-vs-');
+    if (!teamA || !teamBRest) return [];
+
+    const teamBMatch = teamBRest.match(/^(.+?)-\d+(?:st|nd|rd|th)-match/);
+    const teamB = teamBMatch ? teamBMatch[1] : teamBRest;
+
+    if (!teamA || !teamB) return [];
+    return [teamA, teamB];
+};
+
+const buildRoundMatchDays = (stats) => {
+    const rawMatches = Array.isArray(stats?.matches) ? stats.matches : [];
+    if (rawMatches.length === 0) return {};
+
+    const dedupedByUrl = new Map();
+    rawMatches.forEach((entry) => {
+        const url = entry?.url;
+        const day = toIsoDay(entry?.matchDate || entry?.date || entry?.match_date);
+        if (!url || !day) return;
+
+        const existing = dedupedByUrl.get(url);
+        if (!existing || day < existing) {
+            dedupedByUrl.set(url, day);
+        }
+    });
+
+    const teamToDays = new Map();
+    dedupedByUrl.forEach((day, url) => {
+        const teams = extractTeamsFromMatchUrl(url);
+        teams.forEach((teamSlug) => {
+            if (!teamToDays.has(teamSlug)) {
+                teamToDays.set(teamSlug, new Set());
+            }
+            teamToDays.get(teamSlug).add(day);
+        });
+    });
+
+    const teams = Array.from(teamToDays.keys());
+    if (teams.length < 2) return {};
+
+    const orderedDaysByTeam = new Map();
+    teams.forEach((teamSlug) => {
+        const ordered = Array.from(teamToDays.get(teamSlug)).sort();
+        orderedDaysByTeam.set(teamSlug, ordered);
+    });
+
+    const roundDayMap = {};
+    for (let round = 1; round <= 40; round += 1) {
+        let completionDay = null;
+
+        for (const teamSlug of teams) {
+            const teamDays = orderedDaysByTeam.get(teamSlug) || [];
+            const nthDay = teamDays[round - 1];
+            if (!nthDay) {
+                return roundDayMap;
+            }
+            if (!completionDay || nthDay > completionDay) {
+                completionDay = nthDay;
+            }
+        }
+
+        const matchDay = addOneDayIso(completionDay);
+        if (!matchDay) return roundDayMap;
+        roundDayMap[round] = matchDay;
+    }
+
+    return roundDayMap;
+};
+
+const formatMatchDay = (rawValue) => {
+    if (!rawValue) return 'Pending scraped match dates';
+    if (typeof rawValue === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(rawValue)) return rawValue;
+    const parsed = new Date(rawValue);
+    if (Number.isNaN(parsed.getTime())) return 'Pending scraped match dates';
+    return parsed.toLocaleDateString();
+};
+
 const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrigger }) => {
     const [fixtures, setFixtures] = useState([]);
+    const [roundMatchDays, setRoundMatchDays] = useState({});
     const [roundsInput, setRoundsInput] = useState(1);
     const [ignoreRoundsInput, setIgnoreRoundsInput] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -23,8 +122,12 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrig
         if (!currentLeague) return;
         setLoading(true);
         try {
-            const data = await api.getFixtures(currentLeague.id);
+            const [data, stats] = await Promise.all([
+                api.getFixtures(currentLeague.id),
+                api.getTournamentStats().catch(() => null)
+            ]);
             setFixtures(data);
+            setRoundMatchDays(buildRoundMatchDays(stats));
 
             // Prefer the currently-generated rounds count so the input reflects league state.
             const currentMaxRound = (data || []).reduce((maxRound, match) => {
@@ -199,7 +302,7 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrig
                         </div>
                     )}
                 </div>
-                
+
                 <div className="fixtures-container">
                     {loading ? (
                         <div className="text-center">Loading fixtures...</div>
@@ -226,6 +329,12 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrig
                                     const scoreB = isCompleted ? match.team_b_score : '-';
                                     const classA = isCompleted && match.winner_id === match.team_a_id ? 'winner' : '';
                                     const classB = isCompleted && match.winner_id === match.team_b_id ? 'winner' : '';
+                                    const computedRoundDay = roundMatchDays[Number(match.round_number)] || null;
+                                    const fallbackMatchDay = match.score_due_at || match.finalized_at;
+                                    const matchDayText = formatMatchDay(computedRoundDay || fallbackMatchDay);
+                                    const finalizedText = match.finalized_at
+                                        ? new Date(match.finalized_at).toLocaleString()
+                                        : null;
                                     
                                     return (
                                         <div key={match.id} className="match-card">
@@ -244,6 +353,8 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrig
                                             <div className={`match-score ${isCompleted ? 'completed' : ''}`}>
                                                 {scoreA} - {scoreB}
                                                 <div className="match-status">{match.status}</div>
+                                                <div className="match-meta">Match Day: {matchDayText}</div>
+                                                {finalizedText && <div className="match-meta">Finalized: {finalizedText}</div>}
                                             </div>
                                             {isCompleted ? (
                                                 <button
