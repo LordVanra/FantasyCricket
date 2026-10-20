@@ -106,7 +106,7 @@ class CricketScraper {
 
   async scrapeMatch(matchUrl) {
     try {
-      const response = await axios.get(matchUrl, { headers: this.headers });
+      const response = await axios.get(matchUrl, { headers: this.headers, timeout: 30000 });
       const $ = cheerio.load(response.data);
       const matchDate = this.extractMatchDate(response.data, $);
 
@@ -262,7 +262,7 @@ class CricketScraper {
 
       return { batting: battingData, bowling: bowlingData, fielding: fielding, matchDate };
     } catch (error) {
-      return { batting: [], bowling: [], fielding: [], matchDate: null };
+      throw new Error(`Scorecard fetch failed for ${matchUrl}: ${error.message}`);
     }
   }
 
@@ -272,7 +272,7 @@ class CricketScraper {
       // First try the new ESPNCricinfo layout: /squads
       const teamsUrl = `https://www.espncricinfo.com/series/${this.seriesSlug}-${this.seriesId}/squads`;
       console.log(`Scraping teams from: ${teamsUrl}`);
-      const response = await axios.get(teamsUrl, { headers: this.headers });
+      const response = await axios.get(teamsUrl, { headers: this.headers, timeout: 30000 });
       const $ = cheerio.load(response.data);
 
       const teamLinks = [];
@@ -299,7 +299,7 @@ class CricketScraper {
           teamName = teamName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
           console.log(`  Scraping squad for: ${teamName}`);
-          const teamResp = await axios.get(teamUrl, { headers: this.headers });
+          const teamResp = await axios.get(teamUrl, { headers: this.headers, timeout: 30000 });
           const $team = cheerio.load(teamResp.data);
 
           if (!squads[teamName]) squads[teamName] = [];
@@ -323,7 +323,7 @@ class CricketScraper {
 
           await new Promise(r => setTimeout(r, 1500));
         } catch (err) {
-          console.log(`  Could not scrape squad for team URL: ${teamUrl} - ${err.message}`);
+          throw new Error(`Squad fetch failed for ${teamUrl}: ${err.message}`);
         }
       }
 
@@ -331,8 +331,7 @@ class CricketScraper {
       console.log(`Scraped ${Object.keys(squads).length} team squads with ${totalPlayers} total players`);
 
     } catch (error) {
-      console.log(`Could not scrape squads page: ${error.message}`);
-      console.log('Bench players may not be included in the draft pool.');
+      throw new Error(`Squad scraping failed: ${error.message}`);
     }
     return squads;
   }
@@ -347,7 +346,7 @@ class CricketScraper {
     try {
       const resultsUrl = `https://www.espncricinfo.com/series/${this.seriesSlug}-${this.seriesId}/match-results`;
 
-      const response = await axios.get(resultsUrl, { headers: this.headers });
+      const response = await axios.get(resultsUrl, { headers: this.headers, timeout: 30000 });
       const $ = cheerio.load(response.data);
 
       const matchUrls = [];
@@ -375,14 +374,14 @@ class CricketScraper {
       }
 
     } catch (error) {
-      console.error('Error:', error.message);
+      throw new Error(`Tournament scraping failed: ${error.message}`);
     }
 
     // Scrape full team rosters
     try {
       layers.squads = await this.scrapeSquads();
     } catch (error) {
-      console.log('Squad scraping failed, continuing without roster data:', error.message);
+      throw error;
     }
 
     return layers;
@@ -396,6 +395,9 @@ if (require.main === module) {
   new CricketScraper(url).scrape().then(data => {
     fs.writeFileSync(outputFile, JSON.stringify(data, null, 2), 'utf8');
     console.log(`Saved to ${outputFile}`);
+  }).catch(error => {
+    console.error(error.message);
+    process.exitCode = 1;
   });
 }
 
