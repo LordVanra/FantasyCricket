@@ -119,6 +119,14 @@ const getTodayLocalIsoDay = () => {
     return `${year}-${month}-${day}`;
 };
 
+const getEffectiveRoundNumber = (roundNumber, ignoredRounds) => {
+    const baseRound = Number(roundNumber);
+    const ignore = Number(ignoredRounds);
+    const normalizedRound = Number.isFinite(baseRound) ? Math.max(1, Math.floor(baseRound)) : 1;
+    const normalizedIgnore = Number.isFinite(ignore) ? Math.max(0, Math.floor(ignore)) : 0;
+    return normalizedRound + normalizedIgnore;
+};
+
 const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrigger }) => {
     const [fixtures, setFixtures] = useState([]);
     const [roundMatchDays, setRoundMatchDays] = useState({});
@@ -210,21 +218,11 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrig
     };
 
     const autoUpdateScoresIfDue = async () => {
-        if (!currentLeague || autoUpdateInFlightRef.current) return;
-
-        const today = getTodayLocalIsoDay();
-        const lastRun = window.localStorage.getItem(getAutoUpdateStorageKey(currentLeague.id));
-        if (lastRun === today) return;
+        if (!currentLeague || !isCommissioner || autoUpdateInFlightRef.current) return;
 
         const hasDueMatch = (fixtures || []).some((match) => {
             if (!match || match.status === 'completed') return false;
-
-            const roundDay = roundMatchDays[Number(match.round_number)] || null;
-            const fallbackDay = toLocalIsoDay(match.score_due_at);
-            const dueDay = roundDay || fallbackDay;
-
-            if (!dueDay) return false;
-            return dueDay <= today;
+            return match.score_due_at && Date.parse(match.score_due_at) <= Date.now();
         });
 
         if (!hasDueMatch) return;
@@ -233,7 +231,6 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrig
         try {
             const ignoredRounds = Math.max(0, Math.min(20, Number(ignoreRoundsInput) || 0));
             const count = await api.updateRoundScores(currentLeague.id, ignoredRounds);
-            window.localStorage.setItem(getAutoUpdateStorageKey(currentLeague.id), today);
 
             if ((count || 0) > 0) {
                 notify(`Auto-updated ${count} match(es).`, 'success');
@@ -253,7 +250,7 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrig
         autoUpdateScoresIfDue();
         const timer = window.setInterval(autoUpdateScoresIfDue, 60 * 1000);
         return () => window.clearInterval(timer);
-    }, [currentLeague, fixtures, roundMatchDays, ignoreRoundsInput]);
+    }, [currentLeague, fixtures, roundMatchDays, ignoreRoundsInput, isCommissioner]);
 
     const closeBreakdownModal = () => {
         setBreakdownOpen(false);
@@ -367,6 +364,20 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrig
                         Object.keys(rounds).sort((a, b) => parseInt(a) - parseInt(b)).map((roundNum) => (
                             <div key={`round-${roundNum}`} className="fixture-round">
                                 <div className="round-header">Round {roundNum}</div>
+                                {isCommissioner && rounds[roundNum].every(m => m.status !== 'completed') && (
+                                    <form onSubmit={async event => {
+                                        event.preventDefault();
+                                        const input = event.currentTarget.elements.deadline.value;
+                                        try {
+                                            await api.setRoundDueDate(currentLeague.id, Number(roundNum), new Date(input).toISOString());
+                                            await loadFixtures();
+                                            notify('Scoring deadline saved.', 'success');
+                                        } catch (error) { notify(error.message, 'error'); }
+                                    }}>
+                                        <label>Scoring deadline (your local time) <input name="deadline" type="datetime-local" required /></label>
+                                        <button className="btn btn-outline" type="submit">Save deadline</button>
+                                    </form>
+                                )}
                                 {rounds[roundNum].map((match) => {
                                     const teamA = usersList.find((u) => u.id === match.team_a_id);
                                     const teamB = usersList.find((u) => u.id === match.team_b_id);
@@ -377,9 +388,10 @@ const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrig
                                     const scoreB = isCompleted ? match.team_b_score : '-';
                                     const classA = isCompleted && match.winner_id === match.team_a_id ? 'winner' : '';
                                     const classB = isCompleted && match.winner_id === match.team_b_id ? 'winner' : '';
-                                    const computedRoundDay = roundMatchDays[Number(match.round_number)] || null;
+                                    const effectiveRound = getEffectiveRoundNumber(match.round_number, ignoreRoundsInput);
+                                    const computedRoundDay = roundMatchDays[effectiveRound] || null;
                                     const fallbackMatchDay = match.score_due_at || match.finalized_at;
-                                    const matchDayText = formatMatchDay(computedRoundDay || fallbackMatchDay);
+                                    const matchDayText = match.score_due_at ? new Date(match.score_due_at).toLocaleString() : 'Set scoring deadline';
                                     const finalizedText = match.finalized_at
                                         ? new Date(match.finalized_at).toLocaleString()
                                         : null;

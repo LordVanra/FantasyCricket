@@ -28,7 +28,7 @@ const LeagueView = ({ currentUser, currentLeague, onLeagueChange }) => {
         try {
             const league = await api.createLeague(name, code, currentUser.id);
             await api.joinLeague(currentUser.id, league.id);
-            notify(`League "${name}" created! Code: ${code}`, 'success');
+            notify(`League "${name}" created! Code: ${league.code}`, 'success');
             setCreateName('');
             loadLeagues();
             onLeagueChange(league.id);

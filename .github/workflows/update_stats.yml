@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      FANTASY_API_URL: ${{ secrets.FANTASY_API_URL }}
+      STATS_SYNC_TOKEN: ${{ secrets.STATS_SYNC_TOKEN }}
       TOURNAMENT_URL: ${{ secrets.TOURNAMENT_URL }}
       MIN_MATCHES: '1'
       MIN_PLAYERS: '120'
@@ -28,15 +28,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: backend/package-lock.json
 
       - name: Validate required secrets
         run: |
           test -n "$TOURNAMENT_URL" || (echo "TOURNAMENT_URL secret is missing" && exit 1)
-          test -n "$SUPABASE_URL" || (echo "SUPABASE_URL secret is missing" && exit 1)
-          test -n "$SUPABASE_ANON_KEY" || (echo "SUPABASE_ANON_KEY secret is missing" && exit 1)
+          test -n "$FANTASY_API_URL" || (echo "FANTASY_API_URL secret is missing" && exit 1)
+          test -n "$STATS_SYNC_TOKEN" || (echo "STATS_SYNC_TOKEN secret is missing" && exit 1)
 
       - name: Install dependencies
         working-directory: backend
@@ -96,7 +96,7 @@ jobs:
           console.log('Processed validation passed:', {players, teams});
           "
 
-      - name: Sync to Supabase
+      - name: Sync to Cloudflare D1
         working-directory: backend
         run: |
           node -e "const { syncStats } = require('./dbSync'); syncStats().catch((e) => { console.error(e); process.exit(1); });"

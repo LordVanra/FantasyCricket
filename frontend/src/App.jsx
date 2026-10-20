@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Navbar from './components/Navbar';
 import AuthView from './components/AuthView';
 import DraftPanel from './components/DraftPanel';
@@ -34,6 +34,7 @@ const App = () => {
     const [dataLoading, setDataLoading] = useState(false);
     const [scoreboardTrigger, setScoreboardTrigger] = useState(0);
     const [selectedPlayerName, setSelectedPlayerName] = useState(null);
+    const dataGeneration = useRef(0);
 
     const getLineupTypeCounts = useCallback((lineup) => {
         const counts = { batsman: 0, bowler: 0, allrounder: 0 };
@@ -73,15 +74,19 @@ const App = () => {
     const lineupValidation = validateStarting11(starting11);
 
     const loadData = useCallback(async () => {
-        if (!user) return;
+        if (!user || !league) return;
+        const generation = ++dataGeneration.current;
         setDataLoading(true);
         try {
             const leagueId = league ? league.id : null;
-            const [statsData, draftedData, uList] = await Promise.all([
+            const [statsData, draftedData, uList, teamData, tradesData] = await Promise.all([
                 api.getTournamentStats(),
                 api.getDraftedPlayers(leagueId),
-                api.getAllUsers(leagueId)
+                api.getAllUsers(leagueId),
+                api.getUserTeam(user.id, league.id),
+                api.getTrades(user.id)
             ]);
+            if (generation !== dataGeneration.current) return;
             
             setAllPlayersData(statsData || { players: {} });
             setDraftedPlayers(draftedData || []);
@@ -90,20 +95,18 @@ const App = () => {
             const mySquadPlayers = (draftedData || []).filter(dp => dp.user_id === user.id).map(dp => dp.player_id);
             setMySquad(mySquadPlayers);
 
-            const teamData = await api.getUserTeam(user.id);
             if (teamData && teamData.starting_11) {
                 setStarting11(teamData.starting_11.filter(name => mySquadPlayers.includes(name)));
             } else {
                 setStarting11([]);
             }
 
-            const tradesData = await api.getTrades(user.id);
             setPendingTrades(tradesData || []);
 
         } catch (error) {
-            notify(`Error loading data: ${error.message}`, 'error');
+            if (generation === dataGeneration.current) notify(`Error loading data: ${error.message}`, 'error');
         } finally {
-            setDataLoading(false);
+            if (generation === dataGeneration.current) setDataLoading(false);
         }
     }, [user, league, notify]);
 
@@ -143,11 +146,10 @@ const App = () => {
                 const randomName = candidates[Math.floor(Math.random() * candidates.length)];
                 
                 await api.makeDraftPick(league.id, timeoutUserId, randomName, timeoutPick);
-                await api.draftPlayer(randomName, randomName, timeoutUserId, league.id);
 
                 setDraftedPlayers((prev) => {
                     if (prev.some((pick) => pick.player_id === randomName)) return prev;
-                    return [...prev, { player_id: randomName, user_id: timeoutUserId }];
+                    return [...prev, { player_id: randomName, player_name: randomName, user_id: timeoutUserId }];
                 });
             }
         } catch (error) {
@@ -179,11 +181,18 @@ const App = () => {
 
     // Load data when user/league changes
     useEffect(() => {
+        setDraftedPlayers([]); setMySquad([]); setStarting11([]); setPendingTrades([]); setUsersList([]);
         loadData();
+        return () => { dataGeneration.current++; };
     }, [user?.id, league?.id]);
 
     useEffect(() => {
         if (!draft.draftState) return;
+        const picks = draft.draftState.picks || [];
+        if (draft.draftState.is_active) {
+            setDraftedPlayers(picks.map(p => ({ ...p, player_name: p.player_id, league_id: league?.id })));
+            setMySquad(picks.filter(p => p.user_id === user?.id).map(p => p.player_id));
+        }
         if (!draft.draftState.is_active && draft.draftState.current_pick > 0) {
             loadData();
         }
@@ -198,6 +207,7 @@ const App = () => {
             <>
                 <Navbar authData={auth} />
                 <main className="container">
+                    {auth.error && <div role="alert" className="card">{auth.error} <button className="btn" onClick={auth.retry}>Retry connection</button></div>}
                     <AuthView authData={auth} />
                 </main>
             </>
@@ -234,7 +244,7 @@ const App = () => {
 
     const handleAccountDeleted = () => {
         notify('Account deleted. Goodbye.', 'info');
-        signOut();
+        auth.retry();
     };
 
     const renderTabContent = () => {

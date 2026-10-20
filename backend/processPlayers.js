@@ -523,7 +523,7 @@ class CricketDataProcessor {
 
     // Automated database sync
     if (sync) {
-      await syncStats();
+      await syncStats(outputFile);
     }
   }
 }

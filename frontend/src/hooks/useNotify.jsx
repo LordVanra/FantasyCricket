@@ -6,7 +6,7 @@ export const NotifyProvider = ({ children }) => {
     const [notifications, setNotifications] = useState([]);
 
     const notify = useCallback((message, type = 'info') => {
-        const id = Date.now();
+        const id = crypto.randomUUID();
         setNotifications((prev) => [...prev, { id, message, type }]);
         setTimeout(() => {
             setNotifications((prev) => prev.filter((n) => n.id !== id));

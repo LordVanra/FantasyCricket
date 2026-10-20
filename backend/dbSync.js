@@ -1,49 +1,16 @@
 const fs = require('fs');
 const path = require('path');
-const supabase = require('./supabase');
-
-async function syncStats() {
-    try {
-        const statsPath = path.join(__dirname, 'stats.json');
-        const statsData = JSON.parse(fs.readFileSync(statsPath, 'utf8'));
-
-        const { data, error } = await supabase
-            .from('tournament_stats')
-            .upsert({
-                id: 1,
-                tournament_url: statsData.tournament,
-                data: statsData,
-                updated_at: new Date()
-            }, { onConflict: 'id' });
-
-        if (error) throw error;
-        console.log('Successfully synced stats.json to Supabase!');
-    } catch (error) {
-        console.error('Error syncing stats:', error.message);
-        throw error;
-    }
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+async function syncStats(file = path.join(__dirname, 'stats.json')) {
+    const base = process.env.FANTASY_API_URL;
+    const token = process.env.STATS_SYNC_TOKEN;
+    if (!base || !token) throw new Error('Set FANTASY_API_URL and STATS_SYNC_TOKEN for the Cloudflare backend');
+    const stats = JSON.parse(fs.readFileSync(file, 'utf8'));
+    const result = await fetch(`${base.replace(/\/$/, '')}/api/admin/stats`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(stats), signal: AbortSignal.timeout(30000)
+    });
+    if (!result.ok) throw new Error(`Stats sync failed (${result.status}): ${await result.text()}`);
+    console.log('Tournament statistics synced to Cloudflare D1');
 }
-
-// Function to handle user data
-async function saveUserData(userId, players, starting11) {
-    try {
-        const { data, error } = await supabase
-            .from('users')
-            .upsert({
-                id: userId,
-                players: players,
-                starting11: starting11,
-                updated_at: new Date()
-            }, { onConflict: 'id' });
-
-        if (error) throw error;
-        console.log(`Successfully saved data for user ${userId}`);
-    } catch (error) {
-        console.error('Error saving user data:', error.message);
-    }
-}
-
-// Uncomment to run immediately
-// syncStats();
-
-module.exports = { syncStats, saveUserData };
+module.exports = { syncStats };

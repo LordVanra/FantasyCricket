@@ -25,7 +25,9 @@ export function useDraft(leagueId, userId, onTimeout, options = {}) {
     }, [leagueId]);
 
     useEffect(() => {
-        fetchDraftState();
+        setDraftState(null);
+        instantAutoDraftedPickRef.current = -1;
+        timedAutoDraftedPickRef.current = -1;
         if (!leagueId) return;
 
         const channel = api.subscribeToDraft(leagueId, (newState) => {
@@ -105,7 +107,6 @@ export function useDraft(leagueId, userId, onTimeout, options = {}) {
             return false;
         }
         try {
-            await api.clearLeagueSquads(leagueId);
             await api.startDraft(leagueId, shuffled);
             notify('Draft started! Existing squads were cleared.', 'success');
             return true;
@@ -140,8 +141,8 @@ export function useDraft(leagueId, userId, onTimeout, options = {}) {
             return;
         }
         try {
-            await api.makeDraftPick(leagueId, userId, playerId, draftState.current_pick);
-            await api.draftPlayer(playerId, playerName, userId, leagueId);
+            const nextState = await api.makeDraftPick(leagueId, userId, playerId, draftState.current_pick);
+            setDraftState(nextState);
             notify(`Drafted ${playerName}! (Pick ${draftState.current_pick + 1})`, 'success');
         } catch (error) {
             notify('Draft failed: ' + error.message, 'error');
