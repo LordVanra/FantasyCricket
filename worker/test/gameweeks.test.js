@@ -60,3 +60,18 @@ test('a postponed match never reopens a locked lineup',()=>{
  assert.equal(s.gameweeks[0].lock_at,new Date(at(10)).toISOString());
  assert.throws(()=>saveGameweekLineup(s,'a',1,s.teams.a.starting_11,stats,at(12)),/locked/);
 });
+
+test('match details snapshot raw stats separately from points and retain the assigned fixture',()=>{
+ const {s,stats}=setup();createGameweeks(s,'a',stats,1,1,at(0));
+ stats.players.P0.batting=[{matchUrl:'ab1',runs:40,balls:25,sr:160,fours:4,sixes:2},{matchUrl:'ab2',runs:999}];
+ stats.players.P0.bowling=[{matchUrl:'ab1',overs:4,runs:28,economy:7,wickets:2}];
+ stats.players.P0.fielding=[{matchUrl:'ab1',catches:1,stumpings:1,runouts:1}];
+ stats.schedule.forEach(m=>m.completed=true);stats.matches=stats.schedule.map(m=>({url:m.url}));
+ advanceGameweeks(s,stats,at(50));
+ const row=s.matches[0].breakdowns.a.players[0];
+ assert.equal(row.stats.batting.balls,25);assert.equal(row.stats.batting.sr,160);
+ assert.equal(row.stats.bowling.wickets,2);assert.equal(row.breakdown.bowling.wickets,40);
+ assert.equal(row.points,114);assert.equal(row.stats.batting.runs,40);
+ stats.players.P0.batting[0].runs=900;advanceGameweeks(s,stats,at(60));
+ assert.equal(s.matches[0].breakdowns.a.players[0].stats.batting.runs,40);
+});

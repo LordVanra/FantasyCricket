@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/api';
-import MatchBreakdownModal from './MatchBreakdownModal';
+import MatchDetail from './MatchDetail';
 
 const time = value => value ? new Date(value).toLocaleString() : 'Awaiting schedule';
 function GameweekLineup({ week, squad, players, leagueId, onSaved }) {
@@ -50,11 +50,8 @@ export default function Fixtures({ currentLeague, currentUser, usersList, isComm
     const week=data.weeks.find(w=>w.number===selected) || data.weeks[0];
     const matches=week?data.matches.filter(m=>m.round_number===week.number):data.matches;
     const name=id=>usersList.find(u=>u.id===id)?.username || 'Unknown';
-    const open=async(match,id)=>{
-        setModal({match,teamName:name(id),loading:true});
-        try {const breakdown=await api.getMatchTeamBreakdown(match.id,id);setModal({match,teamName:name(id),breakdown});}
-        catch(e){setModal({match,teamName:name(id),error:e.message});}
-    };
+    const open=match=>setModal(match);
+    if(modal) return <MatchDetail match={data.matches.find(m=>m.id===modal.id) || modal} week={data.weeks.find(w=>w.number===modal.round_number)} name={name} onClose={()=>setModal(null)}/>;
     return <section id="fixtures-view" className="tab-content gameweeks-view">
         <div className="card">
             <h2>Head-to-head gameweeks</h2>
@@ -81,6 +78,7 @@ export default function Fixtures({ currentLeague, currentUser, usersList, isComm
         {week && <div className="card">
             <h3>Gameweek {week.number} · {week.status}</h3>
             <p>Lineup deadline: <strong>{time(week.lock_at)}</strong> (your local time)</p>
+            <p>Expected finish: <strong>{time(new Date(Math.max(...week.team_matches.map(m=>Date.parse(m.startTime)))+4*3600000).toISOString())}</strong> Â· estimate; results finalize after all scorecards are imported.</p>
             <p>{week.completed_teams || 0}/{week.team_matches.length} IPL team results imported</p>
             <details><summary>Which IPL match counts for each team?</summary>
                 <ul>{week.team_matches.map(m=><li key={m.team}><strong>{m.team}</strong>: match {week.ipl_round} · {time(m.startTime)} · <a href={m.url} target="_blank" rel="noreferrer">Scorecard</a></li>)}</ul>
@@ -90,13 +88,13 @@ export default function Fixtures({ currentLeague, currentUser, usersList, isComm
             <h3>{week?'Matchups':'Fixtures'}</h3>
             {week && !matches.some(m=>[m.team_a_id,m.team_b_id].includes(currentUser.id)) && <p>You have a bye this gameweek. No head-to-head league points are awarded.</p>}
             {!matches.length && <p>No matchups yet.</p>}
-            {matches.map(m=><div key={m.id} className="match-card">
-                <button className="match-team-btn" disabled={!['live','completed'].includes(m.status)} onClick={()=>open(m,m.team_a_id)}>{name(m.team_a_id)}</button>
-                <div className="match-score">{m.status==='pending'?'—':m.team_a_score} : {m.status==='pending'?'—':m.team_b_score}<div className="match-status">{m.status}</div></div>
-                <button className="match-team-btn" disabled={!['live','completed'].includes(m.status)} onClick={()=>open(m,m.team_b_id)}>{name(m.team_b_id)}</button>
-            </div>)}
+            {matches.map(m=><button type="button" key={m.id} className="match-card matchup-link" onClick={()=>open(m)}>
+                <strong>{name(m.team_a_id)}</strong>
+                <div className="match-score">{m.status==='pending'?'â€”':m.team_a_score} : {m.status==='pending'?'â€”':m.team_b_score}<div className="match-status">{m.status} Â· View both XIs â†’</div>
+                <small>{m.finalized_at ? `Finalized ${time(m.finalized_at)}` : week ? `Expected finish ${time(new Date(Math.max(...week.team_matches.map(t=>Date.parse(t.startTime)))+4*3600000).toISOString())}` : 'Finish date unavailable'}</small></div>
+                <strong>{name(m.team_b_id)}</strong>
+            </button>)}
         </div>
         {week && <GameweekLineup key={leagueId+'-'+week.number} week={week} leagueId={leagueId} squad={data.squad} players={data.stats.players || {}} onSaved={reload}/>}
-        <MatchBreakdownModal isOpen={!!modal} {...modal} onClose={()=>setModal(null)}/>
     </section>;
 }

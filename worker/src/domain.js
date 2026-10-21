@@ -123,7 +123,7 @@ export function playerPoints(player = {}, round) {
     bowling: { economy: number(w.overs) > 0 ? 10 - number(w.economy) : 0, wickets: number(w.wickets) * 20 },
     fielding: { catches: number(f.catches) * 8, stumpings: number(f.stumpings) * 5, runouts: number(f.runouts) * 4 }
   };
-  return { points: Math.round(Object.values(breakdown).flatMap(Object.values).reduce((a, b) => a + b, 0) * 10) / 10, breakdown };
+  return { stats: { batting: { runs: number(b.runs), balls: number(b.balls), sr: number(b.sr), fours: number(b.fours), sixes: number(b.sixes) }, bowling: { overs: number(w.overs), runs: number(w.runs), economy: number(w.economy), wickets: number(w.wickets), maidens: number(w.maidens), dots: number(w.dots) }, fielding: { catches: number(f.catches), stumpings: number(f.stumpings), runouts: number(f.runouts) } }, points: Math.round(Object.values(breakdown).flatMap(Object.values).reduce((a, b) => a + b, 0) * 10) / 10, breakdown };
 }
 export function finalizeScores(s, actor, stats, ignored) {
   commissioner(s, actor);

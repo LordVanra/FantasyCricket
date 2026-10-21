@@ -1655,3 +1655,13 @@ tr:last-child td {
 .gameweek-lineup input { width: auto; }
 .gameweeks-view details li { margin: 10px 0; }
 .gameweeks-view a { color: var(--accent, #36d5ad); }
+.matchup-link { width:100%; color:inherit; font:inherit; text-align:center; cursor:pointer; }
+.matchup-link:hover { outline:2px solid var(--accent, #6d7cff); }
+.matchup-link small { display:block; font-size:12px; margin-top:8px; }
+.match-detail-teams { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+.match-player { border-top:1px solid #ffffff26; padding:16px 0; }
+.match-player h4 { display:flex; justify-content:space-between; gap:12px; }
+.match-player p { line-height:1.8; }
+.points-contributions { display:grid; grid-template-columns:1fr auto; gap:8px; }
+.points-contributions dd { margin:0; }
+@media(max-width:800px) { .match-detail-teams { grid-template-columns:1fr; } }
