@@ -1638,3 +1638,11 @@ tr:last-child td {
         padding: 0.75rem 1rem;
     }
 }
+.draft-chat { margin-bottom: 20px; }
+.draft-chat-log { max-height: 220px; min-height: 70px; overflow-y: auto; margin: 12px 0; }
+.draft-chat-message { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+.draft-chat-message time { color: var(--text-dim); font-size: .75rem; }
+.draft-chat-message p { margin: 4px 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.draft-chat-form { display: grid; gap: 8px; }
+.draft-chat-form textarea { width: 100%; resize: vertical; min-height: 60px; background: rgba(255,255,255,.05); color: var(--text); border: 1px solid rgba(255,255,255,.2); border-radius: 8px; padding: 10px; font: inherit; }
+.draft-chat-form > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; }

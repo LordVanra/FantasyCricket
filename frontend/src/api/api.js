@@ -8,6 +8,8 @@ const api = {
     signUp: async (email, password) => ({ data: await call('signUp', { email, password }) }),
     signIn: async (email, password) => ({ data: await call('signIn', { email, password }) }),
     signOut: () => call('signOut'), getUser: () => call('getUser'),
+    getDraftChat: leagueId => call('getDraftChat', { leagueId }),
+    sendDraftChat: (leagueId, message) => call('sendDraftChat', { leagueId, message }),
     getTournamentStats: () => call('getTournamentStats'),
     getDraftedPlayers: leagueId => call('getDraftedPlayers', { leagueId }),
     isPlayerDrafted: (playerId, leagueId) => call('isPlayerDrafted', { playerId, leagueId }),

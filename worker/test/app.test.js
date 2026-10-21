@@ -131,6 +131,32 @@ test('HTTP auth, sessions, server authority, stats upload and logout', async () 
   assert.equal((await request('getLeagues', {}, { Origin: 'https://fantasycricketgame.vercel.app.evil.example' })).status, 403);
   const uploaded = await worker.fetch(new Request('https://example.com/api/admin/stats', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer test-token' }, body: JSON.stringify(stats) }), env);
   assert.equal(uploaded.status, 200);
+  const fullStats = { ...stats, tournament: 'season-test', teams: { Alpha: ['m1'], Beta: ['m1'] }, matches: [{ url: 'm1' }] };
+  const upload = data => worker.fetch(new Request('https://example.com/api/admin/stats', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer test-token' }, body: JSON.stringify(data) }), env);
+  assert.equal((await upload(fullStats)).status, 200);
+  assert.equal((await upload({ ...fullStats, matches: [] })).status, 409);
+  assert.equal((await upload({ ...fullStats, teams: { Alpha: ['m1'] } })).status, 409);
   assert.equal(Object.keys((await request('getTournamentStats')).data.players).length, 66);
+  assert.equal((await request('getDraftChat', { leagueId: 'default' })).data.length, 0);
+  assert.equal((await request('sendDraftChat', { leagueId: 'default', message: '   ' })).status, 400);
+  assert.equal((await request('sendDraftChat', { leagueId: 'default', message: 'x'.repeat(1001) })).status, 400);
+  const chat = await request('sendDraftChat', { leagueId: 'default', message: '<b>My pick</b>', username: 'imposter' });
+  assert.equal(chat.status, 200); assert.equal(chat.data.username, 'alice');
+  assert.equal(chat.data.message, '<b>My pick</b>');
+  assert.equal((await request('sendDraftChat', { leagueId: 'default', message: 'spam' })).status, 429);
+  assert.equal((await request('getDraftChat', { leagueId: 'default' })).data.length, 1);
+  const other = emptyLeague('private', 'Private league', 'PRIVATE', { id: 'other', username: 'other' });
+  await env.DB.prepare('INSERT INTO leagues(id,code,state) VALUES(?,?,?)').bind(other.id, other.code, JSON.stringify(other)).run();
+  assert.equal((await request('getDraftChat', { leagueId: 'private' })).status, 403);
+  assert.equal((await request('sendDraftChat', { leagueId: 'private', message: 'intrusion' })).status, 403);
   await request('signOut'); assert.equal((await request('getUser')).data, null);
+});
+
+test('players with no appearances can fill an entire draft', () => {
+  const s = league();
+  const preseason = { players: Object.fromEntries(Object.entries(players).map(([name, p]) => [name, { ...p, batting: [], bowling: [], fielding: [], matches: [] }])), matches: [] };
+  startDraft(s, 'a', ['a', 'b'], preseason);
+  for (let i = 0; i < 44; i++) { const id = i % 2 ? 'b' : 'a'; pick(s, id, id, 'P' + i, i, preseason); }
+  assert.equal(s.drafted.length, 44); assert.equal(s.draft.is_active, false);
+  assert.equal(playerPoints(preseason.players.P0, 1).points, 0);
 });

@@ -19,8 +19,9 @@ jobs:
       FANTASY_API_URL: ${{ secrets.FANTASY_API_URL }}
       STATS_SYNC_TOKEN: ${{ secrets.STATS_SYNC_TOKEN }}
       TOURNAMENT_URL: ${{ secrets.TOURNAMENT_URL }}
-      MIN_MATCHES: '1'
+      MIN_MATCHES: '0'
       MIN_PLAYERS: '120'
+      MIN_TEAMS: '10'
 
     steps:
       - name: Checkout repository
@@ -48,6 +49,10 @@ jobs:
             npm install
           fi
 
+      - name: Test roster and scraper behavior
+        working-directory: backend
+        run: node --test test/*.test.cjs
+
       - name: Run scraper
         working-directory: backend
         run: node datascrape.js "$TOURNAMENT_URL" "data.json"
@@ -61,11 +66,11 @@ jobs:
           const matches=(d.matches||[]).length;
           const squads=Object.values(d.squads||{}).reduce((n,arr)=>n+(Array.isArray(arr)?arr.length:0),0);
           const teams=Object.keys(d.squads||{}).length;
-          if(matches < Number(process.env.MIN_MATCHES || 1)) {
+          if(matches < Number(process.env.MIN_MATCHES || 0)) {
             console.error('Scrape validation failed: too few matches ->', matches);
             process.exit(1);
           }
-          if(teams < 2 || squads < 20) {
+          if(teams < Number(process.env.MIN_TEAMS) || squads < Number(process.env.MIN_PLAYERS)) {
             console.error('Scrape validation failed: squads look incomplete -> teams:', teams, 'players:', squads);
             process.exit(1);
           }
@@ -90,7 +95,7 @@ jobs:
             console.error('Processed validation failed: too few players ->', players);
             process.exit(1);
           }
-          if(teams < 2) {
+          if(teams < Number(process.env.MIN_TEAMS)) {
             console.error('Processed validation failed: too few teams ->', teams);
             process.exit(1);
           }

@@ -305,7 +305,7 @@ class CricketDataProcessor {
     console.log(`Found ${this.fullNames.size} unique full names from batting/bowling`);
 
     // Build teams map: teamName -> ordered list of match URLs
-    const teamsMap = {};
+    const teamsMap = Object.fromEntries(Object.keys(this.data.squads || {}).map(team => [this.normalizeTeamName(team), []]));
     sortedMatches.forEach((match) => {
       const teams = this.extractTeamsFromUrl(match.url);
       teams.forEach(team => {
@@ -503,6 +503,9 @@ class CricketDataProcessor {
 
     return {
       tournament: this.data.url,
+      season: String(this.data.url || '').match(/(?:ipl|indian-premier-league)-(20\d{2})/)?.[1] || null,
+      rosterSource: 'competition-squads',
+      rosterUpdatedAt: new Date().toISOString(),
       totalMatches: matches.length,
       lastMatchUrl: lastMatchUrl,
       matches: matches.map(match => ({

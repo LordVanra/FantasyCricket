@@ -355,10 +355,16 @@ class CricketScraper {
       return layers;
     }
 
+    layers.squads = await this.scrapeSquads();
+
     try {
       const resultsUrl = `https://www.espncricinfo.com/series/${this.seriesSlug}-${this.seriesId}/match-results`;
 
-      const response = await axios.get(resultsUrl, { headers: this.headers, timeout: 30000 });
+      const response = await axios.get(resultsUrl, { headers: this.headers, timeout: 30000 }).catch(error => {
+        // A preseason may have squads before a results page exists. Other errors fail closed.
+        if (error.response?.status === 404 && Object.keys(layers.squads).length >= 2) return { data: '' };
+        throw error;
+      });
       const $ = cheerio.load(response.data);
 
       const matchUrls = [];
@@ -377,13 +383,6 @@ class CricketScraper {
 
     } catch (error) {
       throw new Error(`Tournament scraping failed: ${error.message}`);
-    }
-
-    // Scrape full team rosters
-    try {
-      layers.squads = await this.scrapeSquads();
-    } catch (error) {
-      throw error;
     }
 
     return layers;

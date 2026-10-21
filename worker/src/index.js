@@ -75,6 +75,20 @@ async function rpc(db, user, op, p) {
   if (op === 'getUserTeam') return s.teams[userId] || null;
   if (op === 'getTrades') return s.trades.filter(t => t.sender_id === actor || t.receiver_id === actor);
   if (op === 'getDraftState') return s.draft;
+  if (op === 'getDraftChat') return s.chat || [];
+  if (op === 'sendDraftChat') {
+    check(typeof p.message === 'string' && p.message.trim().length > 0 && p.message.length <= 1000, 'Message must be 1–1000 characters');
+    return mutate(db, leagueId, state => {
+      member(state, actor);
+      state.chat ||= [];
+      const last = [...state.chat].reverse().find(m => m.user_id === actor);
+      check(!last || Date.now() - Date.parse(last.created_at) >= 2000, 'Please wait two seconds between messages', 429);
+      const message = { id: crypto.randomUUID(), user_id: actor, username: user.username, message: p.message.trim(), created_at: now() };
+      state.chat.push(message);
+      state.chat = state.chat.slice(-100);
+      return message;
+    });
+  }
   if (op === 'getLeagueStandings') return standings(s);
   if (op === 'getFixtures') return s.matches.map(({ breakdowns, ...m }) => ({ ...m,
     team_a_name: s.members.find(u => u.id === m.team_a_id)?.username,
@@ -182,6 +196,11 @@ export default {
         check(env.STATS_SYNC_TOKEN && request.headers.get('authorization') === `Bearer ${env.STATS_SYNC_TOKEN}`, 'Invalid sync credentials', 401);
         check(body.players && typeof body.players === 'object' && Object.keys(body.players).length > 0 && Array.isArray(body.matches), 'Invalid tournament data');
         const previous = await stats(env.DB);
+        if (previous.tournament === body.tournament) {
+          check(body.matches.length >= (previous.matches || []).length, 'Update would remove existing match results; refusing incomplete scrape', 409);
+          const oldTeams = Object.keys(previous.teams || {});
+          check(oldTeams.every(team => Object.hasOwn(body.teams || {}, team)), 'Update would remove tournament teams; refusing incomplete scrape', 409);
+        }
         if (previous.tournament && previous.tournament !== body.tournament) {
           const leagues = await stmt(env.DB, 'SELECT id FROM leagues WHERE json_extract(state, \'$.draft\') IS NOT NULL OR json_array_length(state, \'$.matches\') > 0 LIMIT 1').first();
           check(!leagues, 'A different tournament cannot replace statistics used by existing drafts or fixtures. Start a fresh database for a new season.', 409);

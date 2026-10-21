@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Navbar from './components/Navbar';
 import AuthView from './components/AuthView';
 import DraftPanel from './components/DraftPanel';
+import DraftChat from './components/DraftChat';
 import PlayerList from './components/PlayerList';
 import MyTeam from './components/MyTeam';
 import TradeCenter from './components/TradeCenter';
@@ -262,6 +263,8 @@ const App = () => {
                             </div>
                         </div>
 
+                        <p className="hint">{(allPlayersData.season || allPlayersData.tournament?.match(/ipl-(20\d{2})/)?.[1]) ? 'IPL ' + (allPlayersData.season || allPlayersData.tournament.match(/ipl-(20\d{2})/)[1]) : 'Current competition'} squad pool · Includes players with no appearances. {(allPlayersData.season === '2026' || allPlayersData.tournament?.includes('ipl-2026-')) && 'IPL 2027 squads are not loaded yet.'}</p>
+                        {league && <DraftChat key={league.id} leagueId={league.id} />}
                         {hasActiveDraftSession && (
                             <DraftPanel 
                                 draftState={draft.draftState} 

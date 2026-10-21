@@ -123,7 +123,7 @@ const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState,
                             const eco = parseFloat(bowling.economy) || 0;
                             points += 10 - eco;
                         }
-                        points += (parseInt(bowling.wickets) || 0) * 25;
+                        points += (parseInt(bowling.wickets) || 0) * 20;
                         points += (parseInt(fielding.catches) || 0) * 8;
                         points += (parseInt(fielding.stumpings) || 0) * 5;
                         points += (parseInt(fielding.runouts) || 0) * 4;
