@@ -19,6 +19,7 @@ export function validateLineup(s, userId, lineup, stats) {
 }
 export function startDraft(s, actor, order, stats) {
   commissioner(s, actor);
+  check(!s.gameweeks?.length, 'A gameweek season already exists; drafting cannot be restarted');
   check(!s.draft?.is_active, 'A draft is already active');
   check(!s.matches.some(m => m.status === 'completed'), 'Cannot reset squads after scores have been finalized');
   check(Array.isArray(order) && order.length >= 2 && order.length === s.members.length && new Set(order).size === order.length && order.every(id => s.members.some(m => m.id === id)), 'Draft order must contain every member exactly once');
@@ -91,7 +92,7 @@ export function actOnTrade(s, actor, id, action) {
 }
 export function fixtures(s, actor, rounds) {
   commissioner(s, actor);
-  check(Number.isInteger(rounds) && rounds >= 1 && rounds <= 10, 'Rounds must be 1–10');
+  check(Number.isInteger(rounds) && rounds >= 1 && rounds <= 14, 'Rounds must be 1–14');
   check(s.members.length >= 2, 'At least two members are required');
   check(!s.matches.some(m => m.status === 'completed'), 'Completed fixtures cannot be replaced');
   const rotation = s.members.map(m => m.id);

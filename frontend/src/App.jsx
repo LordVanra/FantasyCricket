@@ -341,7 +341,7 @@ const App = () => {
                 );
             case 'fixtures':
                 return (
-                    <Fixtures 
+                    <Fixtures currentUser={user}
                         currentLeague={league} 
                         usersList={usersList} 
                         isCommissioner={isCommissioner} 
@@ -392,7 +392,7 @@ const App = () => {
                         { id: 'dashboard', label: 'Dashboard' },
                         { id: 'trade', label: 'Trade Center' },
                         { id: 'league', label: 'Leagues' },
-                        { id: 'fixtures', label: 'Fixtures' },
+                        { id: 'fixtures', label: 'Gameweeks' },
                         isCommissioner && { id: 'commissioner', label: 'Commissioner' },
                         { id: 'scoreboard', label: 'Scoreboard' },
                         { id: 'account', label: 'Account' },

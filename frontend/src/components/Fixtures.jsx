@@ -1,452 +1,102 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import api from '../api/api';
-import { useNotify } from '../hooks/useNotify';
 import MatchBreakdownModal from './MatchBreakdownModal';
 
-const toIsoDay = (value) => {
-    if (!value) return null;
-    const parsed = new Date(value);
-    if (Number.isNaN(parsed.getTime())) return null;
-    return parsed.toISOString().slice(0, 10);
-};
-
-const addOneDayIso = (isoDay) => {
-    if (!isoDay) return null;
-    const parsed = new Date(`${isoDay}T00:00:00Z`);
-    if (Number.isNaN(parsed.getTime())) return null;
-    parsed.setUTCDate(parsed.getUTCDate() + 1);
-    return parsed.toISOString().slice(0, 10);
-};
-
-const extractTeamsFromMatchUrl = (matchUrl) => {
-    if (!matchUrl || typeof matchUrl !== 'string') return [];
-    const parts = matchUrl.split('/');
-    const slug = parts.find((segment) => segment.includes('-vs-'));
-    if (!slug) return [];
-
-    const [teamA, teamBRest] = slug.split('-vs-');
-    if (!teamA || !teamBRest) return [];
-
-    const teamBMatch = teamBRest.match(/^(.+?)-\d+(?:st|nd|rd|th)-match/);
-    const teamB = teamBMatch ? teamBMatch[1] : teamBRest;
-
-    if (!teamA || !teamB) return [];
-    return [teamA, teamB];
-};
-
-const buildRoundMatchDays = (stats) => {
-    const rawMatches = Array.isArray(stats?.matches) ? stats.matches : [];
-    if (rawMatches.length === 0) return {};
-
-    const dedupedByUrl = new Map();
-    rawMatches.forEach((entry) => {
-        const url = entry?.url;
-        const day = toIsoDay(entry?.matchDate || entry?.date || entry?.match_date);
-        if (!url || !day) return;
-
-        const existing = dedupedByUrl.get(url);
-        if (!existing || day < existing) {
-            dedupedByUrl.set(url, day);
-        }
-    });
-
-    const teamToDays = new Map();
-    dedupedByUrl.forEach((day, url) => {
-        const teams = extractTeamsFromMatchUrl(url);
-        teams.forEach((teamSlug) => {
-            if (!teamToDays.has(teamSlug)) {
-                teamToDays.set(teamSlug, new Set());
-            }
-            teamToDays.get(teamSlug).add(day);
-        });
-    });
-
-    const teams = Array.from(teamToDays.keys());
-    if (teams.length < 2) return {};
-
-    const orderedDaysByTeam = new Map();
-    teams.forEach((teamSlug) => {
-        const ordered = Array.from(teamToDays.get(teamSlug)).sort();
-        orderedDaysByTeam.set(teamSlug, ordered);
-    });
-
-    const roundDayMap = {};
-    for (let round = 1; round <= 40; round += 1) {
-        let completionDay = null;
-
-        for (const teamSlug of teams) {
-            const teamDays = orderedDaysByTeam.get(teamSlug) || [];
-            const nthDay = teamDays[round - 1];
-            if (!nthDay) {
-                return roundDayMap;
-            }
-            if (!completionDay || nthDay > completionDay) {
-                completionDay = nthDay;
-            }
-        }
-
-        const matchDay = addOneDayIso(completionDay);
-        if (!matchDay) return roundDayMap;
-        roundDayMap[round] = matchDay;
-    }
-
-    return roundDayMap;
-};
-
-const formatMatchDay = (rawValue) => {
-    if (!rawValue) return 'Pending scraped match dates';
-    if (typeof rawValue === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(rawValue)) return rawValue;
-    const parsed = new Date(rawValue);
-    if (Number.isNaN(parsed.getTime())) return 'Pending scraped match dates';
-    return parsed.toLocaleDateString();
-};
-
-const toLocalIsoDay = (value) => {
-    if (!value) return null;
-    const parsed = new Date(value);
-    if (Number.isNaN(parsed.getTime())) return null;
-    const year = parsed.getFullYear();
-    const month = String(parsed.getMonth() + 1).padStart(2, '0');
-    const day = String(parsed.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-};
-
-const getTodayLocalIsoDay = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-};
-
-const getEffectiveRoundNumber = (roundNumber, ignoredRounds) => {
-    const baseRound = Number(roundNumber);
-    const ignore = Number(ignoredRounds);
-    const normalizedRound = Number.isFinite(baseRound) ? Math.max(1, Math.floor(baseRound)) : 1;
-    const normalizedIgnore = Number.isFinite(ignore) ? Math.max(0, Math.floor(ignore)) : 0;
-    return normalizedRound + normalizedIgnore;
-};
-
-const Fixtures = ({ currentLeague, usersList, isCommissioner, onUpdateScoresTrigger }) => {
-    const [fixtures, setFixtures] = useState([]);
-    const [roundMatchDays, setRoundMatchDays] = useState({});
-    const [roundsInput, setRoundsInput] = useState(1);
-    const [ignoreRoundsInput, setIgnoreRoundsInput] = useState(0);
-    const [loading, setLoading] = useState(false);
-    const [breakdownOpen, setBreakdownOpen] = useState(false);
-    const [breakdownLoading, setBreakdownLoading] = useState(false);
-    const [breakdownError, setBreakdownError] = useState('');
-    const [selectedMatch, setSelectedMatch] = useState(null);
-    const [selectedTeamName, setSelectedTeamName] = useState('');
-    const [selectedBreakdown, setSelectedBreakdown] = useState(null);
-    const autoUpdateInFlightRef = useRef(false);
-    const { notify } = useNotify();
-
-    const getRoundsStorageKey = (leagueId) => `fixtures-rounds-${leagueId}`;
-    const getIgnoreRoundsStorageKey = (leagueId) => `ignore-rounds-${leagueId}`;
-    const getAutoUpdateStorageKey = (leagueId) => `auto-score-last-run-${leagueId}`;
-
-    const loadFixtures = async () => {
-        if (!currentLeague) return;
-        setLoading(true);
-        try {
-            const [data, stats] = await Promise.all([
-                api.getFixtures(currentLeague.id),
-                api.getTournamentStats().catch(() => null)
-            ]);
-            setFixtures(data);
-            setRoundMatchDays(buildRoundMatchDays(stats));
-
-            // Prefer the currently-generated rounds count so the input reflects league state.
-            const currentMaxRound = (data || []).reduce((maxRound, match) => {
-                const value = Number(match?.round_number) || 0;
-                return value > maxRound ? value : maxRound;
-            }, 0);
-
-            if (currentMaxRound > 0) {
-                const clampedRound = Math.min(10, Math.max(1, currentMaxRound));
-                setRoundsInput(clampedRound);
-                window.localStorage.setItem(getRoundsStorageKey(currentLeague.id), String(clampedRound));
-            }
-        } catch (error) {
-            notify('Error loading fixtures: ' + error.message, 'error');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        loadFixtures();
-    }, [currentLeague]);
-
-    useEffect(() => {
-        if (!currentLeague) return;
-
-        const storedRoundsValue = window.localStorage.getItem(getRoundsStorageKey(currentLeague.id));
-        if (storedRoundsValue === null) {
-            setRoundsInput(1);
-        } else {
-            const parsedRounds = parseInt(storedRoundsValue, 10);
-            setRoundsInput(Number.isNaN(parsedRounds) ? 1 : Math.max(1, Math.min(10, parsedRounds)));
-        }
-
-        const storedValue = window.localStorage.getItem(getIgnoreRoundsStorageKey(currentLeague.id));
-        if (storedValue === null) {
-            setIgnoreRoundsInput(0);
-            return;
-        }
-
-        const parsed = parseInt(storedValue, 10);
-        setIgnoreRoundsInput(Number.isNaN(parsed) ? 0 : Math.max(0, Math.min(20, parsed)));
-    }, [currentLeague]);
-
-    const handleGenerate = async () => {
-        if (!currentLeague) return;
-        if (roundsInput < 1 || roundsInput > 10) {
-            return notify('Please enter rounds between 1-10', 'error');
-        }
-        if (window.confirm(`Generate ${roundsInput} round(s) of fixtures? This will clear any existing matches.`)) {
+const time = value => value ? new Date(value).toLocaleString() : 'Awaiting schedule';
+function GameweekLineup({ week, squad, players, leagueId, onSaved }) {
+    const [selected, setSelected] = useState(week.lineup || []);
+    const [error, setError] = useState('');
+    const [busy, setBusy] = useState(false);
+    const locked = Date.now() >= Date.parse(week.lock_at);
+    const lineup = locked ? week.lineup : selected;
+    return <div className="card">
+        <h3>{locked ? 'Locked XI' : 'Your gameweek XI'} · {lineup.length}/11</h3>
+        <p className="hint">{locked ? 'This lineup cannot change. Other gameweeks have separate lineups.' : 'Pick 4 batsmen, 4 bowlers, 2 allrounders and 1 extra player. Save before the deadline.'}</p>
+        <div className="gameweek-lineup">
+            {(locked ? lineup : squad).map(name => <label key={name}>
+                <input type="checkbox" checked={lineup.includes(name)} disabled={locked || busy || (!selected.includes(name) && selected.length >= 11)}
+                    onChange={() => setSelected(current => current.includes(name) ? current.filter(n => n !== name) : [...current, name])} />
+                {name} <span className="hint">{players[name]?.team} · {players[name]?.playerType}</span>
+            </label>)}
+        </div>
+        {locked && !lineup.length && <p role="status">No valid XI was saved before the deadline. This gameweek scores zero.</p>}
+        {!locked && <button className="btn btn-primary" disabled={busy || selected.length !== 11} onClick={async () => {
+            setBusy(true); setError('');
+            try { await api.saveGameweekLineup(leagueId, week.number, selected); setError('Lineup saved.'); onSaved(); }
+            catch(e) { setError(e.message); } finally { setBusy(false); }
+        }}>{busy ? 'Saving…' : 'Save gameweek XI'}</button>}
+        {error && <p role="status">{error}</p>}
+    </div>;
+}
+export default function Fixtures({ currentLeague, currentUser, usersList, isCommissioner, onUpdateScoresTrigger }) {
+    const [data,setData]=useState({matches:[],weeks:[],stats:{},squad:[]});
+    const [loading,setLoading]=useState(true),[error,setError]=useState(''),[busy,setBusy]=useState(false);
+    const [selected,setSelected]=useState(1),[count,setCount]=useState(14),[firstRound,setFirstRound]=useState(1),[refresh,setRefresh]=useState(0);
+    const [modal,setModal]=useState(null);
+    const leagueId=currentLeague?.id;
+    useEffect(()=>{
+        if(!leagueId) return;
+        let stopped=false,timer;
+        const load=async()=>{
             try {
-                await api.generateFixtures(currentLeague.id, roundsInput);
-                notify(`${roundsInput} round(s) generated!`, 'success');
-                loadFixtures();
-                onUpdateScoresTrigger(); // trigger scoreboard refresh
-            } catch (error) {
-                notify('Generation failed: ' + error.message, 'error');
-            }
-        }
+                const [matches,weeks,stats,drafted]=await Promise.all([api.getFixtures(leagueId),api.getGameweeks(leagueId),api.getTournamentStats(),api.getDraftedPlayers(leagueId)]);
+                if(!stopped){setData({matches,weeks,stats,squad:drafted.filter(p=>p.user_id===currentUser.id).map(p=>p.player_id)});setError('');setLoading(false);}
+            } catch(e){if(!stopped){setError(e.message);setLoading(false);}}
+            finally {if(!stopped)timer=setTimeout(load,30000);}
+        };
+        load();return()=>{stopped=true;clearTimeout(timer);};
+    },[leagueId,currentUser?.id,refresh]);
+    const reload=()=>{setRefresh(n=>n+1);onUpdateScoresTrigger?.();};
+    const week=data.weeks.find(w=>w.number===selected) || data.weeks[0];
+    const matches=week?data.matches.filter(m=>m.round_number===week.number):data.matches;
+    const name=id=>usersList.find(u=>u.id===id)?.username || 'Unknown';
+    const open=async(match,id)=>{
+        setModal({match,teamName:name(id),loading:true});
+        try {const breakdown=await api.getMatchTeamBreakdown(match.id,id);setModal({match,teamName:name(id),breakdown});}
+        catch(e){setModal({match,teamName:name(id),error:e.message});}
     };
-
-    const autoUpdateScoresIfDue = async () => {
-        if (!currentLeague || !isCommissioner || autoUpdateInFlightRef.current) return;
-
-        const hasDueMatch = (fixtures || []).some((match) => {
-            if (!match || match.status === 'completed') return false;
-            return match.score_due_at && Date.parse(match.score_due_at) <= Date.now();
-        });
-
-        if (!hasDueMatch) return;
-
-        autoUpdateInFlightRef.current = true;
-        try {
-            const ignoredRounds = Math.max(0, Math.min(20, Number(ignoreRoundsInput) || 0));
-            const count = await api.updateRoundScores(currentLeague.id, ignoredRounds);
-
-            if ((count || 0) > 0) {
-                notify(`Auto-updated ${count} match(es).`, 'success');
-                await loadFixtures();
-                onUpdateScoresTrigger();
-            }
-        } catch (error) {
-            notify('Auto update failed: ' + error.message, 'error');
-        } finally {
-            autoUpdateInFlightRef.current = false;
-        }
-    };
-
-    useEffect(() => {
-        if (!currentLeague) return;
-
-        autoUpdateScoresIfDue();
-        const timer = window.setInterval(autoUpdateScoresIfDue, 60 * 1000);
-        return () => window.clearInterval(timer);
-    }, [currentLeague, fixtures, roundMatchDays, ignoreRoundsInput, isCommissioner]);
-
-    const closeBreakdownModal = () => {
-        setBreakdownOpen(false);
-        setBreakdownLoading(false);
-        setBreakdownError('');
-        setSelectedMatch(null);
-        setSelectedTeamName('');
-        setSelectedBreakdown(null);
-    };
-
-    const openTeamBreakdown = async (match, teamId, teamName) => {
-        if (!match || match.status !== 'completed') return;
-
-        setSelectedMatch(match);
-        setSelectedTeamName(teamName);
-        setSelectedBreakdown(null);
-        setBreakdownError('');
-        setBreakdownLoading(true);
-        setBreakdownOpen(true);
-
-        try {
-            const data = await api.getMatchTeamBreakdown(match.id, teamId);
-            setSelectedBreakdown(data);
-        } catch (error) {
-            setBreakdownError(error.message || 'Failed to load match breakdown.');
-            notify('Could not load team breakdown: ' + error.message, 'error');
-        } finally {
-            setBreakdownLoading(false);
-        }
-    };
-
-    // Group by rounds
-    const rounds = {};
-    fixtures.forEach((match) => {
-        if (!rounds[match.round_number]) rounds[match.round_number] = [];
-        rounds[match.round_number].push(match);
-    });
-
-    return (
-        <section id="fixtures-view" className="tab-content">
-            <div className="card">
-                <div className="card-header">
-                    <h3>Season Fixtures</h3>
-                    {isCommissioner && (
-                        <div id="commissioner-controls" className="form-group fixtures-controls" style={{ margin: 0 }}>
-                            <button className="btn btn-primary fixtures-action-btn" onClick={handleGenerate}>
-                                Generate Fixtures
-                            </button>
-                            <div className="fixtures-rounds-field">
-                                <label htmlFor="fixtures-rounds-input">Rounds</label>
-                                <input
-                                    id="fixtures-rounds-input"
-                                    type="number"
-                                    className="fixtures-rounds-input"
-                                    min="1"
-                                    max="10"
-                                    value={roundsInput}
-                                    onChange={(event) => {
-                                        const parsed = parseInt(event.target.value, 10);
-                                        if (Number.isNaN(parsed)) {
-                                            setRoundsInput(1);
-                                            window.localStorage.setItem(getRoundsStorageKey(currentLeague.id), '1');
-                                            return;
-                                        }
-                                        const clamped = Math.min(10, Math.max(1, parsed));
-                                        setRoundsInput(clamped);
-                                        window.localStorage.setItem(getRoundsStorageKey(currentLeague.id), String(clamped));
-                                    }}
-                                />
-                            </div>
-                            <div className="fixtures-rounds-field">
-                                <label htmlFor="fixtures-ignore-rounds-input">Ignore Rounds</label>
-                                <input
-                                    id="fixtures-ignore-rounds-input"
-                                    type="number"
-                                    className="fixtures-rounds-input"
-                                    min="0"
-                                    max="20"
-                                    value={ignoreRoundsInput}
-                                    onChange={(event) => {
-                                        const parsed = parseInt(event.target.value, 10);
-                                        if (Number.isNaN(parsed)) {
-                                            setIgnoreRoundsInput(0);
-                                            window.localStorage.setItem(getIgnoreRoundsStorageKey(currentLeague.id), '0');
-                                            return;
-                                        }
-
-                                        const clamped = Math.max(0, Math.min(20, parsed));
-                                        setIgnoreRoundsInput(clamped);
-                                        window.localStorage.setItem(getIgnoreRoundsStorageKey(currentLeague.id), String(clamped));
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                <div className="fixtures-container">
-                    {loading ? (
-                        <div className="text-center">Loading fixtures...</div>
-                    ) : fixtures.length === 0 ? (
-                        <div className="text-center dim">
-                            <p>No fixtures generated yet.</p>
-                            {usersList.length >= 2 ? (
-                                <p className="text-sm">Use the commissioner controls to generate fixtures.</p>
-                            ) : (
-                                <p>Need at least 2 teams.</p>
-                            )}
-                        </div>
-                    ) : (
-                        Object.keys(rounds).sort((a, b) => parseInt(a) - parseInt(b)).map((roundNum) => (
-                            <div key={`round-${roundNum}`} className="fixture-round">
-                                <div className="round-header">Round {roundNum}</div>
-                                {isCommissioner && rounds[roundNum].every(m => m.status !== 'completed') && (
-                                    <form onSubmit={async event => {
-                                        event.preventDefault();
-                                        const input = event.currentTarget.elements.deadline.value;
-                                        try {
-                                            await api.setRoundDueDate(currentLeague.id, Number(roundNum), new Date(input).toISOString());
-                                            await loadFixtures();
-                                            notify('Scoring deadline saved.', 'success');
-                                        } catch (error) { notify(error.message, 'error'); }
-                                    }}>
-                                        <label>Scoring deadline (your local time) <input name="deadline" type="datetime-local" required /></label>
-                                        <button className="btn btn-outline" type="submit">Save deadline</button>
-                                    </form>
-                                )}
-                                {rounds[roundNum].map((match) => {
-                                    const teamA = usersList.find((u) => u.id === match.team_a_id);
-                                    const teamB = usersList.find((u) => u.id === match.team_b_id);
-                                    const nameA = teamA ? teamA.username : 'Unknown';
-                                    const nameB = teamB ? teamB.username : 'Unknown';
-                                    const isCompleted = match.status === 'completed';
-                                    const scoreA = isCompleted ? match.team_a_score : '-';
-                                    const scoreB = isCompleted ? match.team_b_score : '-';
-                                    const classA = isCompleted && match.winner_id === match.team_a_id ? 'winner' : '';
-                                    const classB = isCompleted && match.winner_id === match.team_b_id ? 'winner' : '';
-                                    const effectiveRound = getEffectiveRoundNumber(match.round_number, ignoreRoundsInput);
-                                    const computedRoundDay = roundMatchDays[effectiveRound] || null;
-                                    const fallbackMatchDay = match.score_due_at || match.finalized_at;
-                                    const matchDayText = match.score_due_at ? new Date(match.score_due_at).toLocaleString() : 'Set scoring deadline';
-                                    const finalizedText = match.finalized_at
-                                        ? new Date(match.finalized_at).toLocaleString()
-                                        : null;
-                                    
-                                    return (
-                                        <div key={match.id} className="match-card">
-                                            {isCompleted ? (
-                                                <button
-                                                    type="button"
-                                                    className={`match-team-btn match-team text-right ${classA}`.trim()}
-                                                    onClick={() => openTeamBreakdown(match, match.team_a_id, nameA)}
-                                                    title={`View ${nameA} breakdown`}
-                                                >
-                                                    {nameA}
-                                                </button>
-                                            ) : (
-                                                <span className={`match-team text-right ${classA}`}>{nameA}</span>
-                                            )}
-                                            <div className={`match-score ${isCompleted ? 'completed' : ''}`}>
-                                                {scoreA} - {scoreB}
-                                                <div className="match-status">{match.status}</div>
-                                                <div className="match-meta">Match Day: {matchDayText}</div>
-                                                {finalizedText && <div className="match-meta">Finalized: {finalizedText}</div>}
-                                            </div>
-                                            {isCompleted ? (
-                                                <button
-                                                    type="button"
-                                                    className={`match-team-btn match-team ${classB}`.trim()}
-                                                    onClick={() => openTeamBreakdown(match, match.team_b_id, nameB)}
-                                                    title={`View ${nameB} breakdown`}
-                                                >
-                                                    {nameB}
-                                                </button>
-                                            ) : (
-                                                <span className={`match-team ${classB}`}>{nameB}</span>
-                                            )}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        ))
-                    )}
-                </div>
-            </div>
-            <MatchBreakdownModal
-                isOpen={breakdownOpen}
-                loading={breakdownLoading}
-                error={breakdownError}
-                match={selectedMatch}
-                teamName={selectedTeamName}
-                breakdown={selectedBreakdown}
-                onClose={closeBreakdownModal}
-            />
-        </section>
-    );
-};
-
-export default Fixtures;
+    return <section id="fixtures-view" className="tab-content gameweeks-view">
+        <div className="card">
+            <h2>Head-to-head gameweeks</h2>
+            <p>One opponent. One match per IPL team. Gameweek 2 uses each IPL team's second match—even if a player missed its first.</p>
+            <p className="hint">Rounds can overlap and last more or less than seven days. Each XI locks before the earliest match in its round. A missed appearance scores zero. Results update after the stats import; they are not ball-by-ball live.</p>
+            <p className="hint">Win: 2 league points · Draw: 1 · Loss: 0. Ties in the table use net fantasy points.</p>
+            {error && <p role="alert">{error}</p>}
+            {loading && <p>Loading gameweeks…</p>}
+            {!loading && !data.weeks.length && data.matches.length>0 && <p>These are fixtures from the previous scoring system. Existing results are preserved. A completed season cannot be replaced.</p>}
+            {isCommissioner && !data.weeks.length && !data.matches.some(m=>m.status==='completed') && <form className="gameweek-setup" onSubmit={async e=>{
+                e.preventDefault();setBusy(true);setError('');
+                try {await api.createGameweeks(leagueId,count,firstRound);reload();}catch(e){setError(e.message);}finally{setBusy(false);}
+            }}>
+                <p>After the draft, everyone must save a valid XI on the dashboard. It becomes the starting lineup for each gameweek; members can edit future gameweeks separately.</p>
+                <label>First IPL team round <input type="number" min="1" max="14" value={firstRound} onChange={e=>setFirstRound(Number(e.target.value))}/></label>
+                <label>Number of gameweeks <input type="number" min="1" max={15-firstRound} value={count} onChange={e=>setCount(Number(e.target.value))}/></label>
+                <button className="btn btn-primary" disabled={busy || !data.stats.schedule?.length}>{busy?'Creating…':'Create season'}</button>
+                {!data.stats.schedule?.length && <p className="hint">Waiting for the competition schedule. Deadlines will use published IPL start times.</p>}
+            </form>}
+            {!!data.weeks.length && <label>Gameweek <select value={week?.number} onChange={e=>setSelected(Number(e.target.value))}>
+                {data.weeks.map(w=><option key={w.number} value={w.number}>Gameweek {w.number} · IPL round {w.ipl_round} · {w.status}</option>)}
+            </select></label>}
+        </div>
+        {week && <div className="card">
+            <h3>Gameweek {week.number} · {week.status}</h3>
+            <p>Lineup deadline: <strong>{time(week.lock_at)}</strong> (your local time)</p>
+            <p>{week.completed_teams || 0}/{week.team_matches.length} IPL team results imported</p>
+            <details><summary>Which IPL match counts for each team?</summary>
+                <ul>{week.team_matches.map(m=><li key={m.team}><strong>{m.team}</strong>: match {week.ipl_round} · {time(m.startTime)} · <a href={m.url} target="_blank" rel="noreferrer">Scorecard</a></li>)}</ul>
+            </details>
+        </div>}
+        <div className="card">
+            <h3>{week?'Matchups':'Fixtures'}</h3>
+            {week && !matches.some(m=>[m.team_a_id,m.team_b_id].includes(currentUser.id)) && <p>You have a bye this gameweek. No head-to-head league points are awarded.</p>}
+            {!matches.length && <p>No matchups yet.</p>}
+            {matches.map(m=><div key={m.id} className="match-card">
+                <button className="match-team-btn" disabled={!['live','completed'].includes(m.status)} onClick={()=>open(m,m.team_a_id)}>{name(m.team_a_id)}</button>
+                <div className="match-score">{m.status==='pending'?'—':m.team_a_score} : {m.status==='pending'?'—':m.team_b_score}<div className="match-status">{m.status}</div></div>
+                <button className="match-team-btn" disabled={!['live','completed'].includes(m.status)} onClick={()=>open(m,m.team_b_id)}>{name(m.team_b_id)}</button>
+            </div>)}
+        </div>
+        {week && <GameweekLineup key={leagueId+'-'+week.number} week={week} leagueId={leagueId} squad={data.squad} players={data.stats.players || {}} onSaved={reload}/>}
+        <MatchBreakdownModal isOpen={!!modal} {...modal} onClose={()=>setModal(null)}/>
+    </section>;
+}

@@ -1,3 +1,4 @@
+import { createGameweeks, saveGameweekLineup, advanceGameweeks, removeFromFutureLineups } from './gameweeks.js';
 import { check, now, emptyLeague, member, commissioner, validateLineup, startDraft, pick, trade, actOnTrade, fixtures, finalizeScores, standings } from './domain.js';
 
 const enc = new TextEncoder();
@@ -18,9 +19,11 @@ async function getLeague(db, id) {
 export async function mutate(db, id, change) {
   for (let attempt = 0; attempt < 5; attempt++) {
     const row = await getLeague(db, id);
+    const original = JSON.stringify(row.state);
     const result = change(row.state);
     const serialized = JSON.stringify(row.state);
     check(enc.encode(serialized).length < 1500000, 'League storage limit reached');
+    if (serialized === original) return result;
     const updated = await stmt(db, 'UPDATE leagues SET state = ?, revision = revision + 1 WHERE id = ? AND revision = ?', serialized, id, row.revision).run();
     if (updated.meta.changes === 1) return result;
   }
@@ -66,9 +69,16 @@ async function rpc(db, user, op, p) {
   }
   const leagueId = p.leagueId || user.league_id;
   check(leagueId, 'Choose a league first');
-  const s = (await getLeague(db, leagueId)).state;
+  let s = (await getLeague(db, leagueId)).state;
+  member(s, actor);
+  if (s.gameweeks) {
+    const data = await stats(db);
+    await mutate(db, leagueId, state => advanceGameweeks(state, data));
+    s = (await getLeague(db, leagueId)).state;
+  }
   member(s, actor);
   const userId = p.userId || actor;
+  if (op === 'getGameweeks') return (s.gameweeks || []).map(({lineups,locked_lineups,player_teams,...w}) => ({...w, lineup:locked_lineups?.[actor] || lineups[actor] || []}));
   if (op === 'getAllUsers') return s.members;
   if (op === 'getDraftedPlayers') return s.drafted;
   if (op === 'isPlayerDrafted') return s.drafted.some(d => d.player_id === p.playerId);
@@ -96,13 +106,16 @@ async function rpc(db, user, op, p) {
     team_b_name: s.members.find(u => u.id === m.team_b_id)?.username }));
   if (op === 'getMatchTeamBreakdown') {
     const m = s.matches.find(m => m.id === p.matchId);
-    check(m?.breakdowns?.[userId], 'Finalized match breakdown not found', 404);
+    check(m?.breakdowns?.[userId], 'Match breakdown not available yet', 404);
     return { ...m.breakdowns[userId], finalized_at: m.finalized_at, score_due_at: m.score_due_at };
   }
-  const tournament = ['startDraft', 'makeDraftPick', 'saveUserTeam', 'updateRoundScores', 'setRoundDueDate'].includes(op) ? await stats(db) : null;
+  const tournament = ['startDraft', 'makeDraftPick', 'saveUserTeam', 'updateRoundScores', 'setRoundDueDate', 'createGameweeks', 'saveGameweekLineup', 'releasePlayer', 'swapPlayers', 'updateTradeStatus'].includes(op) ? await stats(db) : null;
   return mutate(db, leagueId, state => {
     member(state, actor);
+    if (state.gameweeks && tournament) advanceGameweeks(state, tournament);
     switch (op) {
+      case 'createGameweeks': return createGameweeks(state, actor, tournament, p.count, p.firstRound);
+      case 'saveGameweekLineup': return saveGameweekLineup(state, actor, p.round, p.starting11, tournament);
       case 'startDraft': return startDraft(state, actor, p.turnOrder, tournament);
       case 'makeDraftPick': return pick(state, actor, userId, p.playerId, p.currentPick, tournament);
       case 'setUserAutoDraftMode': {
@@ -126,6 +139,7 @@ async function rpc(db, user, op, p) {
         check(!state.draft?.is_active, 'Cannot release during a draft');
         check(!state.matches.some(m => m.status !== 'completed' && m.score_due_at && Date.parse(m.score_due_at) <= Date.now()), 'Finalize due matches before releasing players');
         check(!state.matches.some(m => m.status !== 'completed' && m.score_due_at) || !state.teams[actor]?.starting_11.includes(p.playerId), 'Save a replacement lineup before releasing a scheduled starter');
+        removeFromFutureLineups(state, [p.playerId]);
         state.drafted = state.drafted.filter(d => !(d.user_id === actor && d.player_id === p.playerId));
         if (state.teams[actor]) state.teams[actor].starting_11 = state.teams[actor].starting_11.filter(n => n !== p.playerId);
         return null;
@@ -138,11 +152,14 @@ async function rpc(db, user, op, p) {
           const t = state.trades.find(t => t.id === p.tradeId);
           check(!t || ![[t.sender_id, t.players_offered], [t.receiver_id, t.players_requested]].some(([id, players]) => players.some(p => state.teams[id]?.starting_11.includes(p))), 'Both teams must save replacement lineups before trading scheduled starters');
         }
-        return actOnTrade(state, actor, p.tradeId, op === 'swapPlayers' ? 'accepted' : p.newStatus);
+        const result = actOnTrade(state, actor, p.tradeId, op === 'swapPlayers' ? 'accepted' : p.newStatus);
+        if(result.status === 'accepted') removeFromFutureLineups(state, [...result.players_offered, ...result.players_requested]);
+        return result;
       }
-      case 'generateFixtures': return fixtures(state, actor, p.rounds);
-      case 'updateRoundScores': return finalizeScores(state, actor, tournament, p.ignoredRounds);
+      case 'generateFixtures': check(!state.gameweeks, 'Use gameweek season setup'); return fixtures(state, actor, p.rounds);
+      case 'updateRoundScores': check(!state.gameweeks, 'Gameweek scores update automatically'); return finalizeScores(state, actor, tournament, p.ignoredRounds);
       case 'setRoundDueDate': {
+        check(!state.gameweeks, 'Gameweek deadlines come from the IPL schedule');
         commissioner(state, actor);
         check(!state.draft?.is_active, 'Finish drafting before scheduling scores');
         check(Number.isInteger(p.round) && p.round >= 1, 'Invalid round');
@@ -175,6 +192,13 @@ function response(data, status = 200, headers = {}) {
   return Response.json(data, { status, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...headers } });
 }
 export default {
+  async scheduled(_event, env, ctx) {
+    ctx.waitUntil((async () => {
+      const data = await stats(env.DB);
+      const rows = await stmt(env.DB, "SELECT id FROM leagues WHERE json_type(state, '$.gameweeks') = 'array'").all();
+      for (const row of rows.results) await mutate(env.DB, row.id, s => advanceGameweeks(s, data));
+    })());
+  },
   async fetch(request, env) {
     try {
       const url = new URL(request.url);
@@ -199,6 +223,7 @@ export default {
         const previous = await stats(env.DB);
         if (previous.tournament === body.tournament) {
           check(body.matches.length >= (previous.matches || []).length, 'Update would remove existing match results; refusing incomplete scrape', 409);
+          check((body.schedule || []).length >= (previous.schedule || []).length, 'Update would remove scheduled matches; refusing incomplete scrape', 409);
           const oldTeams = Object.keys(previous.teams || {});
           check(oldTeams.every(team => Object.hasOwn(body.teams || {}, team)), 'Update would remove tournament teams; refusing incomplete scrape', 409);
         }

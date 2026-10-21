@@ -35,6 +35,7 @@ test('failed tournament fetch cannot be saved as successful empty output', async
 test('preseason squads survive an absent results page, but not server outages', async () => {
   const previous = axios.get;
   const scraper = new Scraper(url);
+  scraper.scrapeSchedule = async () => [];
   scraper.scrapeSquads = async () => ({ Alpha: [{ name: 'Bench Player' }], Beta: [{ name: 'Other Player' }] });
   try {
     axios.get = async () => { throw Object.assign(new Error('not found'), { response: { status: 404 } }); };
@@ -54,4 +55,12 @@ test('squad cards include bench players but exclude leaderboard sidebar links', 
     const squads = await new Scraper(url).scrapeSquads();
     assert.deepEqual(squads['Team Alpha'], [{ name: 'Bench Bowler', url: '/cricketers/bench-bowler-789', type: 'bowler' }]);
   } finally { axios.get = previous; }
+});
+
+test('schedule includes only the selected competition and preserves times, teams and completion', () => {
+  const base={series:{objectId:123},objectId:456,slug:'team-a-vs-team-b-1st-match',teams:[{team:{longName:'Alpha'}},{team:{longName:'Beta'}}],startTime:'2027-04-01T14:00:00Z',title:'1st Match',stage:'SCHEDULED'};
+  const html='<script id="__NEXT_DATA__">'+JSON.stringify({props:{appPageProps:{data:{content:{matches:[base,{...base,series:{objectId:999}},{...base,objectId:457,title:'Final',stage:'FINISHED'}]}}}}})+'</script>';
+  const data=new Scraper(url).parseSchedule(html);
+  assert.equal(data.length,2); assert.equal(data[0].completed,false);assert.equal(data[0].startTime,base.startTime);
+  assert.deepEqual(data[0].teams,['Alpha','Beta']); assert.equal(data[1].leagueStage,false);assert.equal(data[1].completed,true);
 });

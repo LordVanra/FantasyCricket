@@ -16,6 +16,7 @@
     "database_id": "595063bf-f558-418b-a412-b641a45d4554",
     "migrations_dir": "migrations"
   }],
+  "triggers": { "crons": ["*/5 * * * *"] },
   "vars": {
     "APP_ORIGINS": "https://fantasycricketgame.vercel.app"
   },

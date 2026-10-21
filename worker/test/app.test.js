@@ -182,3 +182,35 @@ test('manual and automatic picks create exactly one attributed announcement, inc
   startDraft(s, 'a', ['a', 'b'], stats);
   assert.equal(s.chat.length, 0);
 });
+
+test('HTTP gameweek lifecycle: setup, locked lineups and automatic scheduled scoring', async () => {
+  const env={DB:dbAdapter(),AUTH_LIMITER:{limit:async()=>({success:true})},STATS_SYNC_TOKEN:'test-token'};
+  const realNow=Date.now; let clock=realNow(); Date.now=()=>clock;
+  const clients=[];
+  function client(){let cookie='';return async(op,params={})=>{
+    const r=await worker.fetch(new Request('https://example.com/api/rpc',{method:'POST',headers:{'Content-Type':'application/json',Cookie:cookie},body:JSON.stringify({op,params})}),env);
+    if(r.headers.get('set-cookie'))cookie=r.headers.get('set-cookie').split(';')[0];return{status:r.status,data:await r.json()};
+  };}
+  const upload=async data=>worker.fetch(new Request('https://example.com/api/admin/stats',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer test-token'},body:JSON.stringify(data)}),env);
+  try{
+    for(const name of ['one','two']){const call=client(),credentials={email:name+'@fantasy-app.internal',password:'Password123!'};const user=(await call('signUp',credentials)).data.user;await call('signIn',credentials);clients.push({call,user});}
+    const [a,b]=clients,league=(await a.call('createLeague',{name:'Gameweeks'})).data;
+    for(const c of clients)await c.call('joinLeague',{leagueId:league.id});
+    const tournament={tournament:'test',teams:{A:[],B:[]},rosterTeams:['A','B'],matches:[],schedule:[{url:'match1',teams:['A','B'],startTime:new Date(clock+60000).toISOString(),completed:false,leagueStage:true}],players:Object.fromEntries(Object.entries(players).map(([name,p])=>[name,{...p,team:'A',batting:[{matchUrl:'match1',runs:5}]}]))};
+    assert.equal((await upload(tournament)).status,200);
+    assert.equal((await upload({...tournament,schedule:[]})).status,409);
+    await a.call('startDraft',{leagueId:league.id,turnOrder:clients.map(c=>c.user.id)});
+    for(let i=0;i<30;i++){const c=clients[i%2],n=Math.floor(i/2)+(i%2)*15;assert.equal((await c.call('makeDraftPick',{leagueId:league.id,userId:c.user.id,playerId:'P'+n,currentPick:i})).status,200);}
+    for(let i=0;i<2;i++)assert.equal((await clients[i].call('saveUserTeam',{leagueId:league.id,starting11:Array.from({length:11},(_,j)=>'P'+(i*15+j))})).status,200);
+    assert.equal((await b.call('createGameweeks',{leagueId:league.id,count:1,firstRound:1})).status,403);
+    assert.equal((await a.call('createGameweeks',{leagueId:league.id,count:1,firstRound:1})).status,200);
+    assert.equal((await a.call('getGameweeks',{leagueId:league.id})).data[0].lineup.length,11);
+    clock+=61000;
+    assert.equal((await a.call('saveGameweekLineup',{leagueId:league.id,round:1,starting11:[]})).status,409);
+    assert.equal((await a.call('getFixtures',{leagueId:league.id})).data[0].status,'live');
+    tournament.schedule[0].completed=true;tournament.matches=[{url:'match1'}];await upload(tournament);
+    const jobs=[];await worker.scheduled({},env,{waitUntil:p=>jobs.push(p)});await Promise.all(jobs);
+    const result=(await a.call('getFixtures',{leagueId:league.id})).data[0];assert.equal(result.status,'completed');assert.equal(result.team_a_score,55);
+    assert.equal((await a.call('getLeagueStandings',{leagueId:league.id})).data[0].played,1);
+  }finally{Date.now=realNow;}
+});

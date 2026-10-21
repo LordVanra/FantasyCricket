@@ -1646,3 +1646,12 @@ tr:last-child td {
 .draft-chat-form { display: grid; gap: 8px; }
 .draft-chat-form textarea { width: 100%; resize: vertical; min-height: 60px; background: rgba(255,255,255,.05); color: var(--text); border: 1px solid rgba(255,255,255,.2); border-radius: 8px; padding: 10px; font: inherit; }
 .draft-chat-form > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.gameweeks-view { display: grid; gap: 20px; }
+.gameweek-setup { display: flex; flex-wrap: wrap; align-items: end; gap: 16px; margin-top: 16px; }
+.gameweek-setup p { flex-basis: 100%; }
+.gameweek-setup label { display: grid; gap: 8px; }
+.gameweek-lineup { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 12px; margin: 16px 0; }
+.gameweek-lineup label { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px; }
+.gameweek-lineup input { width: auto; }
+.gameweeks-view details li { margin: 10px 0; }
+.gameweeks-view a { color: var(--accent, #36d5ad); }

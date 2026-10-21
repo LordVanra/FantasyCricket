@@ -348,6 +348,31 @@ class CricketScraper {
     return squads;
   }
 
+  parseSchedule(html) {
+    const $ = cheerio.load(html);
+    const raw = $('#__NEXT_DATA__').text();
+    if (!raw) throw new Error('Schedule metadata is missing');
+    const matches = JSON.parse(raw)?.props?.appPageProps?.data?.content?.matches;
+    if (!Array.isArray(matches)) throw new Error('Schedule match list is missing');
+    return matches.filter(m => String(m.series?.objectId) === this.seriesId).map(m => ({
+      url: this.scorecardUrl('/series/' + this.seriesSlug + '-' + this.seriesId + '/' + m.slug + '-' + m.objectId),
+      teams: (m.teams || []).map(t => t.team.longName),
+      startTime: m.timePublished === false ? null : m.startTime,
+      completed: m.stage === 'FINISHED' || m.state === 'POST',
+      leagueStage: !/final|qualifier|eliminator/i.test(m.title || ''),
+      title: m.title
+    })).filter(m => m.url && m.teams.length === 2);
+  }
+  async scrapeSchedule() {
+    try {
+      const response = await axios.get('https://www.espncricinfo.com/series/' + this.seriesSlug + '-' + this.seriesId + '/match-schedule-fixtures', { headers: this.headers, timeout: 30000 });
+      return this.parseSchedule(response.data);
+    } catch (error) {
+      if (error.response?.status === 404) return [];
+      throw new Error('Schedule fetch failed: ' + error.message);
+    }
+  }
+
   async scrape() {
     const layers = { url: this.url, matches: [], squads: {} };
 
@@ -385,6 +410,7 @@ class CricketScraper {
       throw new Error(`Tournament scraping failed: ${error.message}`);
     }
 
+    layers.schedule = await this.scrapeSchedule();
     return layers;
   }
 }

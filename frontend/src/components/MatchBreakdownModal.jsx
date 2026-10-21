@@ -67,6 +67,7 @@ const MatchBreakdownModal = ({ isOpen, loading, error, match, teamName, breakdow
                                             <span>Bowl: {toNumber(bowling.economy) + toNumber(bowling.wickets)}</span>
                                             <span>Field: {toNumber(fielding.catches) + toNumber(fielding.stumpings) + toNumber(fielding.runouts)}</span>
                                         </div>
+                                        {row.appearance_status && <p className="hint">{row.team} · {row.appearance_status === 'did_not_play' ? 'Did not play — 0 points' : row.appearance_status === 'awaiting_result' ? 'Awaiting this team’s result' : 'Result imported'} {row.match_url && <a href={row.match_url} target="_blank" rel="noreferrer">Match scorecard</a>}</p>}
                                         <div className="match-breakdown-details">
                                             <span>Runs {toNumber(batting.runs).toFixed(1)}</span>
                                             <span>4s {toNumber(batting.fours).toFixed(1)}</span>

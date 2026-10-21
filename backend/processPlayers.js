@@ -505,6 +505,8 @@ class CricketDataProcessor {
       tournament: this.data.url,
       season: String(this.data.url || '').match(/(?:ipl|indian-premier-league)-(20\d{2})/)?.[1] || null,
       rosterSource: 'competition-squads',
+      rosterTeams: Object.keys(this.data.squads || {}).map(t => this.normalizeTeamName(t)),
+      schedule: (this.data.schedule || []).map(m => ({ ...m, teams: m.teams.map(t => this.normalizeTeamName(t)) })),
       rosterUpdatedAt: new Date().toISOString(),
       totalMatches: matches.length,
       lastMatchUrl: lastMatchUrl,

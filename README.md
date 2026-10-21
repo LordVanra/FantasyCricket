@@ -129,3 +129,14 @@ The updater loads the selected competition's full squads before match results. E
 Draft chat is shown only during an active draft; posting outside an active draft is rejected by the server. Every successful manual or automatic pick atomically creates a username picked: player announcement. A new draft clears the previous chat. Only league members can read or post; the server sets authors, limits messages to 1000 characters and enforces two seconds between posts. The latest 100 messages are retained. Clients refresh every four seconds while visible.
 
 The configured competition remains IPL 2026. As checked on October 21, 2026, no verified IPL 2027 squad source has been configured; CREX's 2027 squad page reports squads not announced. The dashboard labels the actual season. Once the 2027 ESPN series squads are available, set TOURNAMENT_URL to that series and run Update Cricket Stats. A season change is deliberately blocked when existing drafts or fixtures depend on the old season; use a fresh season database in that case. Do not relabel old-season players or scores as 2027.
+
+
+## Head-to-head gameweeks (team-round scoring)
+
+New seasons use one fixture per IPL team per fantasy gameweek, not calendar-week totals or a player's nth appearance. Gameweek N maps to each IPL team's Nth league-stage match. A player who misses that match scores zero; later appearances never move backward. Playoffs are excluded. Gameweeks may overlap.
+
+The scraper imports the competition schedule (exact start times, teams, completion state), separately from player statistics. After everyone drafts 15 players and saves a valid XI, the commissioner creates up to 14 gameweeks starting at a future IPL team round. The initial XI is copied to each gameweek. Members edit each future gameweek independently under Gameweeks. Lineups lock at the earliest IPL start in that round; postponements never reopen locks. Rescheduled fixtures update the team-round mapping before finalization.
+
+Scores remain provisional until every participating IPL team's relevant result is both finished and imported. The backend advances gameweeks every five minutes and on league requests, independently of a commissioner's browser. The existing stats workflow imports daily, so scores are not ball-by-ball live. Completed results and lineup snapshots are immutable. Wins earn 2 league points; draws 1; losses 0. Odd league sizes have byes with no head-to-head points.
+
+Trades/releases preserve locked gameweeks and remove affected players from future saved XIs. Members must refill those XIs before their deadlines; an invalid or missing XI at lock scores zero. Existing legacy fixture results are retained under their original rules and are not silently rescored. A fully completed IPL season cannot be newly scheduled retroactively; select a future competition/round.
