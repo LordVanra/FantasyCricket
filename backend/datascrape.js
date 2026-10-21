@@ -17,6 +17,18 @@ class CricketScraper {
     return text.replace(/[^a-zA-Z0-9\s\.\(\)\/]/g, '').replace(/\s+/g, ' ').trim();
   }
 
+  scorecardUrl(href) {
+    try {
+      const url = new URL(href, 'https://www.espncricinfo.com');
+      const parts = url.pathname.split('/').filter(Boolean);
+      if (url.origin !== 'https://www.espncricinfo.com' || parts[0] !== 'series' ||
+          parts[1] !== `${this.seriesSlug}-${this.seriesId}` ||
+          !parts[2]?.includes('-vs-') || !/-\d+$/.test(parts[2])) return null;
+      // Report, photos, videos and commentary links all share this match path.
+      return `${url.origin}/${parts.slice(0, 3).join('/')}/full-scorecard`;
+    } catch { return null; }
+  }
+
   cleanPlayerName(name) {
     let cleaned = name.replace(/\(c\)/g, '').trim();
     cleaned = cleaned.replace(/\s+/g, ' ');
@@ -353,18 +365,8 @@ class CricketScraper {
       $('a').each((i, elem) => {
         const href = $(elem).attr('href');
         if (!href) return;
-        // Match any link that belongs to this series and contains '-vs-' (an actual match link)
-        if (href.includes(this.seriesSlug) && href.includes(this.seriesId) && href.includes('-vs-')) {
-          let matchPath = href.startsWith('http') ? href : `https://www.espncricinfo.com${href}`;
-          // Normalize to full-scorecard URL by replacing the trailing path segment
-          matchPath = matchPath.replace(/\/(?:live-cricket-score|scorecard|ball-by-ball-commentary|points-table-standings|match-(?:photos|videos))$/, '/full-scorecard');
-          if (!matchPath.endsWith('/full-scorecard')) {
-            matchPath = matchPath + '/full-scorecard';
-          }
-          if (!matchUrls.includes(matchPath)) {
-            matchUrls.push(matchPath);
-          }
-        }
+        const matchPath = this.scorecardUrl(href);
+        if (matchPath && !matchUrls.includes(matchPath)) matchUrls.push(matchPath);
       });
 
       for (let i = 0; i < matchUrls.length; i++) {
