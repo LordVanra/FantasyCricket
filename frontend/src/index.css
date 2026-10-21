@@ -1665,3 +1665,18 @@ tr:last-child td {
 .points-contributions { display:grid; grid-template-columns:1fr auto; gap:8px; }
 .points-contributions dd { margin:0; }
 @media(max-width:800px) { .match-detail-teams { grid-template-columns:1fr; } }
+
+/* Keep scorecard links readable against the dark match cards. */
+.match-detail a,
+.match-detail a:visited,
+.match-breakdown-modal a,
+.match-breakdown-modal a:visited {
+    color: #5eead4;
+    text-underline-offset: 3px;
+}
+.match-detail a:hover,
+.match-detail a:focus-visible,
+.match-breakdown-modal a:hover,
+.match-breakdown-modal a:focus-visible {
+    color: #99f6e4;
+}
