@@ -12,6 +12,11 @@ function GameweekLineup({ week, squad, players, leagueId, onSaved }) {
     return <div className="card">
         <h3>{locked ? 'Locked XI' : 'Your gameweek XI'} · {lineup.length}/11</h3>
         <p className="hint">{locked ? 'This lineup cannot change. Other gameweeks have separate lineups.' : 'Pick 4 batsmen, 4 bowlers, 2 allrounders and 1 extra player. Save before the deadline.'}</p>
+        <p className="hint">Batting multipliers: slots 1–2 ×1.25; 3–4 ×1.10; 5–8 ×1; 9–11 ×0.90. Bowling and fielding are unchanged by position.</p>
+        <ol>{lineup.map((name,index)=><li key={name}>{name} {!locked && <>
+            <button type="button" aria-label={`Move ${name} up`} disabled={busy || index===0} onClick={()=>setSelected(current=>{const next=[...current];[next[index-1],next[index]]=[next[index],next[index-1]];return next;})}>↑</button>
+            <button type="button" aria-label={`Move ${name} down`} disabled={busy || index===lineup.length-1} onClick={()=>setSelected(current=>{const next=[...current];[next[index+1],next[index]]=[next[index],next[index+1]];return next;})}>↓</button>
+        </>}</li>)}</ol>
         <div className="gameweek-lineup">
             {(locked ? lineup : squad).map(name => <label key={name}>
                 <input type="checkbox" checked={lineup.includes(name)} disabled={locked || busy || (!selected.includes(name) && selected.length >= 11)}

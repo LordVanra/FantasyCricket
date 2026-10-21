@@ -92,7 +92,7 @@ test('scoring is due-gated, immutable and keeps lineup snapshots', () => {
   assert.equal(finalizeScores(s, 'a', stats, 0), 0);
   s.matches[0].score_due_at = '2000-01-01T00:00:00Z';
   assert.equal(finalizeScores(s, 'a', stats, 0), 1);
-  assert.equal(s.matches[0].team_a_score, 165);
+  assert.equal(s.matches[0].team_a_score, 171.1);
   s.teams.a.starting_11 = [];
   assert.equal(finalizeScores(s, 'a', { players: {} }, 0), 0);
   assert.equal(s.matches[0].breakdowns.a.starting_11.length, 11);
@@ -210,7 +210,7 @@ test('HTTP gameweek lifecycle: setup, locked lineups and automatic scheduled sco
     assert.equal((await a.call('getFixtures',{leagueId:league.id})).data[0].status,'live');
     tournament.schedule[0].completed=true;tournament.matches=[{url:'match1'}];await upload(tournament);
     const jobs=[];await worker.scheduled({},env,{waitUntil:p=>jobs.push(p)});await Promise.all(jobs);
-    const result=(await a.call('getFixtures',{leagueId:league.id})).data[0];assert.equal(result.status,'completed');assert.equal(result.team_a_score,55);
+    const result=(await a.call('getFixtures',{leagueId:league.id})).data[0];assert.equal(result.status,'completed');assert.equal(result.team_a_score,57.1);
     assert.equal((await a.call('getLeagueStandings',{leagueId:league.id})).data[0].played,1);
   }finally{Date.now=realNow;}
 });

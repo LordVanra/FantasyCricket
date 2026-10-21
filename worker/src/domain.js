@@ -123,7 +123,12 @@ export function fixtures(s, actor, rounds) {
   return s.matches;
 }
 const number = value => Number.parseFloat(value) || 0;
-export function playerPoints(player = {}, round) {
+export const battingMultiplier = slot => slot <= 2 ? 1.25 : slot <= 4 ? 1.1 : slot <= 8 ? 1 : 0.9;
+export function legalBalls(overs) {
+  const match = String(overs ?? 0).match(/^(\d+)(?:\.([0-5]))?$/);
+  return match ? Number(match[1]) * 6 + Number(match[2] || 0) : 0;
+}
+export function playerPoints(player = {}, round, slot = 5) {
   const entries = [...(player.batting || []), ...(player.bowling || []), ...(player.fielding || [])];
   const urls = [...new Set(entries.map(e => e.matchUrl).filter(Boolean))].sort((a, b) => {
     const n = u => Math.min(...entries.filter(e => e.matchUrl === u).map(e => Number(e.matchNumber) || Infinity));
@@ -132,12 +137,14 @@ export function playerPoints(player = {}, round) {
   const url = urls[round - 1];
   const entry = type => url ? player[type]?.find(e => e.matchUrl === url) || {} : {};
   const b = entry('batting'), w = entry('bowling'), f = entry('fielding');
+  const multiplier = battingMultiplier(slot);
+  const balls = legalBalls(w.overs);
   const breakdown = {
-    batting: { runs: number(b.runs), fours: number(b.fours) * 2, sixes: number(b.sixes) * 3 },
-    bowling: { economy: number(w.overs) > 0 ? 10 - number(w.economy) : 0, wickets: number(w.wickets) * 20 },
+    batting: { runs: number(b.runs) * multiplier, fours: number(b.fours) * 2 * multiplier, sixes: number(b.sixes) * 3 * multiplier },
+    bowling: { economy: balls > 0 ? 3 * (11 - number(w.economy)) * balls / 12 : 0, wickets: number(w.wickets) * 25 },
     fielding: { catches: number(f.catches) * 8, stumpings: number(f.stumpings) * 5, runouts: number(f.runouts) * 4 }
   };
-  return { stats: { batting: { runs: number(b.runs), balls: number(b.balls), sr: number(b.sr), fours: number(b.fours), sixes: number(b.sixes) }, bowling: { overs: number(w.overs), runs: number(w.runs), economy: number(w.economy), wickets: number(w.wickets), maidens: number(w.maidens), dots: number(w.dots) }, fielding: { catches: number(f.catches), stumpings: number(f.stumpings), runouts: number(f.runouts) } }, points: Math.round(Object.values(breakdown).flatMap(Object.values).reduce((a, b) => a + b, 0) * 10) / 10, breakdown };
+  return { scoring_version: 3, lineup_position: slot, batting_multiplier: multiplier, legal_balls: balls, stats: { batting: { runs: number(b.runs), balls: number(b.balls), sr: number(b.sr), fours: number(b.fours), sixes: number(b.sixes) }, bowling: { overs: number(w.overs), runs: number(w.runs), economy: number(w.economy), wickets: number(w.wickets), maidens: number(w.maidens), dots: number(w.dots) }, fielding: { catches: number(f.catches), stumpings: number(f.stumpings), runouts: number(f.runouts) } }, points: Math.round(Object.values(breakdown).flatMap(Object.values).reduce((a, b) => a + b, 0) * 10) / 10, breakdown };
 }
 export function finalizeScores(s, actor, stats, ignored) {
   commissioner(s, actor);
@@ -153,7 +160,7 @@ export function finalizeScores(s, actor, stats, ignored) {
     for (const id of [m.team_a_id, m.team_b_id]) {
       const lineup = s.teams[id]?.starting_11 || [];
       validateLineup(s, id, lineup, stats);
-      const players = lineup.map(name => ({ player_name: name, ...playerPoints(stats.players[name], m.round_number + ignored) }));
+      const players = lineup.map((name, index) => ({ player_name: name, ...playerPoints(stats.players[name], m.round_number + ignored, index + 1) }));
       m.breakdowns[id] = { match_id: m.id, league_id: s.id, round_number: m.round_number, status: 'completed', user_id: id,
         starting_11: [...lineup], players, team_total: Math.round(players.reduce((n, p) => n + p.points, 0) * 10) / 10 };
     }

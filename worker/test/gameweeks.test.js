@@ -26,7 +26,7 @@ test('second IPL team match is selected despite unequal weekly frequency and mis
  const match=s.matches.find(m=>m.round_number===2);
  const p0=match.breakdowns.a.players.find(p=>p.player_name==='P0');
  assert.equal(p0.points,0);assert.equal(p0.appearance_status,'did_not_play');assert.equal(p0.match_url,'ab2');
- assert.equal(match.breakdowns.a.players.find(p=>p.player_name==='P1').points,7);
+ assert.equal(match.breakdowns.a.players.find(p=>p.player_name==='P1').points,8.8);
  assert.equal(match.status,'completed');
 });
 test('round waits for all teams and never finalizes merely because its deadline passed',()=>{
@@ -70,8 +70,8 @@ test('match details snapshot raw stats separately from points and retain the ass
  advanceGameweeks(s,stats,at(50));
  const row=s.matches[0].breakdowns.a.players[0];
  assert.equal(row.stats.batting.balls,25);assert.equal(row.stats.batting.sr,160);
- assert.equal(row.stats.bowling.wickets,2);assert.equal(row.breakdown.bowling.wickets,40);
- assert.equal(row.points,114);assert.equal(row.stats.batting.runs,40);
+ assert.equal(row.stats.bowling.wickets,2);assert.equal(row.breakdown.bowling.wickets,50);
+ assert.equal(row.points,158.5);assert.equal(row.stats.batting.runs,40);
  stats.players.P0.batting[0].runs=900;advanceGameweeks(s,stats,at(60));
  assert.equal(s.matches[0].breakdowns.a.players[0].stats.batting.runs,40);
 });

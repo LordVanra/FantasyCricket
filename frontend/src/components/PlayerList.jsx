@@ -121,9 +121,11 @@ const PlayerList = ({ players, draftedPlayers, mySquad, currentUser, draftState,
                         const overs = parseFloat(bowling.overs) || 0;
                         if (overs > 0) {
                             const eco = parseFloat(bowling.economy) || 0;
-                            points += 10 - eco;
+                            const parts = String(bowling.overs).split('.');
+                            const balls = Number(parts[0]) * 6 + Number(parts[1] || 0);
+                            points += 3 * (11 - eco) * balls / 12;
                         }
-                        points += (parseInt(bowling.wickets) || 0) * 20;
+                        points += (parseInt(bowling.wickets) || 0) * 25;
                         points += (parseInt(fielding.catches) || 0) * 8;
                         points += (parseInt(fielding.stumpings) || 0) * 5;
                         points += (parseInt(fielding.runouts) || 0) * 4;

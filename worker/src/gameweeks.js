@@ -40,9 +40,9 @@ export function saveGameweekLineup(s, actor, number, lineup, stats, clock=Date.n
   w.lineups[actor]=[...lineup];
   return w.lineups[actor];
 }
-function scoreForMatch(player, url) {
+function scoreForMatch(player, url, slot) {
   const single = Object.fromEntries(['batting','bowling','fielding'].map(type=>[type,(player?.[type] || []).filter(e=>e.matchUrl===url)]));
-  return playerPoints(single,1);
+  return playerPoints(single,1,slot);
 }
 export function advanceGameweeks(s, stats, clock=Date.now()) {
   if (!s.gameweeks) return;
@@ -74,12 +74,12 @@ export function advanceGameweeks(s, stats, clock=Date.now()) {
       match.breakdowns={};
       for(const id of [match.team_a_id,match.team_b_id]) {
         const lineup=w.locked_lineups[id] || [];
-        const players=lineup.map(name=> {
+        const players=lineup.map((name,index)=> {
           const team=w.player_teams[name];
           const fixture=w.team_matches.find(m=>m.team===team);
           const available=fixture && completed(fixture);
           const player=stats.players[name];
-          const result=scoreForMatch(available?player:null,fixture?.url);
+          const result=scoreForMatch(available?player:null,fixture?.url,index+1);
           const appeared=available && ['batting','bowling','fielding'].some(type=>player?.[type]?.some(e=>e.matchUrl===fixture.url));
           return { player_name:name, team, match_url:fixture?.url, appearance_status:available?(appeared?'played':'did_not_play'):'awaiting_result', ...result };
         });
