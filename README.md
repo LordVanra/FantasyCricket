@@ -80,7 +80,7 @@ site and has not been verified against a live tournament in this migration.
 - Commissioner starts the draft; squads clear and draft state initializes in
   one database update. The server validates every pick and commits ownership
   and turn advancement together. Concurrent clients cannot overwrite a pick.
-- Drafts use 22 players per team. Automatic picks require that player's opt-in;
+- Drafts use 15 players per team. Automatic picks require that player's opt-in;
   an open browser drives automatic picks. Polling is every 3 seconds during a
   draft and 15 seconds otherwise, paused in hidden tabs.
 - Membership freezes after drafting/fixtures start. Existing members can switch

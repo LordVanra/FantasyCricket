@@ -162,7 +162,7 @@ const App = () => {
 
     const draft = useDraft(league?.id, user?.id, handleDraftTimeout);
     const turnOrder = draft.draftState?.turn_order || [];
-    const totalPicks = turnOrder.length * (draft.draftSquadSize || 22);
+    const totalPicks = turnOrder.length * (draft.draftSquadSize || 15);
     const hasActiveDraftSession = Boolean(
         draft.draftState?.is_active
         && turnOrder.length >= 2

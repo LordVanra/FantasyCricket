@@ -159,7 +159,7 @@ export function useDraft(leagueId, userId, onTimeout, options = {}) {
         isMyTurn,
         autoDraftEnabled: instantAutoDraft,
         toggleAutoDraft,
-        draftSquadSize: 22,
+        draftSquadSize: 15,
         startDraft,
         makePick
     };

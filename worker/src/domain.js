@@ -22,7 +22,7 @@ export function startDraft(s, actor, order, stats) {
   check(!s.draft?.is_active, 'A draft is already active');
   check(!s.matches.some(m => m.status === 'completed'), 'Cannot reset squads after scores have been finalized');
   check(Array.isArray(order) && order.length >= 2 && order.length === s.members.length && new Set(order).size === order.length && order.every(id => s.members.some(m => m.id === id)), 'Draft order must contain every member exactly once');
-  check(Object.keys(stats.players || {}).length >= order.length * 22, 'Not enough tournament players for 22-player squads');
+  check(Object.keys(stats.players || {}).length >= order.length * 15, 'Not enough tournament players for 15-player squads');
   s.drafted = []; s.teams = {}; s.trades = []; s.chat = [];
   s.draft = { league_id: s.id, is_active: true, current_pick: 0, turn_order: order, picks: [], auto_draft_user_ids: [], turn_start_time: now() };
   return s.draft;
@@ -31,6 +31,7 @@ export function pick(s, actor, target, player, expected, stats) {
   member(s, actor);
   const d = s.draft;
   check(d?.is_active, 'Draft is not active');
+  check(d.current_pick < d.turn_order.length * 15, 'Draft is complete');
   check(d.current_pick === expected, 'Pick mismatch: another client already picked', 409);
   check(d.turn_order[d.current_pick % d.turn_order.length] === target, 'Not this player’s turn', 409);
   check(actor === target || d.auto_draft_user_ids.includes(target), 'Only the current player can pick', 403);
@@ -44,7 +45,7 @@ export function pick(s, actor, target, player, expected, stats) {
     player_id: player, message: username + ' picked: ' + player, created_at: now() });
   s.chat = s.chat.slice(-100);
   d.current_pick++;
-  d.is_active = d.current_pick < d.turn_order.length * 22;
+  d.is_active = d.current_pick < d.turn_order.length * 15;
   d.turn_start_time = now();
   return d;
 }

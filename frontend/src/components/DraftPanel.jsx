@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DraftPanel = ({ draftState, countdown, isMyTurn, currentUser, usersList, autoDraftEnabled, onToggleAutoDraft, onPlayerClick, draftSquadSize = 22 }) => {
+const DraftPanel = ({ draftState, countdown, isMyTurn, currentUser, usersList, autoDraftEnabled, onToggleAutoDraft, onPlayerClick, draftSquadSize = 15 }) => {
     if (!draftState) {
         return null;
     }

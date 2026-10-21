@@ -66,14 +66,14 @@ test('stale trade cannot transfer a player now owned by someone else', () => {
   assert.throws(() => actOnTrade(s, 'b', t.id, 'accepted'), /ownership changed/);
   assert.equal(t.status, 'pending');
 });
-test('22 picks per member completes the draft without allowing extra picks', () => {
+test('15 picks per member completes the draft without allowing extra picks', () => {
   const s = league(); startDraft(s, 'a', ['a', 'b'], stats);
-  for (let i = 0; i < 44; i++) {
+  for (let i = 0; i < 30; i++) {
     const id = i % 2 ? 'b' : 'a'; pick(s, id, id, `P${i}`, i, stats);
   }
   assert.equal(s.draft.is_active, false);
-  assert.equal(s.drafted.filter(p => p.user_id === 'a').length, 22);
-  assert.throws(() => pick(s, 'a', 'a', 'P44', 44, stats), /not active/);
+  assert.equal(s.drafted.filter(p => p.user_id === 'a').length, 15);
+  assert.throws(() => pick(s, 'a', 'a', 'P30', 30, stats), /not active/);
 });
 test('round robin handles odd teams without self matches', () => {
   const s = league(); s.members.push({ id: 'c', username: 'charlie' });
@@ -161,24 +161,24 @@ test('players with no appearances can fill an entire draft', () => {
   const s = league();
   const preseason = { players: Object.fromEntries(Object.entries(players).map(([name, p]) => [name, { ...p, batting: [], bowling: [], fielding: [], matches: [] }])), matches: [] };
   startDraft(s, 'a', ['a', 'b'], preseason);
-  for (let i = 0; i < 44; i++) { const id = i % 2 ? 'b' : 'a'; pick(s, id, id, 'P' + i, i, preseason); }
-  assert.equal(s.drafted.length, 44); assert.equal(s.draft.is_active, false);
+  for (let i = 0; i < 30; i++) { const id = i % 2 ? 'b' : 'a'; pick(s, id, id, 'P' + i, i, preseason); }
+  assert.equal(s.drafted.length, 30); assert.equal(s.draft.is_active, false);
   assert.equal(playerPoints(preseason.players.P0, 1).points, 0);
 });
 
 test('manual and automatic picks create exactly one attributed announcement, including final pick', () => {
   const s = league(); startDraft(s, 'a', ['a', 'b'], stats);
   s.draft.auto_draft_user_ids = ['b'];
-  for (let i = 0; i < 44; i++) {
+  for (let i = 0; i < 30; i++) {
     const target = i % 2 ? 'b' : 'a';
     pick(s, 'a', target, 'P' + i, i, stats);
     assert.equal(s.chat[i].message, (target === 'a' ? 'alice' : 'bob') + ' picked: P' + i);
     assert.equal(s.chat[i].kind, 'draft_pick');
     assert.equal(s.chat[i].user_id, target);
   }
-  assert.equal(s.chat.length, 44);
-  assert.throws(() => pick(s, 'a', 'b', 'P43', 43, stats));
-  assert.equal(s.chat.length, 44);
+  assert.equal(s.chat.length, 30);
+  assert.throws(() => pick(s, 'a', 'b', 'P29', 29, stats));
+  assert.equal(s.chat.length, 30);
   startDraft(s, 'a', ['a', 'b'], stats);
   assert.equal(s.chat.length, 0);
 });
