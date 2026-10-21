@@ -78,7 +78,7 @@ export default function Fixtures({ currentLeague, currentUser, usersList, isComm
         {week && <div className="card">
             <h3>Gameweek {week.number} · {week.status}</h3>
             <p>Lineup deadline: <strong>{time(week.lock_at)}</strong> (your local time)</p>
-            <p>Expected finish: <strong>{time(new Date(Math.max(...week.team_matches.map(m=>Date.parse(m.startTime)))+4*3600000).toISOString())}</strong> Â· estimate; results finalize after all scorecards are imported.</p>
+            <p>Expected finish: <strong>{time(new Date(Math.max(...week.team_matches.map(m=>Date.parse(m.startTime)))+4*3600000).toISOString())}</strong> · estimate; results finalize after all scorecards are imported.</p>
             <p>{week.completed_teams || 0}/{week.team_matches.length} IPL team results imported</p>
             <details><summary>Which IPL match counts for each team?</summary>
                 <ul>{week.team_matches.map(m=><li key={m.team}><strong>{m.team}</strong>: match {week.ipl_round} · {time(m.startTime)} · <a href={m.url} target="_blank" rel="noreferrer">Scorecard</a></li>)}</ul>
@@ -90,7 +90,7 @@ export default function Fixtures({ currentLeague, currentUser, usersList, isComm
             {!matches.length && <p>No matchups yet.</p>}
             {matches.map(m=><button type="button" key={m.id} className="match-card matchup-link" onClick={()=>open(m)}>
                 <strong>{name(m.team_a_id)}</strong>
-                <div className="match-score">{m.status==='pending'?'â€”':m.team_a_score} : {m.status==='pending'?'â€”':m.team_b_score}<div className="match-status">{m.status} Â· View both XIs â†’</div>
+                <div className="match-score">{m.status==='pending'?'—':m.team_a_score} : {m.status==='pending'?'—':m.team_b_score}<div className="match-status">{m.status} · View both XIs →</div>
                 <small>{m.finalized_at ? `Finalized ${time(m.finalized_at)}` : week ? `Expected finish ${time(new Date(Math.max(...week.team_matches.map(t=>Date.parse(t.startTime)))+4*3600000).toISOString())}` : 'Finish date unavailable'}</small></div>
                 <strong>{name(m.team_b_id)}</strong>
             </button>)}
