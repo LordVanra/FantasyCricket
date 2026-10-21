@@ -44,3 +44,14 @@ test('preseason squads survive an absent results page, but not server outages', 
     await assert.rejects(scraper.scrape(), /Tournament scraping failed/);
   } finally { axios.get = previous; }
 });
+
+test('squad cards include bench players but exclude leaderboard sidebar links', async () => {
+  const previous = axios.get;
+  axios.get = async requestUrl => ({ data: requestUrl.endsWith('/squads')
+    ? '<a href="/series/test-123/team-alpha-squad-456/series-squads">Alpha</a>'
+    : '<div class="ds-relative ds-flex ds-flex-row"><div><a href="/cricketers/bench-bowler-789">Bench Bowler</a><p>Bowler</p><span>Batting: Right hand Bat</span></div></div><aside><a href="/cricketers/sidebar-player-999">Sidebar Player</a></aside>' });
+  try {
+    const squads = await new Scraper(url).scrapeSquads();
+    assert.deepEqual(squads['Team Alpha'], [{ name: 'Bench Bowler', url: '/cricketers/bench-bowler-789', type: 'bowler' }]);
+  } finally { axios.get = previous; }
+});

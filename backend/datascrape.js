@@ -316,14 +316,14 @@ class CricketScraper {
 
           if (!squads[teamName]) squads[teamName] = [];
           
-          $team('a').each((i, elem) => {
+          // Only squad cards: leaderboard and news sidebars also link to cricketers.
+          $team('div.ds-relative.ds-flex.ds-flex-row a').each((i, elem) => {
             const href = $team(elem).attr('href') || '';
             const text = this.cleanPlayerName(this.cleanText($team(elem).text()));
             if (href.includes('/cricketers/') && text && text.length > 1 && !text.toLowerCase().includes('cricketers')) {
-              const cardText = this.cleanText($team(elem).closest('div.ds-border-line, div.ds-relative.ds-flex.ds-flex-row').text());
-              const parentText = this.cleanText($team(elem).parent().text());
-              const rowText = this.cleanText($team(elem).closest('li, div, tr').text());
-              const inferredType = this.extractPlayerType(`${cardText} ${parentText} ${rowText}`.replace(text, '').trim());
+              const card = $team(elem).closest('div.ds-relative.ds-flex.ds-flex-row');
+              const roleText = this.cleanText(card.find('p').first().text());
+              const inferredType = this.normalizePlayerType(roleText);
               const existing = squads[teamName].find(p => p.url === href);
               if (!existing) {
                 squads[teamName].push({ name: text, url: href, type: inferredType });

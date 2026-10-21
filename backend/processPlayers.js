@@ -450,7 +450,7 @@ class CricketDataProcessor {
 
           // Skip if already in playerNameMap (already found from match data)
           if (this.playerNameMap[canonical]) {
-            if (!this.playerNameMap[canonical].playerType && rosterType) {
+            if (rosterType) {
               this.playerNameMap[canonical].playerType = rosterType;
             }
             if (normalizedRosterTeam) {
