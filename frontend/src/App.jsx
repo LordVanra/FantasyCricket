@@ -264,7 +264,7 @@ const App = () => {
                         </div>
 
                         <p className="hint">{(allPlayersData.season || allPlayersData.tournament?.match(/ipl-(20\d{2})/)?.[1]) ? 'IPL ' + (allPlayersData.season || allPlayersData.tournament.match(/ipl-(20\d{2})/)[1]) : 'Current competition'} squad pool · Includes players with no appearances. {(allPlayersData.season === '2026' || allPlayersData.tournament?.includes('ipl-2026-')) && 'IPL 2027 squads are not loaded yet.'}</p>
-                        {league && <DraftChat key={league.id} leagueId={league.id} />}
+                        {league && draft.draftState?.is_active && <DraftChat key={league.id} leagueId={league.id} />}
                         {hasActiveDraftSession && (
                             <DraftPanel 
                                 draftState={draft.draftState} 

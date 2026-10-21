@@ -46,12 +46,12 @@ export default function DraftChat({ leagueId }) {
     };
     return <section className="card draft-chat" aria-label="Draft chat">
         <h3>Draft chat</h3>
-        <p className="hint">Private to your league · Latest 100 messages · Updates every few seconds</p>
+        <p className="hint">Active draft only · Latest 100 messages · Updates every few seconds</p>
         <div className="draft-chat-log" role="log" aria-live="polite" aria-relevant="additions" ref={log}
             onScroll={() => { const el = log.current; nearBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 60; }}>
             {!messages.length && <p className="hint">Talk picks and plans with your league here.</p>}
             {messages.map(message => <div className="draft-chat-message" key={message.id}>
-                <strong>{message.username}</strong>{' '}
+                <strong>{message.kind === 'draft_pick' ? 'Draft pick' : message.username}</strong>{' '}
                 <time dateTime={message.created_at}>{new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</time>
                 <p>{message.message}</p>
             </div>)}
@@ -60,7 +60,7 @@ export default function DraftChat({ leagueId }) {
             <label htmlFor="draft-chat-input" className="hint">Message your league</label>
             <textarea id="draft-chat-input" maxLength={1000} rows={2} value={text} disabled={sending}
                 onChange={e => setText(e.target.value)} placeholder="Who are you picking?" />
-            <div><span className="hint">{text.length}/1000</span><button type="submit" disabled={sending || !text.trim()}>{sending ? 'Sending…' : 'Send'}</button></div>
+            <div><span className="hint">{text.length}/1000</span><button className="btn btn-primary" type="submit" disabled={sending || !text.trim()}>{sending ? 'Sending…' : 'Send'}</button></div>
         </form>
         {(error || refreshError) && <p role="alert">{error || refreshError}</p>}
     </section>;

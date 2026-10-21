@@ -80,8 +80,9 @@ async function rpc(db, user, op, p) {
     check(typeof p.message === 'string' && p.message.trim().length > 0 && p.message.length <= 1000, 'Message must be 1–1000 characters');
     return mutate(db, leagueId, state => {
       member(state, actor);
+      check(state.draft?.is_active, 'Chat is only available during an active draft', 409);
       state.chat ||= [];
-      const last = [...state.chat].reverse().find(m => m.user_id === actor);
+      const last = [...state.chat].reverse().find(m => m.user_id === actor && m.kind !== 'draft_pick');
       check(!last || Date.now() - Date.parse(last.created_at) >= 2000, 'Please wait two seconds between messages', 429);
       const message = { id: crypto.randomUUID(), user_id: actor, username: user.username, message: p.message.trim(), created_at: now() };
       state.chat.push(message);

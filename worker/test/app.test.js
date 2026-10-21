@@ -104,6 +104,7 @@ test('concurrent database picks commit exactly one winner', async () => {
   const results = await Promise.allSettled(['P1', 'P2'].map(p => mutate(db, 'l', s => pick(s, 'a', 'a', p, 0, stats))));
   assert.equal(results.filter(r => r.status === 'fulfilled').length, 1);
   const saved = JSON.parse((await db.prepare('SELECT state FROM leagues WHERE id=?').bind('l').first()).state);
+  assert.equal(saved.chat.length, 1);
   assert.equal(saved.drafted.length, 1); assert.equal(saved.draft.current_pick, 1);
 });
 test('HTTP auth, sessions, server authority, stats upload and logout', async () => {
@@ -138,6 +139,8 @@ test('HTTP auth, sessions, server authority, stats upload and logout', async () 
   assert.equal((await upload({ ...fullStats, teams: { Alpha: ['m1'] } })).status, 409);
   assert.equal(Object.keys((await request('getTournamentStats')).data.players).length, 66);
   assert.equal((await request('getDraftChat', { leagueId: 'default' })).data.length, 0);
+  assert.equal((await request('sendDraftChat', { leagueId: 'default', message: 'Before draft' })).status, 409);
+  await mutate(env.DB, 'default', state => { state.draft = { is_active: true }; });
   assert.equal((await request('sendDraftChat', { leagueId: 'default', message: '   ' })).status, 400);
   assert.equal((await request('sendDraftChat', { leagueId: 'default', message: 'x'.repeat(1001) })).status, 400);
   const chat = await request('sendDraftChat', { leagueId: 'default', message: '<b>My pick</b>', username: 'imposter' });
@@ -145,6 +148,8 @@ test('HTTP auth, sessions, server authority, stats upload and logout', async () 
   assert.equal(chat.data.message, '<b>My pick</b>');
   assert.equal((await request('sendDraftChat', { leagueId: 'default', message: 'spam' })).status, 429);
   assert.equal((await request('getDraftChat', { leagueId: 'default' })).data.length, 1);
+  await mutate(env.DB, 'default', state => { state.draft.is_active = false; });
+  assert.equal((await request('sendDraftChat', { leagueId: 'default', message: 'After draft' })).status, 409);
   const other = emptyLeague('private', 'Private league', 'PRIVATE', { id: 'other', username: 'other' });
   await env.DB.prepare('INSERT INTO leagues(id,code,state) VALUES(?,?,?)').bind(other.id, other.code, JSON.stringify(other)).run();
   assert.equal((await request('getDraftChat', { leagueId: 'private' })).status, 403);
@@ -159,4 +164,21 @@ test('players with no appearances can fill an entire draft', () => {
   for (let i = 0; i < 44; i++) { const id = i % 2 ? 'b' : 'a'; pick(s, id, id, 'P' + i, i, preseason); }
   assert.equal(s.drafted.length, 44); assert.equal(s.draft.is_active, false);
   assert.equal(playerPoints(preseason.players.P0, 1).points, 0);
+});
+
+test('manual and automatic picks create exactly one attributed announcement, including final pick', () => {
+  const s = league(); startDraft(s, 'a', ['a', 'b'], stats);
+  s.draft.auto_draft_user_ids = ['b'];
+  for (let i = 0; i < 44; i++) {
+    const target = i % 2 ? 'b' : 'a';
+    pick(s, 'a', target, 'P' + i, i, stats);
+    assert.equal(s.chat[i].message, (target === 'a' ? 'alice' : 'bob') + ' picked: P' + i);
+    assert.equal(s.chat[i].kind, 'draft_pick');
+    assert.equal(s.chat[i].user_id, target);
+  }
+  assert.equal(s.chat.length, 44);
+  assert.throws(() => pick(s, 'a', 'b', 'P43', 43, stats));
+  assert.equal(s.chat.length, 44);
+  startDraft(s, 'a', ['a', 'b'], stats);
+  assert.equal(s.chat.length, 0);
 });

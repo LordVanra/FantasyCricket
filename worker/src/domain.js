@@ -23,7 +23,7 @@ export function startDraft(s, actor, order, stats) {
   check(!s.matches.some(m => m.status === 'completed'), 'Cannot reset squads after scores have been finalized');
   check(Array.isArray(order) && order.length >= 2 && order.length === s.members.length && new Set(order).size === order.length && order.every(id => s.members.some(m => m.id === id)), 'Draft order must contain every member exactly once');
   check(Object.keys(stats.players || {}).length >= order.length * 22, 'Not enough tournament players for 22-player squads');
-  s.drafted = []; s.teams = {}; s.trades = [];
+  s.drafted = []; s.teams = {}; s.trades = []; s.chat = [];
   s.draft = { league_id: s.id, is_active: true, current_pick: 0, turn_order: order, picks: [], auto_draft_user_ids: [], turn_start_time: now() };
   return s.draft;
 }
@@ -38,6 +38,11 @@ export function pick(s, actor, target, player, expected, stats) {
   check(!s.drafted.some(p => p.player_id === player), 'Player already drafted', 409);
   s.drafted.push({ league_id: s.id, user_id: target, player_id: player, player_name: player });
   d.picks.push({ user_id: target, player_id: player, pick_number: expected });
+  const username = s.members.find(m => m.id === target).username;
+  s.chat ||= [];
+  s.chat.push({ id: crypto.randomUUID(), kind: 'draft_pick', user_id: target, username,
+    player_id: player, message: username + ' picked: ' + player, created_at: now() });
+  s.chat = s.chat.slice(-100);
   d.current_pick++;
   d.is_active = d.current_pick < d.turn_order.length * 22;
   d.turn_start_time = now();
