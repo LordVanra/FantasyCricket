@@ -1,4 +1,4 @@
-import { check, commissioner, validateLineup, fixtures, playerPoints, now } from './domain.js';
+import { check, ensureDefaultLineups, commissioner, validateLineup, fixtures, playerPoints, now } from './domain.js';
 
 // The ordinal belongs to the IPL team, never to the player's appearances.
 export function teamRoundPlan(stats, ordinal) {
@@ -12,22 +12,24 @@ export function teamRoundPlan(stats, ordinal) {
     return { team, url: game.url, startTime: game.startTime };
   });
 }
-export function createGameweeks(s, actor, stats, count, firstRound, clock = Date.now()) {
+export function createGameweeks(s, actor, stats, count, firstRound, clock = Date.now(), historical = false) {
   commissioner(s, actor);
   check(!s.draft?.is_active && s.drafted.length > 0, 'Complete the draft first');
   check(!s.gameweeks?.some(w => Date.parse(w.lock_at) <= clock), 'A started season cannot be replaced');
   check(!s.matches.some(m => m.status === 'completed'), 'Completed results cannot be replaced');
   check(Number.isInteger(count) && count >= 1 && count <= 14 && Number.isInteger(firstRound) && firstRound >= 1 && firstRound + count - 1 <= 14, 'Choose IPL team rounds between 1 and 14');
+  ensureDefaultLineups(s, stats);
   for (const m of s.members) validateLineup(s, m.id, s.teams[m.id]?.starting_11 || [], stats);
   const weeks = Array.from({length:count}, (_, i) => {
     const teamMatches = teamRoundPlan(stats, firstRound + i);
     const lockAt = new Date(Math.min(...teamMatches.map(m => Date.parse(m.startTime)))).toISOString();
-    check(Date.parse(lockAt) > clock, 'This IPL round has already started. Choose a future round');
+    check(historical || Date.parse(lockAt) > clock, 'This IPL round has already started. Choose a future round');
     return { number: i+1, ipl_round: firstRound+i, lock_at: lockAt, status:'upcoming', team_matches:teamMatches,
       lineups:Object.fromEntries(s.members.map(m => [m.id, [...s.teams[m.id].starting_11]])) };
   });
   fixtures(s, actor, count);
-  s.gameweeks = weeks; s.scoring_version = 2;
+  s.gameweeks = weeks; s.scoring_version = 2; s.historical = historical;
+  if (historical) advanceGameweeks(s, stats, clock);
   return weeks;
 }
 export function saveGameweekLineup(s, actor, number, lineup, stats, clock=Date.now()) {

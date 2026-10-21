@@ -30,7 +30,7 @@ const api = {
     getDefaultLeague: () => call('getDefaultLeague'), createDefaultLeague: () => call('createDefaultLeague'),
     getLeagueStandings: leagueId => call('getLeagueStandings', { leagueId }),
     getGameweeks: leagueId => call('getGameweeks', { leagueId }),
-    createGameweeks: (leagueId, count, firstRound) => call('createGameweeks', { leagueId, count, firstRound }),
+    createGameweeks: (leagueId, count, firstRound, historical = false) => call('createGameweeks', { leagueId, count, firstRound, historical }),
     saveGameweekLineup: (leagueId, round, starting11) => call('saveGameweekLineup', { leagueId, round, starting11 }),
     getFixtures: leagueId => call('getFixtures', { leagueId }),
     generateFixtures: (leagueId, rounds = 1) => call('generateFixtures', { leagueId, rounds }),

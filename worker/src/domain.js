@@ -17,6 +17,19 @@ export function validateLineup(s, userId, lineup, stats) {
   check(roles.filter(r => r === 'batsman').length >= 4 && roles.filter(r => r === 'bowler').length >= 4 && roles.filter(r => r === 'allrounder').length >= 2,
     'Lineup needs at least 4 batsmen, 4 bowlers and 2 allrounders');
 }
+export function ensureDefaultLineups(s, stats) {
+  for (const {id} of s.members) {
+    if (s.teams[id]?.starting_11?.length) continue;
+    const owned = [...new Set(s.drafted.filter(d=>d.user_id===id).map(d=>d.player_id))];
+    const selected=[];
+    for (const [role,count] of [['batsman',4],['bowler',4],['allrounder',2]]) {
+      selected.push(...owned.filter(n=>stats.players?.[n]?.playerType?.toLowerCase()===role).slice(0,count));
+    }
+    selected.push(...owned.filter(n=>!selected.includes(n)).slice(0,11-selected.length));
+    try { validateLineup(s,id,selected,stats); } catch { continue; }
+    s.teams[id]={...s.teams[id],id,league_id:s.id,starting_11:selected,squad:owned,auto_generated:true,updated_at:now()};
+  }
+}
 export function startDraft(s, actor, order, stats) {
   commissioner(s, actor);
   check(!s.gameweeks?.length, 'A gameweek season already exists; drafting cannot be restarted');
@@ -48,6 +61,7 @@ export function pick(s, actor, target, player, expected, stats) {
   d.current_pick++;
   d.is_active = d.current_pick < d.turn_order.length * 15;
   d.turn_start_time = now();
+  if (!d.is_active) ensureDefaultLineups(s, stats);
   return d;
 }
 export function trade(s, actor, payload) {

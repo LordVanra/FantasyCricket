@@ -114,7 +114,7 @@ async function rpc(db, user, op, p) {
     member(state, actor);
     if (state.gameweeks && tournament) advanceGameweeks(state, tournament);
     switch (op) {
-      case 'createGameweeks': return createGameweeks(state, actor, tournament, p.count, p.firstRound);
+      case 'createGameweeks': return createGameweeks(state, actor, tournament, p.count, p.firstRound, Date.now(), p.historical === true);
       case 'saveGameweekLineup': return saveGameweekLineup(state, actor, p.round, p.starting11, tournament);
       case 'startDraft': return startDraft(state, actor, p.turnOrder, tournament);
       case 'makeDraftPick': return pick(state, actor, userId, p.playerId, p.currentPick, tournament);

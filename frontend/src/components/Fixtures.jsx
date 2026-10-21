@@ -33,6 +33,7 @@ export default function Fixtures({ currentLeague, currentUser, usersList, isComm
     const [loading,setLoading]=useState(true),[error,setError]=useState(''),[busy,setBusy]=useState(false);
     const [selected,setSelected]=useState(1),[count,setCount]=useState(14),[firstRound,setFirstRound]=useState(1),[refresh,setRefresh]=useState(0);
     const [modal,setModal]=useState(null);
+    const [historical,setHistorical]=useState(false);
     const leagueId=currentLeague?.id;
     useEffect(()=>{
         if(!leagueId) return;
@@ -63,9 +64,10 @@ export default function Fixtures({ currentLeague, currentUser, usersList, isComm
             {!loading && !data.weeks.length && data.matches.length>0 && <p>These are fixtures from the previous scoring system. Existing results are preserved. A completed season cannot be replaced.</p>}
             {isCommissioner && !data.weeks.length && !data.matches.some(m=>m.status==='completed') && <form className="gameweek-setup" onSubmit={async e=>{
                 e.preventDefault();setBusy(true);setError('');
-                try {await api.createGameweeks(leagueId,count,firstRound);reload();}catch(e){setError(e.message);}finally{setBusy(false);}
+                try {await api.createGameweeks(leagueId,count,firstRound,historical);reload();}catch(e){setError(e.message);}finally{setBusy(false);}
             }}>
-                <p>After the draft, everyone must save a valid XI on the dashboard. It becomes the starting lineup for each gameweek; members can edit future gameweeks separately.</p>
+                <p>Missing XIs are generated from draft order, respecting role requirements. Saved XIs are kept. Squads need at least 4 batsmen, 4 bowlers and 2 allrounders.</p>
+                <label><input type="checkbox" checked={historical} onChange={e=>setHistorical(e.target.checked)}/> Use historical results (past rounds lock and score immediately)</label>
                 <label>First IPL team round <input type="number" min="1" max="14" value={firstRound} onChange={e=>setFirstRound(Number(e.target.value))}/></label>
                 <label>Number of gameweeks <input type="number" min="1" max={15-firstRound} value={count} onChange={e=>setCount(Number(e.target.value))}/></label>
                 <button className="btn btn-primary" disabled={busy || !data.stats.schedule?.length}>{busy?'Creating…':'Create season'}</button>

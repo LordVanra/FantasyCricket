@@ -52,7 +52,7 @@ test('season setup rejects backdating, absent schedule and invalid XI',()=>{
  const {s,stats}=setup();assert.throws(()=>createGameweeks(s,'a',stats,1,1,at(11)),/already started/);
  assert.throws(()=>createGameweeks(s,'b',stats,1,1,at(0)),/Commissioner/);
  assert.throws(()=>createGameweeks(s,'a',{...stats,schedule:[]},1,1,at(0)),/schedule/);
- s.teams.a.starting_11=[];assert.throws(()=>createGameweeks(s,'a',stats,1,1,at(0)),/11/);
+ s.teams.a.starting_11=['P0'];assert.throws(()=>createGameweeks(s,'a',stats,1,1,at(0)),/11/);
 });
 test('a postponed match never reopens a locked lineup',()=>{
  const {s,stats}=setup();createGameweeks(s,'a',stats,1,1,at(0));advanceGameweeks(s,stats,at(11));
@@ -75,3 +75,12 @@ test('match details snapshot raw stats separately from points and retain the ass
  stats.players.P0.batting[0].runs=900;advanceGameweeks(s,stats,at(60));
  assert.equal(s.matches[0].breakdowns.a.players[0].stats.batting.runs,40);
 });
+
+ test('historical setup generates missing XIs and immediately scores existing results',()=>{
+ const {s,stats}=setup();s.teams={};
+ stats.schedule.forEach(m=>m.completed=true);stats.matches=stats.schedule.map(m=>({url:m.url}));
+ createGameweeks(s,'a',stats,1,1,at(50),true);
+ assert.equal(s.teams.a.starting_11.length,11);assert.equal(s.teams.b.starting_11.length,11);
+ assert.equal(s.matches[0].status,'completed');assert.equal(s.historical,true);
+ assert.throws(()=>saveGameweekLineup(s,'a',1,s.teams.a.starting_11,stats,at(50)),/locked/);
+ });
