@@ -12,18 +12,14 @@ function GameweekLineup({ week, squad, players, leagueId, onSaved }) {
     return <div className="card">
         <h3>{locked ? 'Locked XI' : 'Your gameweek XI'} · {lineup.length}/11</h3>
         <p className="hint">{locked ? 'This lineup cannot change. Other gameweeks have separate lineups.' : 'Pick 4 batsmen, 4 bowlers, 2 allrounders and 1 extra player. Save before the deadline.'}</p>
-        <p className="hint">Batting multipliers: slots 1–2 ×1.25; 3–4 ×1.10; 5–8 ×1; 9–11 ×0.90. Bowling and fielding are unchanged by position.</p>
-        <ol>{lineup.map((name,index)=><li key={name}>{name} {!locked && <>
+        <ol className="xi-list">{lineup.map((name,index)=><li key={name}><span className="xi-position">{index+1}</span><div className="xi-player"><strong>{name}</strong><span className="hint">{players[name]?.team} · {players[name]?.playerType}</span></div> {!locked && <div className="xi-actions">
             <button type="button" aria-label={`Move ${name} up`} disabled={busy || index===0} onClick={()=>setSelected(current=>{const next=[...current];[next[index-1],next[index]]=[next[index],next[index-1]];return next;})}>↑</button>
             <button type="button" aria-label={`Move ${name} down`} disabled={busy || index===lineup.length-1} onClick={()=>setSelected(current=>{const next=[...current];[next[index+1],next[index]]=[next[index],next[index+1]];return next;})}>↓</button>
-        </>}</li>)}</ol>
-        <div className="gameweek-lineup">
-            {(locked ? lineup : squad).map(name => <label key={name}>
-                <input type="checkbox" checked={lineup.includes(name)} disabled={locked || busy || (!selected.includes(name) && selected.length >= 11)}
-                    onChange={() => setSelected(current => current.includes(name) ? current.filter(n => n !== name) : [...current, name])} />
-                {name} <span className="hint">{players[name]?.team} · {players[name]?.playerType}</span>
-            </label>)}
-        </div>
+            <button type="button" aria-label={`Remove ${name}`} disabled={busy} onClick={()=>setSelected(current=>current.filter(n=>n!==name))}>×</button>
+        </div>}</li>)}</ol>
+        {!locked && <details className="xi-bench"><summary>Bench · {squad.filter(name=>!selected.includes(name)).length} players</summary>
+            {squad.filter(name=>!selected.includes(name)).map(name=><div className="xi-bench-player" key={name}><span>{name}</span><button className="btn" disabled={busy || selected.length>=11} onClick={()=>setSelected(current=>[...current,name])}>Add to XI</button></div>)}
+        </details>}
         {locked && !lineup.length && <p role="status">No valid XI was saved before the deadline. This gameweek scores zero.</p>}
         {!locked && <button className="btn btn-primary" disabled={busy || selected.length !== 11} onClick={async () => {
             setBusy(true); setError('');

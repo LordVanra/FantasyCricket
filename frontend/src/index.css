@@ -1680,3 +1680,19 @@ tr:last-child td {
 .match-breakdown-modal a:focus-visible {
     color: #99f6e4;
 }
+
+.xi-list { list-style:none; padding:0; margin:20px 0; }
+.xi-list li { display:flex; align-items:center; gap:14px; padding:13px 0; border-bottom:1px solid #ffffff12; }
+.xi-position { flex:0 0 30px; color:#8fa9c4; text-align:center; font-variant-numeric:tabular-nums; }
+.xi-player { display:flex; flex-direction:column; gap:4px; min-width:0; flex:1; }
+.xi-player .hint { font-size:12px; }
+.xi-actions { display:flex; gap:6px; }
+.xi-actions button { background:#ffffff08; border:1px solid #ffffff26; border-radius:6px; color:inherit; min-width:32px; min-height:32px; cursor:pointer; }
+.xi-actions button:disabled { opacity:.3; cursor:default; }
+.xi-bench { margin:16px 0; }
+.xi-bench-player { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px 0; }
+.match-stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(65px,1fr)); gap:12px; margin:16px 0; }
+.match-stats-grid dt { color:#8fa9c4; font-size:12px; }
+.match-stats-grid dd { margin:4px 0 0; font-weight:600; font-variant-numeric:tabular-nums; }
+.match-player .hint a { display:inline-block; margin-left:8px; }
+.match-player details { font-size:13px; color:#8fa9c4; margin-top:12px; }
