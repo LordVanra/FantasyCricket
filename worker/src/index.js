@@ -132,6 +132,11 @@ async function rpc(db, user, op, p) {
         check(!state.matches.some(m => m.status !== 'completed' && m.score_due_at && Date.parse(m.score_due_at) <= Date.now() && [m.team_a_id, m.team_b_id].includes(actor)), 'A match is due. Ask the commissioner to finalize scores before changing your lineup');
         validateLineup(state, actor, p.starting11, tournament);
         state.teams[actor] = { id: actor, league_id: state.id, starting_11: p.starting11, squad: state.drafted.filter(d => d.user_id === actor).map(d => d.player_id), updated_at: now() };
+        for (const week of state.gameweeks || []) {
+          if (week.status !== 'completed' && !week.locked_lineups && Date.parse(week.lock_at) > Date.now()) {
+            week.lineups[actor] = [...p.starting11];
+          }
+        }
         return state.teams[actor];
       }
       case 'releasePlayer': {

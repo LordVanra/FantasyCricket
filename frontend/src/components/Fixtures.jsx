@@ -3,32 +3,6 @@ import api from '../api/api';
 import MatchDetail from './MatchDetail';
 
 const time = value => value ? new Date(value).toLocaleString() : 'Awaiting schedule';
-function GameweekLineup({ week, squad, players, leagueId, onSaved }) {
-    const [selected, setSelected] = useState(week.lineup || []);
-    const [error, setError] = useState('');
-    const [busy, setBusy] = useState(false);
-    const locked = Date.now() >= Date.parse(week.lock_at);
-    const lineup = locked ? week.lineup : selected;
-    return <div className="card">
-        <h3>{locked ? 'Locked XI' : 'Your gameweek XI'} · {lineup.length}/11</h3>
-        <p className="hint">{locked ? 'This lineup cannot change. Other gameweeks have separate lineups.' : 'Pick 4 batsmen, 4 bowlers, 2 allrounders and 1 extra player. Save before the deadline.'}</p>
-        <ol className="xi-list">{lineup.map((name,index)=><li key={name}><span className="xi-position">{index+1}</span><div className="xi-player"><strong>{name}</strong><span className="hint">{players[name]?.team} · {players[name]?.playerType}</span></div> {!locked && <div className="xi-actions">
-            <button type="button" aria-label={`Move ${name} up`} disabled={busy || index===0} onClick={()=>setSelected(current=>{const next=[...current];[next[index-1],next[index]]=[next[index],next[index-1]];return next;})}>↑</button>
-            <button type="button" aria-label={`Move ${name} down`} disabled={busy || index===lineup.length-1} onClick={()=>setSelected(current=>{const next=[...current];[next[index+1],next[index]]=[next[index],next[index+1]];return next;})}>↓</button>
-            <button type="button" aria-label={`Remove ${name}`} disabled={busy} onClick={()=>setSelected(current=>current.filter(n=>n!==name))}>×</button>
-        </div>}</li>)}</ol>
-        {!locked && <details className="xi-bench"><summary>Bench · {squad.filter(name=>!selected.includes(name)).length} players</summary>
-            {squad.filter(name=>!selected.includes(name)).map(name=><div className="xi-bench-player" key={name}><span>{name}</span><button className="btn" disabled={busy || selected.length>=11} onClick={()=>setSelected(current=>[...current,name])}>Add to XI</button></div>)}
-        </details>}
-        {locked && !lineup.length && <p role="status">No valid XI was saved before the deadline. This gameweek scores zero.</p>}
-        {!locked && <button className="btn btn-primary" disabled={busy || selected.length !== 11} onClick={async () => {
-            setBusy(true); setError('');
-            try { await api.saveGameweekLineup(leagueId, week.number, selected); setError('Lineup saved.'); onSaved(); }
-            catch(e) { setError(e.message); } finally { setBusy(false); }
-        }}>{busy ? 'Saving…' : 'Save gameweek XI'}</button>}
-        {error && <p role="status">{error}</p>}
-    </div>;
-}
 export default function Fixtures({ currentLeague, currentUser, usersList, isCommissioner, onUpdateScoresTrigger }) {
     const [data,setData]=useState({matches:[],weeks:[],stats:{},squad:[]});
     const [loading,setLoading]=useState(true),[error,setError]=useState(''),[busy,setBusy]=useState(false);
@@ -58,7 +32,7 @@ export default function Fixtures({ currentLeague, currentUser, usersList, isComm
         <div className="card">
             <h2>Head-to-head gameweeks</h2>
             <p>One opponent. One match per IPL team. Gameweek 2 uses each IPL team's second match—even if a player missed its first.</p>
-            <p className="hint">Rounds can overlap and last more or less than seven days. Each XI locks before the earliest match in its round. A missed appearance scores zero. Results update after the stats import; they are not ball-by-ball live.</p>
+            <p className="hint">Rounds can overlap and last more or less than seven days. Your dashboard XI is saved for each matchup when its round begins. A missed appearance scores zero. Results update after the stats import; they are not ball-by-ball live.</p>
             <p className="hint">Win: 2 league points · Draw: 1 · Loss: 0. Ties in the table use net fantasy points.</p>
             {error && <p role="alert">{error}</p>}
             {loading && <p>Loading gameweeks…</p>}
@@ -98,6 +72,5 @@ export default function Fixtures({ currentLeague, currentUser, usersList, isComm
                 <strong>{name(m.team_b_id)}</strong>
             </button>)}
         </div>
-        {week && <GameweekLineup key={leagueId+'-'+week.number} week={week} leagueId={leagueId} squad={data.squad} players={data.stats.players || {}} onSaved={reload}/>}
     </section>;
 }

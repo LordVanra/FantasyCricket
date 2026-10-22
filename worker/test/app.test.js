@@ -205,12 +205,21 @@ test('HTTP gameweek lifecycle: setup, locked lineups and automatic scheduled sco
     assert.equal((await b.call('createGameweeks',{leagueId:league.id,count:1,firstRound:1})).status,403);
     assert.equal((await a.call('createGameweeks',{leagueId:league.id,count:1,firstRound:1})).status,200);
     assert.equal((await a.call('getGameweeks',{leagueId:league.id})).data[0].lineup.length,11);
+    const reordered=Array.from({length:11},(_,j)=>'P'+j).reverse();
+    assert.equal((await a.call('saveUserTeam',{leagueId:league.id,starting11:reordered})).status,200);
+    assert.deepEqual((await a.call('getGameweeks',{leagueId:league.id})).data[0].lineup,reordered);
     clock+=61000;
     assert.equal((await a.call('saveGameweekLineup',{leagueId:league.id,round:1,starting11:[]})).status,409);
     assert.equal((await a.call('getFixtures',{leagueId:league.id})).data[0].status,'live');
+    const nextLineup=[...reordered].reverse();
+    assert.equal((await a.call('saveUserTeam',{leagueId:league.id,starting11:nextLineup})).status,200);
+    assert.deepEqual((await a.call('getGameweeks',{leagueId:league.id})).data[0].lineup,reordered);
     tournament.schedule[0].completed=true;tournament.matches=[{url:'match1'}];await upload(tournament);
     const jobs=[];await worker.scheduled({},env,{waitUntil:p=>jobs.push(p)});await Promise.all(jobs);
     const result=(await a.call('getFixtures',{leagueId:league.id})).data[0];assert.equal(result.status,'completed');assert.equal(result.team_a_score,57.1);
     assert.equal((await a.call('getLeagueStandings',{leagueId:league.id})).data[0].played,1);
+    await a.call('saveUserTeam',{leagueId:league.id,starting11:reordered});
+    assert.deepEqual((await a.call('getFixtures',{leagueId:league.id})).data[0],result);
+
   }finally{Date.now=realNow;}
 });
